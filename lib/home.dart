@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart';
+import 'login_activity.dart';
 import 'utils.dart' as ut;
 
 
@@ -45,7 +46,12 @@ class HomeScreenState extends State<HomeScreen> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Home page")
+                    Text("Home page"),
+                    RaisedButton(child:Text("LOGIN"),
+                    onPressed: (){
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),);
+                    },)
                   ],
                 )
             ),
