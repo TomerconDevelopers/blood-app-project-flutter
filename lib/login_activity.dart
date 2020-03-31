@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'utils.dart' as ut;
+
 
 class LoginPage extends StatefulWidget{
   @override
@@ -24,21 +26,14 @@ class _LoginPageState extends State<LoginPage>{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            ut.logo(),
+            SizedBox(height: 20.0,),
             Text(
-              'Logo',
-              style: TextStyle(
-                fontSize: 50.0,
-                fontWeight: FontWeight.bold,
-                fontFamily: "Pacifico"
-              ),
-            ),
-            SizedBox(height: 40.0,),
-            Text(
-              "LOGIN",
+              " User Login",
               style: TextStyle(
                 fontSize: 32.0,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor
+                fontWeight: FontWeight.w500,
+                color: Colors.orange
               ),
             ),
             SizedBox(height: 40.0,),
@@ -89,7 +84,7 @@ class _LoginPageState extends State<LoginPage>{
           fontSize: 16.0,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(40.0),
         ),
         prefixIcon: hintText == "Email" ? Icon(Icons.email) : Icon(Icons.lock),
         suffixIcon: hintText == "Password" ? IconButton(
@@ -106,7 +101,7 @@ class _LoginPageState extends State<LoginPage>{
       height: 56.0,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(23.0),
+        borderRadius: BorderRadius.circular(40.0),
         gradient: LinearGradient(
           colors: [
             Color(0xFFFB415B),

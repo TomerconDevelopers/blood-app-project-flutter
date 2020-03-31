@@ -32,6 +32,14 @@ ThemeData maintheme(){
         subtitle: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
       ));
 }
+Widget logo(){
+  return new Image.asset(
+    'assets/images/logo.png',
+    width: 140.0,
+    height: 140.0,
+    fit: BoxFit.fill,
+  );
+}
 BoxDecoration bg(){
   return BoxDecoration(
       gradient: LinearGradient(
