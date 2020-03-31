@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'globals.dart';
+import 'package:encrypt/encrypt.dart' as en;
 
 void showtoast(String text, Color col) {
   Fluttertoast.showToast(
@@ -40,6 +41,71 @@ Widget logo(){
     fit: BoxFit.fill,
   );
 }
+//For rounded borders
+BoxDecoration rounded(var col,bool bord,double r){
+  return BoxDecoration(
+    color: col,
+    borderRadius: BorderRadius.circular(r),
+    border: Border.all(
+        color: (bord)?Colors.grey:Colors.transparent, style: BorderStyle.solid,
+        width: 0.80),
+  );
+}
+//For display app info dialog
+displayinfo(State m) async {
+
+  //HIDE KEYBOARD
+  //SystemChannels.textInput.invokeMethod('TextInput.show');
+  return showDialog(
+      context: m.context,
+      builder: (context) {
+        return AlertDialog(
+
+          content: Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                new Image.asset('images/logo.png', width: 140.0, height: 50.0, fit: BoxFit.cover,),
+                Text("Version: $app_version"),
+                Divider(),
+                Text("Developed by: Tomercon Developers"),
+                Divider(),
+                new FlatButton(
+                  child: new Text('HELP & SUPPORT'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new FlatButton(
+                  child: new Text('CLOSE'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      });
+}
+roundicon(var icn,Color icc,Color bg,double size,double pad)=>
+    Container(
+      margin: EdgeInsets.all(5),
+      padding: EdgeInsets.all(pad),
+      decoration: BoxDecoration(
+        color: bg,
+        shape: BoxShape.circle,
+      ),
+      child: Icon(icn,size:size,color: icc),
+    );
+//for rounded text
+roundedtext(String txt,Color bgcol,Color txtcol)=>
+    Container(
+      padding: EdgeInsets.symmetric(vertical:3,horizontal: 10),
+      margin: EdgeInsets.all(0),
+      decoration: rounded(bgcol,false,40),
+      child: Text(txt,style: TextStyle(color: txtcol,fontSize: 14),),
+    );
 BoxDecoration bg(){
   return BoxDecoration(
       gradient: LinearGradient(
@@ -50,4 +116,34 @@ BoxDecoration bg(){
         image: AssetImage(bg_image),fit: BoxFit.cover,
         colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.dstATop),
       ));
+}
+//============ ENCRYPT-DECRYPT STRING ============
+final key = en.Key.fromUtf8('my 32 length key................');
+final iv = en.IV.fromLength(16);
+final encrypter = en.Encrypter(en.AES(key));
+String encrypt(String txt){
+  print(iv.base64);
+  final encrypted = encrypter.encrypt(txt, iv: iv);
+  return encrypted.base64;
+}
+String decrypt(txt){
+  print(iv.base64);
+  final decrypted = encrypter.decrypt(en.Encrypted.fromBase64(txt), iv: iv);
+  return decrypted;
+}
+//=============================================
+//Widget for displaying empty list or empty items.
+Widget empty_server(String txt){
+  return Align(
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.info,size: 50,color: Colors.white,),
+          Text('$txt',style: TextStyle(fontSize: 20,
+              fontWeight: FontWeight.w600,color: Colors.blue[800]),)
+        ],
+
+      )
+  );
 }
