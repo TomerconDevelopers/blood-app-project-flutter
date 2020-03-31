@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+
 import 'utils.dart' as ut;
 
 
@@ -19,21 +21,25 @@ class _LoginPageState extends State<LoginPage>{
 
   @override
   Widget build(BuildContext context){
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: Container(
-        padding: EdgeInsets.only(top: 100.0, right: 20.0, left: 20.0, bottom: 20.0),
-        child: Column(
+    return MaterialApp(
+        theme: ut.maintheme(),
+        home:Scaffold(
+      body: SingleChildScrollView(
+
+        child: Container(
+          padding: EdgeInsets.only(top: 100.0, right: 20.0, left: 20.0, bottom: 20.0),
+          decoration: ut.bg(),
+          child:Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             ut.logo(),
             SizedBox(height: 20.0,),
             Text(
-              " User Login",
+              "User Login",
               style: TextStyle(
                 fontSize: 32.0,
                 fontWeight: FontWeight.w500,
-                color: Colors.orange
+                color: Colors.grey[800]
               ),
             ),
             SizedBox(height: 40.0,),
@@ -72,6 +78,8 @@ class _LoginPageState extends State<LoginPage>{
           ],
         ),
       ),
+    )
+        )
     );
   }
 
@@ -80,13 +88,15 @@ class _LoginPageState extends State<LoginPage>{
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(
-          color: Colors.grey,
+          color: Colors.black,
           fontSize: 16.0,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(40.0),
         ),
-        prefixIcon: hintText == "Email" ? Icon(Icons.email) : Icon(Icons.lock),
+        prefixIcon: hintText == "Email" ? Icon(Icons.email,
+        color: Colors.red[300],) :
+        Icon(Icons.lock,color:Colors.red[300]),
         suffixIcon: hintText == "Password" ? IconButton(
           onPressed: _toggleVisibility,
           icon: _isHidden ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
