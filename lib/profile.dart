@@ -90,7 +90,7 @@ class _ProfileState extends State<Profile> {
               child: SizedBox(
                 child: ColorFiltered(
                     colorFilter: ColorFilter.mode(
-                        Colors.white.withOpacity(0.4), BlendMode.dstATop),
+                        Colors.white.withOpacity(0.2), BlendMode.dstATop),
                     child: Image.asset('assets/images/logo.png')),
                 height: 50,
                 width: 50,
