@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'package:intl/intl.dart';
 import 'bloodrequest.dart';
-import 'request_services.dart';
+
 
 
 
@@ -110,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   new TextFormField(
                     decoration: const InputDecoration(
                       hintText: 'No of units needed',
-                      labelText: 'number',
+                      labelText: 'Bloodunits',
                     ),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
@@ -130,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   new TextFormField(
                     decoration: const InputDecoration(
                       hintText: 'Enter another phone number',
-                      labelText: 'Phone_extra',
+                      labelText: 'Alternate contact',
                     ),
                     keyboardType: TextInputType.phone,
                     inputFormatters: [
@@ -193,6 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 void _submitForm() {
+  var _formKey;
   final FormState form = _formKey.currentState;
 
   if (!form.validate()) {
@@ -210,8 +210,3 @@ void showMessage(String message, [MaterialColor color = Colors.red]) {
       .showSnackBar(new SnackBar(backgroundColor: color, content: new Text(message)));
 }
 
-var contactService = new ContactService();
-contactService.createContact(newContact)
-.then((value) =>
-showMessage('New contact created for ${value.name}!', Colors.blue)
-);

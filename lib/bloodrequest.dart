@@ -3,7 +3,7 @@ class Request {
   String bloodgroup = '';
   int age;
   DateTime date;
-  int number;
+  int bloodunits;
   String phone = '';
   String phone_extra = '';
   String district = '';
