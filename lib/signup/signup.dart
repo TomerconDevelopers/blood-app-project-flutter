@@ -635,7 +635,7 @@ class _SignUpState extends State<SignUp> {
       }
     });
   }
-  to set username and password
+  //to set username and password
   setPrefs()async{
     SharedPreferences sp=await SharedPreferences.getInstance();
     Future<bool> u=sp.setString("uname",un.text);
@@ -664,7 +664,7 @@ class _SignUpState extends State<SignUp> {
       "status": st,
       "for_time": forTime.text,
       "uname": un.text,
-      "password": pass.text
+      "password": p,
     });
     var res = await http.post(
         "http://192.168.43.221/blood-app-project-backend-master/signup.php",
