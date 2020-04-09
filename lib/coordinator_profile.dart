@@ -1,20 +1,7 @@
 import 'package:flutter/material.dart';
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-      ),
-      home: MyHomePage(title: 'Coordinator profile'),
-    );
-  }
-}
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -26,13 +13,55 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
+  @override
+  void initState() {
+    postValues();
+    super.initState();
+  }
+  String uname = '', pass = '';
+  var r;
+  String n = '',
+      pr='',
+      d = '',
+      l = '',
+      c = '',
+      re='',
+      ex='',
+      e = '', 
+      un = '';
+      //function to post userid and password and accepts full details
+postValues() async {
+    SharedPreferences sp=await SharedPreferences.getInstance();
+    uname=sp.getString('username');
+    pass=sp.getString('password');
+    var bd = json.encode({"userid": uname, "pass": pass});
+    
+    var response = await http.post(
+        "http://192.168.43.221/blood-app-project-backend-master/coordinator_profile.php",
+        body: bd);
+    print(response.statusCode);
+    r = jsonDecode(response.body);
+    print(r);
+    //stores the details to string variables
+    setState(() {
+      n = r['name'];
+      d = r['district'];
+      l = r['localty'];
+      c = r['phone'];
+      e = r['email'];
+      re=r['verified_requests'];
+      ex=r['experience'];
+      pr=r['profession'];
+      un = r['userid'];
+    });
+  }
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed:(){},child: Icon(Icons.edit),backgroundColor:Colors.deepOrange ,),
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Profile'),
       ),
       body: ListView(
         children: <Widget>[
@@ -43,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
               image: DecorationImage(
               image: AssetImage("images/blood_doodle.jpg"),
               fit: BoxFit.cover,
-              colorFilter: new ColorFilter.mode(
+             colorFilter: new ColorFilter.mode(
                   Colors.black.withOpacity(0.2), BlendMode.dstATop),),
                 color: Colors.deepOrange.shade300,
           ),
@@ -59,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   minRadius: 60,
                   backgroundColor: Colors.deepOrange.shade300,
                   child: CircleAvatar(
-                    backgroundImage: new AssetImage("images/profile.jpg"),
+                    //backgroundImage: new AssetImage("images/profile.jpg"),
                     minRadius: 50,
                   ),
                 ),
@@ -67,8 +96,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             //Name and profession details
             SizedBox(height: 10,),
-            Text("Name", style: TextStyle(fontSize: 22.0, color: Colors.white,fontWeight: FontWeight.bold),),
-            Text("Social Worker/Engineer", style: TextStyle(fontSize: 14.0, color: Colors.white),)
+            Text(n.toUpperCase(), style: TextStyle(fontSize: 22.0, color: Colors.white,fontWeight: FontWeight.bold),),
+            Text(pr, style: TextStyle(fontSize: 14.0, color: Colors.white),)
           ], ),
           ),
           
@@ -81,10 +110,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Container(
                     color: Colors.deepOrange.shade400,
                     child: ListTile(
-                      title: Text("3 yrs",textAlign: TextAlign.center, style: TextStyle(
+                      title: Text("$ex years",textAlign: TextAlign.center, style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.0
                       ),),
-                      subtitle: Text("of trusted service", textAlign: TextAlign.center, style: TextStyle(color: Colors.white70,
+                      subtitle: Text("of trusted service", textAlign: TextAlign.center, style: TextStyle(color: Colors.white,
                       fontStyle: FontStyle.italic),),
                     ),
                   ),
@@ -94,10 +123,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Container(
                     color: Colors.red,
                     child: ListTile(
-                      title: Text("100",textAlign: TextAlign.center, style: TextStyle(
+                      title: Text(re,textAlign: TextAlign.center, style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.0
                       ),),
-                      subtitle: Text("verified donor requests", textAlign: TextAlign.center, style: TextStyle(color: Colors.white70,
+                      subtitle: Text("verified donor requests", textAlign: TextAlign.center, style: TextStyle(color: Colors.white,
                           fontStyle: FontStyle.italic),),
                     ),
                   ),
@@ -109,22 +138,27 @@ class _MyHomePageState extends State<MyHomePage> {
           //Other details
           ListTile(
             title: Text("Coordinator ID", style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-            subtitle: Text("ID001", style: TextStyle(fontSize: 18.0),),
+            subtitle: Text(un, style: TextStyle(fontSize: 18.0),),
           ),
           Divider(),
           ListTile(
             title: Text("Phone", style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-            subtitle: Text("123", style: TextStyle(fontSize: 18.0),),
+            subtitle: Text(c, style: TextStyle(fontSize: 18.0),),
           ),
           Divider(),
           ListTile(
             title: Text("Email", style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-            subtitle: Text("xyz.com", style: TextStyle(fontSize: 18.0),),
+            subtitle: Text(e, style: TextStyle(fontSize: 18.0),),
           ),
           Divider(),
           ListTile(
-            title: Text("Address", style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-            subtitle: Text("abc", style: TextStyle(fontSize: 18.0),),
+            title: Text("Taluk", style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
+            subtitle: Text(l, style: TextStyle(fontSize: 18.0),),
+          ),
+          Divider(),
+          ListTile(
+            title: Text("District", style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
+            subtitle: Text(d, style: TextStyle(fontSize: 18.0),),
           ),
           Divider(),
         ],
