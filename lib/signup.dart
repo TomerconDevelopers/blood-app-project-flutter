@@ -10,8 +10,6 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-
-
   //textediting controllers for all fields
   TextEditingController fn = new TextEditingController();
   TextEditingController ln = new TextEditingController();
@@ -31,12 +29,33 @@ class _SignUpState extends State<SignUp> {
 //required variables
   var t, r;
   Widget w = SizedBox(height: 10);
-  String reg = "",sbg,st,gen,d,tl,p;
+  String reg = "", sbg, st, gen, d, tl, p,m;
   var _key1 = GlobalKey<FormState>();
   List gender = ['Male', 'Female', 'Others'];
   bool checked = false;
   List status = ['Available anytime', 'Available for', 'Unavailable for'];
   List bloodgroup = ['A+', 'A-', 'O+', 'O-', 'B+', 'B-', 'AB+', 'AB-'];
+  List med = [
+    'None',
+    'HIV',
+    'Heart disease',
+    'Hypertension',
+    'Cancer',
+    'Received Hepatitis B vaccine',
+    'Major dental procedures/general surgeries in the past 1 month',
+    'Fits',
+    'Asthma',
+    'Epilepsy',
+    'Kidney ailments',
+    'Diabetes',
+    'Ear/body piercing/tatoo in past 6 months',
+    'Undergone Immunization in the past 1 month',
+    'Treated for rabies',
+    'Pregnant/breast feeding',
+    'Women undergone miscarriage in the past 6 months',
+    'Tuberculosis',
+    'Allergy to a substance used in blood donation/Severe allergy/unwell at the time of donation due to allergy'
+  ];
   //list of districts
   List districts = [
     "Thiruvananthapuram",
@@ -141,15 +160,16 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: Container(      //upper beizer curved container
+      body: Container(
+        //upper beizer curved container
         decoration: BoxDecoration(
             image: DecorationImage(
                 colorFilter: ColorFilter.mode(
                     Colors.white.withOpacity(0.2), BlendMode.dstATop),
                 image: AssetImage('images/bg.png'),
                 fit: BoxFit.cover)),
-        child:Scrollbar(
-                  child: ListView(
+        child: Scrollbar(
+          child: ListView(
             children: <Widget>[
               ClipPath(
                 clipper: ClippingClass(),
@@ -167,10 +187,21 @@ class _SignUpState extends State<SignUp> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: <Widget>[
-                          Icon(Icons.arrow_back_ios,color: Colors.white,size: 30,),
-                          Icon(Icons.view_headline,color: Colors.white,size: 30,),
-                        ],),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            Icon(
+                              Icons.view_headline,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 40.0, left: 20),
@@ -206,7 +237,8 @@ class _SignUpState extends State<SignUp> {
                     key: _key1,
                     child: ListView(
                       children: <Widget>[
-                        TextFormField(//first name
+                        TextFormField(
+                          //first name
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please enter name';
@@ -216,7 +248,7 @@ class _SignUpState extends State<SignUp> {
                           },
                           controller: fn,
                           style: TextStyle(fontSize: 20),
-                          
+
                           decoration: InputDecoration(
                               labelText: 'First Name',
                               labelStyle:
@@ -225,7 +257,8 @@ class _SignUpState extends State<SignUp> {
                         SizedBox(
                           height: 20,
                         ),
-                        TextFormField(//last name
+                        TextFormField(
+                          //last name
                           controller: ln,
                           style: TextStyle(fontSize: 20),
                           decoration: InputDecoration(
@@ -236,7 +269,8 @@ class _SignUpState extends State<SignUp> {
                         SizedBox(
                           height: 20,
                         ),
-                        TextFormField(//middle name
+                        TextFormField(
+                          //middle name
                           controller: mn,
                           style: TextStyle(fontSize: 20),
                           decoration: InputDecoration(
@@ -249,15 +283,23 @@ class _SignUpState extends State<SignUp> {
                         ),
                         //gender dropdown
                         DropdownButtonFormField<String>(
-                          validator: (value)=>value==null?'Field required...':null,
+                          isExpanded: true,
+                          validator: (value) =>
+                              value == null ? 'Field required...' : null,
                           hint: Text('Choose gender',
                               style:
                                   TextStyle(color: Colors.black, fontSize: 20)),
                           items: gender.map((lisVal) {
                             return DropdownMenuItem<String>(
                               value: lisVal,
-                              child: Text(lisVal,style:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(lisVal,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 20)),Divider(),
+                                ],
+                              ),
                             );
                           }).toList(),
                           onChanged: (String val) {
@@ -282,7 +324,6 @@ class _SignUpState extends State<SignUp> {
                           controller: age,
                           keyboardType: TextInputType.number,
                           style: TextStyle(fontSize: 20),
-                          
                           decoration: InputDecoration(
                             labelText: 'Age',
                             labelStyle:
@@ -305,7 +346,6 @@ class _SignUpState extends State<SignUp> {
                           controller: weight,
                           keyboardType: TextInputType.number,
                           style: TextStyle(fontSize: 20),
-                          
                           decoration: InputDecoration(
                               labelText: 'Weight(in Kg)',
                               labelStyle:
@@ -317,15 +357,23 @@ class _SignUpState extends State<SignUp> {
                         ),
                         //blood group dropdown
                         DropdownButtonFormField<String>(
-                           validator: (value)=>value==null?'Field required...':null,
+                          isExpanded: true,
+                          validator: (value) =>
+                              value == null ? 'Field required...' : null,
                           hint: Text('Choose Blood group',
                               style:
                                   TextStyle(color: Colors.black, fontSize: 20)),
                           items: bloodgroup.map((lisVal) {
                             return DropdownMenuItem<String>(
                               value: lisVal,
-                              child: Text(lisVal,style:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(lisVal,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 20)),Divider()
+                                ],
+                              ),
                             );
                           }).toList(),
                           onChanged: (String val) {
@@ -340,15 +388,23 @@ class _SignUpState extends State<SignUp> {
                         ),
                         //district selector
                         DropdownButtonFormField<String>(
-                           validator: (value)=>value==null?'Field required...':null,
+                          isExpanded: true,
+                          validator: (value) =>
+                              value == null ? 'Field required...' : null,
                           hint: Text('Choose District',
                               style:
                                   TextStyle(color: Colors.black, fontSize: 20)),
                           items: districts.map((lisVal) {
                             return DropdownMenuItem<String>(
                               value: lisVal,
-                              child: Text(lisVal,style:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
+                              child: Column(
+                                crossAxisAlignment:CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(lisVal,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 20)),Divider()
+                                ],
+                              ),
                             );
                           }).toList(),
                           onChanged: (String val) {
@@ -356,7 +412,7 @@ class _SignUpState extends State<SignUp> {
                               this.d = val;
                               l = tlk[d];
                             });
-                            tl=null;
+                            tl = null;
                           },
                           value: this.d,
                         ),
@@ -365,26 +421,32 @@ class _SignUpState extends State<SignUp> {
                         ),
                         //taluk selector
                         DropdownButtonFormField<String>(
-                           validator: (value)=>value==null?'Field required...':null,
+                          isExpanded: true,
+                          validator: (value) =>
+                              value == null ? 'Field required...' : null,
                           hint: Text('Choose Taluk',
                               style:
                                   TextStyle(color: Colors.black, fontSize: 20)),
                           items: l.map((lisVal) {
                             return DropdownMenuItem<String>(
                               value: lisVal,
-                              child: Text(lisVal,style:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(lisVal,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 20)),Divider()
+                                ],
+                              ),
                             );
                           }).toList(),
-                         
                           onChanged: (String val) {
                             setState(() {
                               this.tl = val;
                               print(tl);
-                            }); 
+                            });
                           },
-                           value: this.tl,
-
+                          value: this.tl,
                         ),
                         SizedBox(
                           height: 20,
@@ -392,18 +454,16 @@ class _SignUpState extends State<SignUp> {
                         //contact number
                         TextFormField(
                           validator: (value) {
-                            var potentialNum=int.tryParse(value);
-                            if (potentialNum==null) {
+                            var potentialNum = int.tryParse(value);
+                            if (potentialNum == null) {
                               return 'Please enter a valid contact number';
-                            
-                          }
-                          else{
-                            return null;
-                          }},
+                            } else {
+                              return null;
+                            }
+                          },
                           controller: cn,
                           keyboardType: TextInputType.phone,
                           style: TextStyle(fontSize: 20),
-                          
                           decoration: InputDecoration(
                               labelText: 'Contact number',
                               labelStyle:
@@ -462,15 +522,23 @@ class _SignUpState extends State<SignUp> {
                         ),
                         //status-available or unavailable
                         DropdownButtonFormField<String>(
-                           validator: (value)=>value==null?'Field required...':null,
+                          isExpanded: true,
+                          validator: (value) =>
+                              value == null ? 'Field required...' : null,
                           hint: Text('Choose Status',
                               style:
                                   TextStyle(color: Colors.black, fontSize: 20)),
                           items: status.map((lisVal) {
                             return DropdownMenuItem<String>(
                               value: lisVal,
-                              child: Text(lisVal,style:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(lisVal,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 20)),Divider()
+                                ],
+                              ),
                             );
                           }).toList(),
                           onChanged: (String val) {
@@ -488,7 +556,41 @@ class _SignUpState extends State<SignUp> {
                         SizedBox(
                           height: 20,
                         ),
-                        w,//if available for/unavailable for till when its valid
+                        w, //if available for/unavailable for till when its valid
+                        
+                          
+                              DropdownButtonFormField<String>(
+                                                              isExpanded:true,
+                                validator: (value) =>
+                                    value == null ? 'Field required...' : null,
+                                hint: Text('Do you have any of the medical conditions given?',
+                                    style:
+                                        TextStyle(color: Colors.black, fontSize: 20)),
+                                items: med.map((lisVal) {
+                                  return DropdownMenuItem<String>(
+                                    value: lisVal,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(lisVal,
+                                            style: TextStyle(
+                                                color: Colors.black, fontSize: 20)),
+                                                Divider(),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (String val) {
+                                  setState(() {
+                                    this.m = val;
+                                    
+                                  });
+                                },
+                                value: this.m,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
                         //username
                         TextFormField(
                           validator: (value) {
@@ -530,7 +632,6 @@ class _SignUpState extends State<SignUp> {
                           height: 20,
                         ),
                         TextFormField(
-                          
                           validator: (value) {
                             if (value.isEmpty || value != pass.text) {
                               return "Passwords don't match";
@@ -547,11 +648,14 @@ class _SignUpState extends State<SignUp> {
                               labelStyle:
                                   TextStyle(color: Colors.black, fontSize: 20)),
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
                         Row(
                           children: <Widget>[
-                            Expanded(flex:1,
-                                                        child: Checkbox(
+                            Expanded(
+                              flex: 1,
+                              child: Checkbox(
                                   value: checked,
                                   onChanged: (bool val) {
                                     setState(() {
@@ -560,9 +664,12 @@ class _SignUpState extends State<SignUp> {
                                   }),
                             ),
                             //agreement
-                            Expanded(flex:10,
-                                                        child: Text(
-                                  "I hereby declare that information furnished above is true to the best of my knowledge.If any of thr above information is found to be wrong,I will be solely responsible for anything resulting out of it and any loss or damage sustained to the government/any other person/agency.",style: TextStyle(color:Colors.black,fontSize: 20)),
+                            Expanded(
+                              flex: 10,
+                              child: Text(
+                                  "I hereby declare that information furnished above is true to the best of my knowledge.If any of thr above information is found to be wrong,I will be solely responsible for anything resulting out of it and any loss or damage sustained to the government/any other person/agency.",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
                             ),
                           ],
                         ),
@@ -570,19 +677,19 @@ class _SignUpState extends State<SignUp> {
                         Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: RaisedButton(
-                            
                             disabledColor: Colors.grey,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)),
                             color: Colors.redAccent,
                             onPressed: () {
                               if (checked) {
-                                callIt();//only if checked
+                                callIt(); //only if checked
                               }
                             },
                             child: Text(
                               'Sign up',
-                              style: TextStyle(fontSize: 20, color: Colors.white),
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white),
                             ),
                           ),
                         )
@@ -604,24 +711,30 @@ class _SignUpState extends State<SignUp> {
       if (_key1.currentState.validate()) {
         if (int.parse(weight.text) < 50 ||
             int.parse(age.text) < 18 ||
-            int.parse(age.text) > 65) {
+            int.parse(age.text) > 65 || m!='None'){
           showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  content: Text("Sorry,You're not eligible to register",style: TextStyle(fontSize: 30,color: Colors.red)),
+                  content: Text("Sorry,You're not eligible to register",
+                      style: TextStyle(fontSize: 30, color: Colors.red)),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(40))),
                   contentPadding: EdgeInsets.all(20),
                 );
               });
-              //checks if dropdowns are empty or not
-        }else if(sbg==null|| d==null ||tl==null || gen==null || st==null){
+          //checks if dropdowns are empty or not
+        } else if (sbg == null ||
+            d == null ||
+            tl == null ||
+            gen == null ||
+            st == null) {
           showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  content: Text("Please fill all the required details",style: TextStyle(fontSize: 30,color: Colors.red)),
+                  content: Text("Please fill all the required details",
+                      style: TextStyle(fontSize: 30, color: Colors.red)),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(40))),
                   contentPadding: EdgeInsets.all(20),
@@ -629,25 +742,26 @@ class _SignUpState extends State<SignUp> {
               });
         }
         //if every data is available post details
-         else {
-           postData();
+        else {
+          postData();
         }
       }
     });
   }
-  to set username and password
+  //to set username and password
   setPrefs()async{
     SharedPreferences sp=await SharedPreferences.getInstance();
-    Future<bool> u=sp.setString("username",un.text);
+    Future<bool> u=sp.setString("uname",un.text);
     print(u);
-    Future<bool> pa=sp.setString("password",p);
+    Future<bool> pa=sp.setString("pass",p);
     print(pa);
 
   }
+  //posts data to the server
   postData() async {
     String fullName = fn.text + " " + mn.text + " " + ln.text;
     String g = gen.toLowerCase();
-    p=ut.encrypt(pass.text);
+    p = ut.encrypt(pass.text);
     await setPrefs();
     var bd = json.encode({
       "name": fullName,
@@ -676,14 +790,17 @@ class _SignUpState extends State<SignUp> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text(reg,style: TextStyle(fontSize: 30,color: Colors.purpleAccent),),
+            content: Text(
+              reg,
+              style: TextStyle(fontSize: 30, color: Colors.purpleAccent),
+            ),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(40))),
             contentPadding: EdgeInsets.all(20),
           );
         });
   }
-
+//function to display the widget based on status
   Widget callFor() {
     return TextFormField(
       validator: (value) {
@@ -697,13 +814,17 @@ class _SignUpState extends State<SignUp> {
       keyboardType: TextInputType.datetime,
       style: TextStyle(fontSize: 20),
       decoration: InputDecoration(
-        labelText: 'Status active till',labelStyle:
-                                TextStyle(color: Colors.black, fontSize: 25,),
+        labelText: 'Status active till',
+        labelStyle: TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+        ),
         hintText: 'YYYY-MM-DD',
       ),
     );
   }
 }
+
 // to clip the path
 class ClippingClass extends CustomClipper<Path> {
   @override
