@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'utils.dart' as ut;
+import 'globals.dart' as g;
 
 class SignUp extends StatefulWidget {
   @override
@@ -912,7 +913,7 @@ class _EditState extends State<EditProfile> {
       "password": p
     });
     var res = await http.post(
-        "http://192.168.43.221/blood-app-project-backend-master/signup.php",
+        g.baseurl+"/signup.php",
         body: bd);
     print(res.statusCode);
     reg = jsonDecode(res.body);
