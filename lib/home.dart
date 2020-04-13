@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:revive/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart';
 import 'login_activity.dart';
@@ -217,6 +218,7 @@ class HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(color:Colors.red),),
                   onPressed: (){
                     //Login redirection code
+                    login();
                   },
                 ),),),
                 Container(
@@ -226,6 +228,7 @@ class HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(color:Colors.red),),
                   onPressed: (){
                     //Sign up redirection code
+                    signup();
                   },
                 ))
               ],
@@ -235,4 +238,22 @@ class HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+  signup(){
+    Navigator.push(context,
+      MaterialPageRoute(builder: (context) =>
+          SignUp()),).then((var value) {
+            //CODE HERE to execute if you back to this page from signup
+
+    });
+  }
+  login(){
+    Navigator.push(context,
+      MaterialPageRoute(builder: (context) =>
+          LoginPage()),).then((var value) {
+      //CODE HERE to execute if you back to this page from signup
+
+    });
+  }
 }
+
+

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'utils.dart' as ut;
-import 'globals' as g;
+import 'globals.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -782,7 +782,7 @@ class _SignUpState extends State<SignUp> {
       "password": p
     });
     var res = await http.post(
-        g.baseurl+"/signup.php",
+        baseurl+"/signup.php",
         body: bd);
     print(res.statusCode);
     reg = jsonDecode(res.body);
