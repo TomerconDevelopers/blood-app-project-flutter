@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'utils.dart' as ut;
 import 'globals.dart';
+import 'utils.dart' as ut;
+
+/* creted by Sandra*/
 
 class SignUp extends StatefulWidget {
   @override
@@ -159,547 +161,610 @@ class _SignUpState extends State<SignUp> {
   };
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: Container(
-        //upper beizer curved container
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                colorFilter: ColorFilter.mode(
-                    Colors.white.withOpacity(0.2), BlendMode.dstATop),
-                image: AssetImage('images/bg.png'),
-                fit: BoxFit.cover)),
-        child: Scrollbar(
-          child: ListView(
-            children: <Widget>[
-              ClipPath(
-                clipper: ClippingClass(),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: [Colors.red, Colors.orange, Colors.yellow],
-                        begin: Alignment.topLeft,
-                        end: Alignment.topRight),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Icon(
-                              Icons.arrow_back_ios,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                            Icon(
-                              Icons.view_headline,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 40.0, left: 20),
-                        child: Text(
-                          'Welcome',
-                          style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: Text(
-                          'To our family',
-                          style: TextStyle(fontSize: 30, color: Colors.white),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height - 200,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Form(
-                    autovalidate: true,
-                    key: _key1,
-                    child: ListView(
+    return MaterialApp(
+      theme: ut.maintheme(),
+          home: Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: Container(
+          //upper beizer curved container
+          decoration: BoxDecoration(
+              image: ut.bg(),),
+          child: Scrollbar(
+            child: ListView(
+              children: <Widget>[
+                ClipPath(
+                  clipper: ClippingClass(),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [Color(0xFFFB415B),
+              Color(0xFFEE5623)],
+                          begin: Alignment.centerRight,
+                          end: Alignment.centerLeft),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        TextFormField(
-                          //first name
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter name';
-                            } else {
-                              return null;
-                            }
-                          },
-                          controller: fn,
-                          style: TextStyle(fontSize: 20),
-
-                          decoration: InputDecoration(
-                              labelText: 'First Name',
-                              labelStyle:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          //last name
-                          controller: ln,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                              labelText: 'Last Name',
-                              labelStyle:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          //middle name
-                          controller: mn,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                              labelText: 'Middle Name',
-                              labelStyle:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //gender dropdown
-                        DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          validator: (value) =>
-                              value == null ? 'Field required...' : null,
-                          hint: Text('Choose gender',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                          items: gender.map((lisVal) {
-                            return DropdownMenuItem<String>(
-                              value: lisVal,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(lisVal,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 20)),Divider(),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (String val) {
-                            setState(() {
-                              this.gen = val;
-                            });
-                          },
-                          value: this.gen,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //age field
-                        TextFormField(
-                          validator: (val) {
-                            if (val.isEmpty) {
-                              return 'Please enter age';
-                            } else {
-                              return null;
-                            }
-                          },
-                          controller: age,
-                          keyboardType: TextInputType.number,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                            labelText: 'Age',
-                            labelStyle:
-                                TextStyle(color: Colors.black, fontSize: 20),
-                            hintText: 'Between 18 and 65',
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //weight field
-                        TextFormField(
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter your Weight';
-                            } else {
-                              return null;
-                            }
-                          },
-                          controller: weight,
-                          keyboardType: TextInputType.number,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                              labelText: 'Weight(in Kg)',
-                              labelStyle:
-                                  TextStyle(color: Colors.black, fontSize: 20),
-                              hintText: 'Should be 50 or above'),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //blood group dropdown
-                        DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          validator: (value) =>
-                              value == null ? 'Field required...' : null,
-                          hint: Text('Choose Blood group',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                          items: bloodgroup.map((lisVal) {
-                            return DropdownMenuItem<String>(
-                              value: lisVal,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(lisVal,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 20)),Divider()
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (String val) {
-                            setState(() {
-                              this.sbg = val;
-                            });
-                          },
-                          value: this.sbg,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //district selector
-                        DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          validator: (value) =>
-                              value == null ? 'Field required...' : null,
-                          hint: Text('Choose District',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                          items: districts.map((lisVal) {
-                            return DropdownMenuItem<String>(
-                              value: lisVal,
-                              child: Column(
-                                crossAxisAlignment:CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(lisVal,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 20)),Divider()
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (String val) {
-                            setState(() {
-                              this.d = val;
-                              l = tlk[d];
-                            });
-                            tl = null;
-                          },
-                          value: this.d,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //taluk selector
-                        DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          validator: (value) =>
-                              value == null ? 'Field required...' : null,
-                          hint: Text('Choose Taluk',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                          items: l.map((lisVal) {
-                            return DropdownMenuItem<String>(
-                              value: lisVal,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(lisVal,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 20)),Divider()
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (String val) {
-                            setState(() {
-                              this.tl = val;
-                              print(tl);
-                            });
-                          },
-                          value: this.tl,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //contact number
-                        TextFormField(
-                          validator: (value) {
-                            var potentialNum = int.tryParse(value);
-                            if (potentialNum == null) {
-                              return 'Please enter a valid contact number';
-                            } else {
-                              return null;
-                            }
-                          },
-                          controller: cn,
-                          keyboardType: TextInputType.phone,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                              labelText: 'Contact number',
-                              labelStyle:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //alternate contact number
-                        TextFormField(
-                          validator: (value) {
-                            if (value.isNotEmpty && value.length != 10) {
-                              return 'Please enter a valid contact number';
-                            } else {
-                              return null;
-                            }
-                          },
-                          controller: acn,
-                          keyboardType: TextInputType.phone,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                              labelText: 'Alternate Contact number',
-                              labelStyle:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //email
-                        TextFormField(
-                          controller: mail,
-                          keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                              labelText: 'Email',
-                              labelStyle:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //last donated
-                        TextFormField(
-                          controller: ld,
-                          keyboardType: TextInputType.datetime,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                            labelText: 'Last Donated on',
-                            labelStyle:
-                                TextStyle(color: Colors.black, fontSize: 20),
-                            hintText: 'YYYY-MM-DD',
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //status-available or unavailable
-                        DropdownButtonFormField<String>(
-                          isExpanded: true,
-                          validator: (value) =>
-                              value == null ? 'Field required...' : null,
-                          hint: Text('Choose Status',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                          items: status.map((lisVal) {
-                            return DropdownMenuItem<String>(
-                              value: lisVal,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(lisVal,
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 20)),Divider()
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (String val) {
-                            setState(() {
-                              this.st = val;
-                              if (st != status[0]) {
-                                w = callFor();
-                              } else {
-                                w = SizedBox(height: 10);
-                              }
-                            });
-                          },
-                          value: this.st,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        w, //if available for/unavailable for till when its valid
-                        
-                          
-                              DropdownButtonFormField<String>(
-                                                              isExpanded:true,
-                                validator: (value) =>
-                                    value == null ? 'Field required...' : null,
-                                hint: Text('Do you have any of the medical conditions given?',
-                                    style:
-                                        TextStyle(color: Colors.black, fontSize: 20)),
-                                items: med.map((lisVal) {
-                                  return DropdownMenuItem<String>(
-                                    value: lisVal,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(lisVal,
-                                            style: TextStyle(
-                                                color: Colors.black, fontSize: 20)),
-                                                Divider(),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (String val) {
-                                  setState(() {
-                                    this.m = val;
-                                    
-                                  });
-                                },
-                                value: this.m,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //username
-                        TextFormField(
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter a username';
-                            } else {
-                              return null;
-                            }
-                          },
-                          controller: un,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                              labelText: 'Username',
-                              labelStyle:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //password
-                        TextFormField(
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter the password';
-                            } else {
-                              return null;
-                            }
-                          },
-                          obscureText: true,
-                          controller: pass,
-                          keyboardType: TextInputType.visiblePassword,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                              labelText: 'Password',
-                              labelStyle:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          validator: (value) {
-                            if (value.isEmpty || value != pass.text) {
-                              return "Passwords don't match";
-                            } else {
-                              return null;
-                            }
-                          },
-                          obscureText: true,
-                          controller: repass,
-                          keyboardType: TextInputType.visiblePassword,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                              labelText: 'Confirm Password',
-                              labelStyle:
-                                  TextStyle(color: Colors.black, fontSize: 20)),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 1,
-                              child: Checkbox(
-                                  value: checked,
-                                  onChanged: (bool val) {
-                                    setState(() {
-                                      checked = val;
-                                    });
-                                  }),
-                            ),
-                            //agreement
-                            Expanded(
-                              flex: 10,
-                              child: Text(
-                                  "I hereby declare that information furnished above is true to the best of my knowledge.If any of the above information is found to be wrong,I will be solely responsible for anything resulting out of it and any loss or damage sustained to the government/any other person/agency.",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20)),
-                            ),
-                          ],
-                        ),
-                        //button
                         Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: RaisedButton(
-                            disabledColor: Colors.grey,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            color: Colors.redAccent,
-                            onPressed: () {
-                              if (checked) {
-                                callIt(); //only if checked
-                              }
-                            },
-                            child: Text(
-                              'Sign up',
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white),
-                            ),
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Icon(
+                                Icons.arrow_back_ios,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              
+                            ],
                           ),
-                        )
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 40.0, left: 20),
+                          child: Text(
+                            'Welcome',
+                            style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: Text(
+                            'To our family',
+                            style: TextStyle(fontSize: 30, color: Colors.white),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
                       ],
                     ),
                   ),
                 ),
-              ),
+                Container(
+                  margin: EdgeInsets.only(top:5),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height - 200,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Form(
+                      autovalidate: true,
+                      key: _key1,
+                      child: ListView(
+                        children: <Widget>[
+                          TextFormField(
+                            //first name
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter name';
+                              } else {
+                                return null;
+                              }
+                            },
+                            
+                            controller: fn,
+                            style: TextStyle(fontSize: 20),
+
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.mood,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                                borderSide: BorderSide(color:Color(0xFFFB415B))
+                              ),
+                                labelText: 'Name',
+                                labelStyle:
+                                    TextStyle(color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          
+                          //gender dropdown
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.wc,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)
+                              )
+                            ),
+                            isExpanded: true,
+                            validator: (value) =>
+                                value == null ? 'Field required...' : null,
+                            hint: Text('Choose gender',
+                                style:
+                                    TextStyle(color: Colors.black, fontSize: 20)),
+                            items: gender.map((lisVal) {
+                              return DropdownMenuItem<String>(
+                                value: lisVal,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(lisVal,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20)),Divider(),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String val) {
+                              setState(() {
+                                this.gen = val;
+                              });
+                            },
+                            value: this.gen,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //age field
+                          TextFormField(
+                            
+                            validator: (val) {
+                              if (val.isEmpty) {
+                                return 'Please enter age';
+                              } else {
+                                return null;
+                              }
+                            },
+                            controller: age,
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.cake,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              labelText: 'Age',
+                              labelStyle:
+                                  TextStyle(color: Colors.black, fontSize: 20),
+                              hintText: 'Between 18 and 65',
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //weight field
+                          TextFormField(
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter your Weight';
+                              } else {
+                                return null;
+                              }
+                            },
+                            controller: weight,
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.timelapse,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                                labelText: 'Weight(in Kg)',
+                                labelStyle:
+                                    TextStyle(color: Colors.black, fontSize: 20),
+                                hintText: 'Should be 50 or above'),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //blood group dropdown
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.invert_colors,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)
+                              )
+                            ),
+                            isExpanded: true,
+                            validator: (value) =>
+                                value == null ? 'Field required...' : null,
+                            hint: Text('Choose Blood group',
+                                style:
+                                    TextStyle(color: Colors.black, fontSize: 20)),
+                            items: bloodgroup.map((lisVal) {
+                              return DropdownMenuItem<String>(
+                                value: lisVal,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(lisVal,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20)),Divider()
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String val) {
+                              setState(() {
+                                this.sbg = val;
+                              });
+                            },
+                            value: this.sbg,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //district selector
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.home,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)
+                              )
+                            ),
+                            isExpanded: true,
+                            validator: (value) =>
+                                value == null ? 'Field required...' : null,
+                            hint: Text('Choose District',
+                                style:
+                                    TextStyle(color: Colors.black, fontSize: 20)),
+                            items: districts.map((lisVal) {
+                              return DropdownMenuItem<String>(
+                                value: lisVal,
+                                child: Column(
+                                  crossAxisAlignment:CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(lisVal,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20)),Divider()
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String val) {
+                              setState(() {
+                                this.d = val;
+                                l = tlk[d];
+                              });
+                              tl = null;
+                            },
+                            value: this.d,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //taluk selector
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.home,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)
+                              )
+                            ),
+                            isExpanded: true,
+                            validator: (value) =>
+                                value == null ? 'Field required...' : null,
+                            hint: Text('Choose Taluk',
+                                style:
+                                    TextStyle(color: Colors.black, fontSize: 20)),
+                            items: l.map((lisVal) {
+                              return DropdownMenuItem<String>(
+                                value: lisVal,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(lisVal,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20)),Divider()
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String val) {
+                              setState(() {
+                                this.tl = val;
+                                print(tl);
+                              });
+                            },
+                            value: this.tl,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //contact number
+                          TextFormField(
+                            validator: (value) {
+                              var potentialNum = int.tryParse(value);
+                              if (potentialNum == null) {
+                                return 'Please enter a valid contact number';
+                              } else {
+                                return null;
+                              }
+                            },
+                            controller: cn,
+                            keyboardType: TextInputType.phone,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.phone,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                                labelText: 'Contact number',
+                                labelStyle:
+                                    TextStyle(color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //alternate contact number
+                          TextFormField(
+                            validator: (value) {
+                              if (value.isNotEmpty && value.length != 10) {
+                                return 'Please enter a valid contact number';
+                              } else {
+                                return null;
+                              }
+                            },
+                            controller: acn,
+                            keyboardType: TextInputType.phone,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.phone,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                                labelText: 'Alternate Contact number',
+                                labelStyle:
+                                    TextStyle(color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //email
+                          TextFormField(
+                            controller: mail,
+                            keyboardType: TextInputType.emailAddress,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.mail,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                                labelText: 'Email',
+                                labelStyle:
+                                    TextStyle(color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //last donated
+                          TextFormField(
+                            controller: ld,
+                            keyboardType: TextInputType.datetime,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.calendar_today,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              labelText: 'Last Donated on',
+                              labelStyle:
+                                  TextStyle(color: Colors.black, fontSize: 20),
+                              hintText: 'YYYY-MM-DD',
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //status-available or unavailable
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.event_available,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)
+                              )
+                            ),
+                            isExpanded: true,
+                            validator: (value) =>
+                                value == null ? 'Field required...' : null,
+                            hint: Text('Choose Status',
+                                style:
+                                    TextStyle(color: Colors.black, fontSize: 20)),
+                            items: status.map((lisVal) {
+                              return DropdownMenuItem<String>(
+                                value: lisVal,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(lisVal,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20)),Divider()
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String val) {
+                              setState(() {
+                                this.st = val;
+                                if (st != status[0]) {
+                                  w = callFor();
+                                } else {
+                                  w = SizedBox(height: 10);
+                                }
+                              });
+                            },
+                            value: this.st,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          w, //if available for/unavailable for till when its valid
+                          
+                            
+                                DropdownButtonFormField<String>(
+                                  
+                                  decoration: InputDecoration(
+                                    prefixIcon: (Icon(Icons.local_hospital,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)
+                              )
+                            ),
+                                                                isExpanded:true,
+                                  validator: (value) =>
+                                      value == null ? 'Field required...' : null,
+                                  hint: Text('Do you have any of the medical conditions given?',
+                                      style:
+                                          TextStyle(color: Colors.black, fontSize: 20)),
+                                  items: med.map((lisVal) {
+                                    return DropdownMenuItem<String>(
+                                      value: lisVal,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(lisVal,
+                                              style: TextStyle(
+                                                  color: Colors.black, fontSize: 20)),
+                                                  Divider(),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String val) {
+                                    setState(() {
+                                      this.m = val;
+                                      
+                                    });
+                                  },
+                                  value: this.m,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //username
+                          TextFormField(
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter a username';
+                              } else {
+                                return null;
+                              }
+                            },
+                            controller: un,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.person,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                                labelText: 'Username',
+                                labelStyle:
+                                    TextStyle(color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //password
+                          TextFormField(
+                            
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter the password';
+                              } else {
+                                return null;
+                              }
+                            },
+                            obscureText: true,
+                            controller: pass,
+                            keyboardType: TextInputType.visiblePassword,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.lock,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                                labelText: 'Password',
+                                labelStyle:
+                                    TextStyle(color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          TextFormField(
+                            validator: (value) {
+                              if (value.isEmpty || value != pass.text) {
+                                return "Passwords don't match";
+                              } else {
+                                return null;
+                              }
+                            },
+                            obscureText: true,
+                            controller: repass,
+                            keyboardType: TextInputType.visiblePassword,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.lock,color:Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                                labelText: 'Confirm Password',
+                                labelStyle:
+                                    TextStyle(color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 1,
+                                child: Checkbox(
+                                    value: checked,
+                                    onChanged: (bool val) {
+                                      setState(() {
+                                        checked = val;
+                                      });
+                                    }),
+                              ),
+                              //agreement
+                              Expanded(
+                                flex: 10,
+                                child: Text(
+                                    "I hereby declare that information furnished above is true to the best of my knowledge.If any of thr above information is found to be wrong,I will be solely responsible for anything resulting out of it and any loss or damage sustained to the government/any other person/agency.",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 20)),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height:20),
+                          //button
+                          Container(
+                            margin: EdgeInsets.all(30),
+        height: 56.0,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(40.0),
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFFB415B),
+              Color(0xFFEE5623)
             ],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft
+          ),
+        ),
+        child: Center(
+          child: Text(
+            "SIGN UP",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+            ),
+          ),
+        ),
+      )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -758,7 +823,6 @@ class _SignUpState extends State<SignUp> {
     print(pa);
 
   }
-  //posts data to the server
   postData() async {
     String fullName = fn.text + " " + mn.text + " " + ln.text;
     String g = gen.toLowerCase();
@@ -801,7 +865,7 @@ class _SignUpState extends State<SignUp> {
           );
         });
   }
-//function to display the widget based on status
+
   Widget callFor() {
     return TextFormField(
       validator: (value) {
