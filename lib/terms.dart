@@ -81,7 +81,9 @@ class _TermsState extends State<Terms> {
           ),
           centerTitle: true,
           backgroundColor: Colors.red[400],
-          leading: Icon(Icons.arrow_back_ios),
+          leading: InkWell(child:Icon(Icons.arrow_back_ios),onTap: (){
+            Navigator.pop(context);
+          }),
           elevation: 0.0,
         ),
         body: Container(
