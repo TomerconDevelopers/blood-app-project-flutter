@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'globals.dart' as g;
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -13,12 +13,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Map f={};
+  String u=g.baseurl;
   @override
   void initState() {
     postValues();
     super.initState();
   }
-  String uname = '', pass = '';
+  String uname = '';
   var r;
   String n = '',
       pr='',
@@ -31,13 +33,9 @@ class _MyHomePageState extends State<MyHomePage> {
       un = '';
       //function to post userid and password and accepts full details
 postValues() async {
-    SharedPreferences sp=await SharedPreferences.getInstance();
-    uname=sp.getString('username');
-    pass=sp.getString('password');
-    var bd = json.encode({"userid": uname, "pass": pass});
-    
+    var bd = json.encode({"userid": uname}); 
     var response = await http.post(
-        "http://192.168.43.221/blood-app-project-backend-master/coordinator_profile.php",
+        u+"/coordinator_profile.php",
         body: bd);
     print(response.statusCode);
     r = jsonDecode(response.body);
@@ -57,7 +55,8 @@ postValues() async {
   }
   @override
   Widget build(BuildContext context) {
-
+    f = ModalRoute.of(context).settings.arguments;
+    uname=f['username'];
     return Scaffold(
       floatingActionButton: FloatingActionButton(onPressed:(){},child: Icon(Icons.edit),backgroundColor:Colors.deepOrange ,),
       appBar: AppBar(
