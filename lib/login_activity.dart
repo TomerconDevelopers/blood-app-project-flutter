@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage>{
             ut.logo(),
             SizedBox(height: 20.0,),
             Text(
-              "User Login x",
+              "User Login",
               style: TextStyle(
                 fontSize: 32.0,
                 fontWeight: FontWeight.w500,

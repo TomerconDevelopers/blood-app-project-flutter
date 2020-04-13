@@ -1,13 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:revive/signup.dart';
+import 'package:revive/terms.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart';
 import 'login_activity.dart';
 import 'utils.dart' as ut;
-import 'package:carousel_pro/carousel_pro.dart';
-import './newsfeed.dart';
-
 
 class HomeScreen extends StatefulWidget {
 
@@ -16,9 +14,6 @@ class HomeScreen extends StatefulWidget {
 }
 class HomeScreenState extends State<HomeScreen> {
   SharedPreferences prefs;
-
-
-
   asyncFunc(BuildContext) async {
 
   }
@@ -35,62 +30,42 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     //Image slider
-    Widget image_carousel = new Container(
-      height: 200,
-      child: new Carousel(
-        boxFit : BoxFit.cover,
-        images: [
-          AssetImage('assets/images/image7.jpeg'),
-          AssetImage('assets/images/image5.jpg'),
-          AssetImage('assets/images/image6.jpeg')
-        ],
-        autoplay: true,
-        animationCurve: Curves.fastOutSlowIn,
-        animationDuration: Duration(milliseconds: 1000),
-        dotSize: 4.0,
-        indicatorBgPadding: 5.0,
-      ),
-    );
+
     return MaterialApp(
       title: 'Home',
       theme: ut.maintheme(),
       home: Scaffold(
           appBar: AppBar(
-            title: Text('Home'),
+            title: Text('Revive'),
+
+            actions: <Widget>[
+              InkWell(child: Icon(Icons.notifications),)
+            ],
           ),
         //Hamburger menu
-          endDrawer: Drawer(
+          drawer: Drawer(
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   DrawerHeader(
                     child: Center(
-                      child:Text('Revive',
-                        style: TextStyle(color:Colors.white,fontSize:50,fontWeight:FontWeight.bold),),),
+                      child:Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children:[Text('Revive',
+                        style: TextStyle(color:Colors.white,fontSize:30,
+                            fontWeight:FontWeight.w500),),
+                        ut.caption()
+                          ]
+                      ),
+          ),
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage("images/blood_doodle.jpg"),
+                          image: AssetImage("assets/images/logo.png"),
                           fit: BoxFit.cover,
                           colorFilter: new ColorFilter.mode(
-                              Colors.black.withOpacity(0.2), BlendMode.dstATop),),
+                              Colors.black.withOpacity(0.1), BlendMode.dstATop),),
                         color: Colors.redAccent
                     ),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.account_circle),
-                    title: Text('Login'),
-                    onTap: () {
-                      // Update the state of the app.
-                      // ...
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.format_align_left),
-                    title: Text("Donor's registration form"),
-                    onTap: () {
-                      // Update the state of the app.
-                      // ...
-                    },
                   ),
                   ListTile(
                     leading: Icon(Icons.search),
@@ -100,22 +75,7 @@ class HomeScreenState extends State<HomeScreen> {
                       // ...
                     },
                   ),
-                  ListTile(
-                    leading: Icon(Icons.send),
-                    title: Text('Request blood'),
-                    onTap: () {
-                      // Update the state of the app.
-                      // ...
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.info),
-                    title: Text('What and Why'),
-                    onTap: () {
-                      // Update the state of the app.
-                      // ...
-                    },
-                  ),
+
                   ListTile(
                     leading: Icon(Icons.list),
                     title: Text('List of blood banks'),
@@ -125,16 +85,21 @@ class HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.import_contacts),
-                    title: Text('Terms and conditions'),
+                    leading: Icon(Icons.group),
+                    title: Text('List of coordinators'),
                     onTap: () {
                       // Update the state of the app.
                       // ...
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.contacts),
-                    title: Text('Contact us'),
+                    leading: Icon(Icons.import_contacts),
+                    title: Text('Terms and conditions'),
+                    onTap: () {terms();},
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.info),
+                    title: Text('About us'),
                     onTap: () {
                       // Update the state of the app.
                       // ...
@@ -146,93 +111,69 @@ class HomeScreenState extends State<HomeScreen> {
           body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
-              height:400,
-              child:ListView(
-                children: <Widget>[
-                  image_carousel    //calling the image slider inside body
-                ],
-        ),
-      ),
+            Container(
+              margin: EdgeInsets.only(bottom: 20),
+            height:400,
+            child:ut.image_carousel(),
+            ),
             //Emergency requirements button
-            Center(
-              child:RaisedButton(    
-                padding: const EdgeInsets.all(2.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(80.0),
-                ),
-                onPressed: () {
-                  //Emergency requirements redirection code
-                  //redirection to newsfeed.dart file
-                },
-                child:Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(80.0)),
-                    gradient: LinearGradient(
-                        colors: [Colors.orange,Colors.red]
-                    ),
-                  ),
-                  height: 45,
-                  width: 250,
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: Text("Emergency requirements-->",
-                    style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 16),),
-                ),),
-              ),
+      InkWell(
+        onTap: () {
+          //Request donor redirection code
+        },
+        child:Container(
+          padding: EdgeInsets.all(10),
+          decoration: ut.buttonstyle(),
+          width: 250,
+          child: Text("Emergency requirements",
+            style: ut.bt(),
+            textAlign: TextAlign.center,),
+        ),),
                 Padding(padding: EdgeInsets.all(10.0),),
-            //Request donor button
-                Center(
-                  child:RaisedButton(
-                    padding: const EdgeInsets.all(2.0),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(80.0),
-                    ),
-                    onPressed: () {
+                  InkWell(
+                    onTap: () {
                       //Request donor redirection code
                     },
                       child:Container(
-                       decoration: BoxDecoration(
-                           borderRadius: BorderRadius.all(Radius.circular(80.0)),
-                        gradient: LinearGradient(
-                            colors: [Colors.orange,Colors.red]
-                        ),
-                      ),
-                       height: 45,
+                        padding: EdgeInsets.all(10),
+                       decoration: ut.buttonstyle(),
                        width: 250,
-                          padding: const EdgeInsets.fromLTRB(60, 10, 50, 10),
                         child: Text("Request donor",
-                        style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),),
-            ),),),
+                        style: ut.bt(),
+                        textAlign: TextAlign.center,),
+            ),),
             //Login and signup button
             Expanded(child:Align(
               alignment: FractionalOffset.bottomCenter,
               child:Row(
+                mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 InkWell(
-                  onTap: (){
-                    print("tapped");
-                  },
+                  onTap: (){login();},
                   child:Container(
-                  width:180,
-                    child:RaisedButton(
-                      elevation: 5.0,
-                      child: Text("Log in",
-                  style: TextStyle(color:Colors.red),),
-                  onPressed: (){
-                    //Login redirection code
-                    login();
-                  },
-                ),),),
-                Container(
-                  width:180,
-                    child:RaisedButton(
-                      child: Text("Sign up",
-                    style: TextStyle(color:Colors.red),),
-                  onPressed: (){
-                    //Sign up redirection code
-                    signup();
-                  },
-                ))
+                      padding: EdgeInsets.all(20),
+                      child:
+                      Row(
+                        children: <Widget>[
+                          ut.btext("Login"),
+                          ut.roundicon(Icons.keyboard_arrow_right, Colors.grey[700], Colors.grey[300], 20, 5)
+                        ],
+                      )
+                  ),),
+                InkWell(
+                  onTap: (){signup();},
+                  child:Container(
+                    padding: EdgeInsets.all(20),
+                    child:
+                        Row(
+                          children: <Widget>[
+                            ut.btext("Signup"),
+                            ut.roundicon(Icons.list, Colors.grey[700],
+                                Colors.grey[300], 20, 5)
+                          ],
+                        )
+                  ),),
               ],
             ),),)
           ],
@@ -245,6 +186,14 @@ class HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(builder: (context) =>
           SignUp()),).then((var value) {
             //CODE HERE to execute if you back to this page from signup
+
+    });
+  }
+  terms(){
+    Navigator.push(context,
+      MaterialPageRoute(builder: (context) =>
+         Terms()),).then((var value) {
+      //CODE HERE to execute if you back to this page from signup
 
     });
   }
