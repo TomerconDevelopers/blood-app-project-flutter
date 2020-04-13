@@ -157,7 +157,7 @@ class HomeScreenState extends State<HomeScreen> {
                       Row(
                         children: <Widget>[
                           ut.btext("Login"),
-                          ut.roundicon(Icons.keyboard_arrow_right, Colors.white, Colors.deeporange.shade300, 20, 5)
+                          ut.roundicon(Icons.keyboard_arrow_right, Colors.white, Colors.deeporange.shade300, 20, 0)
                         ],
                       )
                   ),),
@@ -168,9 +168,9 @@ class HomeScreenState extends State<HomeScreen> {
                     child:
                         Row(
                           children: <Widget>[
-                            ut.btext("Signup"),
+                            ut.btext("Sign Up"),
                             ut.roundicon(Icons.list, Colors.white,
-                                Colors.deeporange.shade300, 20, 5)
+                                Colors.deeporange.shade300, 20, 0)
                           ],
                         )
                   ),),
