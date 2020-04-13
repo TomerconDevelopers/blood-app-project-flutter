@@ -8,6 +8,7 @@ String baseurl = "http://vps001.qubehost.com/bloodapp/"; //Need to update after 
 Color prim_color = Colors.red[400];//Color for appbar
 String bg_image = "assets/images/bg.png";//background image for all pages
 String cu_id;
+String cu_name;
 
 class UserLocationTracker {
 
