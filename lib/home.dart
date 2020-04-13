@@ -5,6 +5,7 @@ import 'globals.dart';
 import 'login_activity.dart';
 import 'utils.dart' as ut;
 import 'package:carousel_pro/carousel_pro.dart';
+import './newsfeed.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -161,6 +162,7 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
                 onPressed: () {
                   //Emergency requirements redirection code
+                  //redirection to newsfeed.dart file
                 },
                 child:Container(
                   decoration: BoxDecoration(
