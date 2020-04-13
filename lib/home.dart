@@ -38,9 +38,9 @@ class HomeScreenState extends State<HomeScreen> {
       child: new Carousel(
         boxFit : BoxFit.cover,
         images: [
-          AssetImage('images/image7.jpeg'),
-          AssetImage('images/image5.jpg'),
-          AssetImage('images/image6.jpeg')
+          AssetImage('assets/images/image7.jpeg'),
+          AssetImage('assets/images/image5.jpg'),
+          AssetImage('assets/images/image6.jpeg')
         ],
         autoplay: true,
         animationCurve: Curves.fastOutSlowIn,
