@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'utils.dart' as ut;
+import 'globals' as g;
 
 class SignUp extends StatefulWidget {
   @override
@@ -667,7 +668,7 @@ class _SignUpState extends State<SignUp> {
                             Expanded(
                               flex: 10,
                               child: Text(
-                                  "I hereby declare that information furnished above is true to the best of my knowledge.If any of thr above information is found to be wrong,I will be solely responsible for anything resulting out of it and any loss or damage sustained to the government/any other person/agency.",
+                                  "I hereby declare that information furnished above is true to the best of my knowledge.If any of the above information is found to be wrong,I will be solely responsible for anything resulting out of it and any loss or damage sustained to the government/any other person/agency.",
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 20)),
                             ),
@@ -781,7 +782,7 @@ class _SignUpState extends State<SignUp> {
       "password": p
     });
     var res = await http.post(
-        "http://192.168.43.221/blood-app-project-backend-master/signup.php",
+        g.baseurl+"/signup.php",
         body: bd);
     print(res.statusCode);
     reg = jsonDecode(res.body);

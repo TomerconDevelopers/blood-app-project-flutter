@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'globals.dart' as g;
 
 class Profile extends StatefulWidget {
   @override
@@ -34,7 +35,7 @@ class _ProfileState extends State<Profile> {
     var bd = json.encode({"uname": uname, "pass": pass});
     
     var response = await http.post(
-        "http://192.168.111.2/blood-app-project-backend-master/profile.php",
+        g.baseurl+"/profile.php",
         body: bd);
     print(response.statusCode);
     r = jsonDecode(response.body);
