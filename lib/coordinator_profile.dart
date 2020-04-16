@@ -14,7 +14,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Map f={};
-  String u=g.baseurl;
+  String u=g.baseUrl;
   @override
   void initState() {
     postValues();

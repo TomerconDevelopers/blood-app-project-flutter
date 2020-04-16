@@ -1,4 +1,6 @@
 
+
+
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,7 +11,7 @@ import 'intro.dart';
 
 void main() {
   //asyncFunc();
-  runApp(MaterialApp(title: 'Navigation Basics',home: Splash(),));
+  runApp(MaterialApp(title: 'Navigation Basics',home: Splash(),debugShowCheckedModeBanner: false,));
 }
 
 SharedPreferences prefs;
@@ -53,6 +55,7 @@ class SplashScreenState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      
         title: 'Student Login',
         theme: ut.maintheme(),
         home: Scaffold(
