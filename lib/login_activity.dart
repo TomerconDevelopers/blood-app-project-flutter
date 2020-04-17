@@ -144,9 +144,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget buildButtonContainer() {
     return InkWell(
       onTap: () async {
-        var bd = json.encode({"uname": em.text, "pass": pass.text});
+        var bd = json.encode({"uname": em.text, "pass": ut.encrypt(pass.text)});
         res = await http.post(
-          g.baseUrl+"/login.php",
+          g.baseUrl+"/UserLogin.php",
             body: bd);
         print(res.statusCode);
         if (res.body != "Invalid Username/Password") {

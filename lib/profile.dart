@@ -209,10 +209,12 @@ class _ProfileState extends State<Profile> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('District',
-                                  style: Theme.of(context).textTheme.title),
+                              Expanded(
+                                                              child: Text('District',
+                                    style: Theme.of(context).textTheme.title),
+                              ),
                               
-                              Text(d, style: Theme.of(context).textTheme.title)
+                              Expanded(child: Text(d, style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -225,10 +227,12 @@ class _ProfileState extends State<Profile> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('Localty',
-                                  style: Theme.of(context).textTheme.title),
+                              Expanded(
+                                                              child: Text('Localty',
+                                    style: Theme.of(context).textTheme.title),
+                              ),
                              
-                              Text(l, style: Theme.of(context).textTheme.title)
+                              Expanded(child: Text(l, style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -241,10 +245,12 @@ class _ProfileState extends State<Profile> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('Contact number',
-                                  style: Theme.of(context).textTheme.title),
+                              Expanded(
+                                                              child: Text('Contact number',
+                                    style: Theme.of(context).textTheme.title),
+                              ),
                               
-                              Text(c, style: Theme.of(context).textTheme.title)
+                              Expanded(child: Text(c, style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -257,10 +263,12 @@ class _ProfileState extends State<Profile> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('Alternate Contact number',
-                                  style: Theme.of(context).textTheme.title),
+                              Expanded(
+                                                              child: Text('Alternate Contact number',
+                                    style: Theme.of(context).textTheme.title),
+                              ),
                              
-                              Text(ac, style: Theme.of(context).textTheme.title)
+                              Expanded(child: Text(ac, style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -289,10 +297,12 @@ class _ProfileState extends State<Profile> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('Last Donation Date',
-                                  style: Theme.of(context).textTheme.title),
+                              Expanded(
+                                                              child: Text('Last Donation Date',
+                                    style: Theme.of(context).textTheme.title),
+                              ),
                               
-                              Text(ld, style: Theme.of(context).textTheme.title)
+                              Expanded(child: Text(ld, style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -305,10 +315,12 @@ class _ProfileState extends State<Profile> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('Status',
-                                  style: Theme.of(context).textTheme.title),
+                              Expanded(
+                                                              child: Text('Status',
+                                    style: Theme.of(context).textTheme.title),
+                              ),
                               
-                              Text(s, style: Theme.of(context).textTheme.title)
+                              Expanded(child: Text(s, style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -321,10 +333,12 @@ class _ProfileState extends State<Profile> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('Status active period',
-                                  style: Theme.of(context).textTheme.title),
+                              Expanded(
+                                                              child: Text('Status active period',
+                                    style: Theme.of(context).textTheme.title),
+                              ),
                               
-                              Text(at, style: Theme.of(context).textTheme.title)
+                              Expanded(child: Text(at, style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -337,10 +351,12 @@ class _ProfileState extends State<Profile> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('Username',
-                                  style: Theme.of(context).textTheme.title),
+                              Expanded(
+                                                              child: Text('Username',
+                                    style: Theme.of(context).textTheme.title),
+                              ),
                               
-                              Text(un, style: Theme.of(context).textTheme.title)
+                              Expanded(child: Text(un, style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(

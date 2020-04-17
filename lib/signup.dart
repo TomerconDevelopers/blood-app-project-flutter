@@ -650,7 +650,7 @@ class _SignUpState extends State<SignUp> {
                             InkWell(
                               onTap: () {
                                 if (checked == true) {
-                                  callIt();
+                                  callIt(context);
                                 }
                               },
                               child: Container(
@@ -713,21 +713,17 @@ class _SignUpState extends State<SignUp> {
         )));
   }
 
-  callIt() {
+  callIt(BuildContext context) {
     setState(() {
       //checking weight and age
       if (!_key1.currentState.validate()) {
         _submitForm();
       } else {
-        Navigator.pop(context,(){
-          setState(() {
-            
-          });
-        });
         if (int.parse(weight.text) < 50 ||
             int.parse(age.text) < 18 ||
             int.parse(age.text) > 65 ||
             m != 'None') {
+              Navigator.pop(context);
           showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -739,33 +735,30 @@ class _SignUpState extends State<SignUp> {
                   contentPadding: EdgeInsets.all(20),
                 );
               });
-
-          //checks if dropdowns are empty or not
         }
 
         // if every data is available post details
         else {
-          postData(g.baseUrl);
+          postData(g.baseUrl,context);
         }
       }
     });
   }
 
   //to set username and password
-  setPrefs() async {
+  setPrefs1() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     Future<bool> u = sp.setString("username", un.text);
     Future<bool> v = sp.setString("name", fn.text);
     Future<bool> w = sp.setString("blood_group", sbg);
     //print(u);
-    Future<bool> pa = sp.setString("password", p);
+    Future<bool> pa = sp.setString("password",ut.encrypt(pass.text));
     // print(pa);
   }
 
-  postData(String s) async {
+  postData(String s,BuildContext context) async {
     String g = gen.toLowerCase();
     p = ut.encrypt(pass.text);
-    await setPrefs();
     var bd = json.encode({
       "name": fn.text,
       "gender": g,
@@ -788,24 +781,17 @@ class _SignUpState extends State<SignUp> {
         body: bd);
     print(res.statusCode);
     reg = jsonDecode(res.body);
-    print(res.body);
-    print(res.body.runtimeType);
-    if (res.body != "Username Already Exists..!" && res.body!="Contact number Already Exists..!") {
-        Navigator.pop(context,(){
-          setState(() {
-            
-          });
-        });
-      }
-    setState(() {
-      
+    print(res.body); 
+    if(reg!="Contact number Already Exists..!" && reg!="Username Already Exists..!"){
+      Navigator.pop(context);
+      setPrefs1();
+    } 
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            return AlertDialog(
-              
+            return AlertDialog(         
               content: Text(
-                reg,
+                jsonDecode(res.body),
                 style: TextStyle(fontSize: 30, color: Colors.purpleAccent),
               ),
               shape: RoundedRectangleBorder(
@@ -813,8 +799,7 @@ class _SignUpState extends State<SignUp> {
               contentPadding: EdgeInsets.all(20),
             );
           });
-    });
-    
+     reg='';
   }
 
   Widget callFor() {

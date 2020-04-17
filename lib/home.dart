@@ -8,7 +8,7 @@ import 'package:revive/request.dart';
 import 'package:revive/signup.dart';
 import 'package:revive/terms.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'globals.dart';
+import 'globals.dart' as g;
 import 'login_activity.dart';
 import 'utils.dart' as ut;
 
@@ -18,43 +18,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  SharedPreferences prefs;Widget q=SizedBox(height: 1),m=SizedBox(height: 1);
-  String bg = '', n = '';
+  SharedPreferences prefs;
+  
   asyncFunc(BuildContext) async {
-    final SharedPreferences sp = await SharedPreferences.getInstance();
-    setState(() {
-      n = sp.get("name");
-      bg = sp.get("blood_group");
-      if(n.isNotEmpty){
-        q= ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Profile'),
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) =>Profile()));
-                // Update the state of the app.
-                // ...
-              },
-            );
-            m= ListTile(
-              leading: Icon(Icons.power_settings_new),
-              title: Text('Log out'),
-              onTap: () {
-                
-                // Update the state of the app.
-                // ...
-              },
-            );
-    }
-    });
-    print(n);
-    print(bg);
+    await setPrefs();
+    
   }
 
   @override
   void initState() {
     super.initState();
-    asyncFunc(BuildContext);
     WidgetsBinding.instance.addPostFrameCallback((_) => start(context));
   }
 
@@ -85,7 +58,8 @@ class HomeScreenState extends State<HomeScreen> {
                 children: <Widget>[
                   Icon(Icons.notifications),
                   SizedBox(width: 15,),
-              Icon(Icons.account_circle,size:25,)
+              g.n.isNotEmpty?IconButton(icon:Icon(Icons.account_circle,size:25,),onPressed:()=> Navigator.push(
+                    context, MaterialPageRoute(builder: (context) =>Profile())),):SizedBox(height: 1,),
             
                 ],
               ),
@@ -147,7 +121,52 @@ class HomeScreenState extends State<HomeScreen> {
                 // ...
               },
             ),
-            q,m,
+            g.n.isNotEmpty?ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Profile'),
+              onTap: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) =>Profile()));
+                // Update the state of the app.
+                // ...
+              },
+            ):SizedBox(width:1)
+            ,g.n.isNotEmpty?ListTile(
+              leading: Icon(Icons.power_settings_new),
+              title: Text('Log out'),
+              onTap: () {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              actions: <Widget>[
+                FlatButton(onPressed:()async{
+                  final SharedPreferences sp=await SharedPreferences.getInstance();
+                      sp.setString('name','');
+                      sp.setString('username','');
+                      sp.setString('blood_group','');
+                      sp.setString('password','');
+                    setState((){                     
+                      g.n='';
+                      g.bg='';
+                    });
+                    Navigator.pop(context);
+                }, child:Text('Yes',style: TextStyle(fontSize: 20, color: Color(0xFFEE5623)),)),
+                FlatButton(onPressed:()=>Navigator.pop(context), child: Text('Cancel',style: TextStyle(fontSize: 15, color: Color(0xFFEE5623)),))
+              ],
+              content: Text(
+                "Do you want to log out?",
+                style: TextStyle(fontSize: 20, color: Color(0xFFEE5623)),
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              contentPadding: EdgeInsets.all(20),
+            );
+          });
+                // Update the state of the app.
+                // ...
+              },
+            ):SizedBox(width:1),
             ListTile(
               leading: Icon(Icons.import_contacts),
               title: Text('Terms and conditions'),
@@ -179,7 +198,7 @@ class HomeScreenState extends State<HomeScreen> {
               height: 20,
             ),
             Text(
-              "WELCOME " + n.toUpperCase(),
+              "WELCOME " + g.n.toUpperCase(),
               style: TextStyle(
                   fontSize: 20,
                   color: Color(0xFFEE5623),
@@ -224,7 +243,7 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-
+           
             //Login and signup button
             Expanded(
               child: Align(
@@ -233,7 +252,7 @@ class HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    InkWell(
+                    g.n.isEmpty?InkWell(
                       onTap: () {
                         login();
                       },
@@ -250,8 +269,7 @@ class HomeScreenState extends State<HomeScreen> {
                                   0)
                             ],
                           )),
-                    ),
-                    InkWell(
+                    ):SizedBox(width:1),g.n.isEmpty?InkWell(
                       onTap: () {
                         signup();
                       },
@@ -264,7 +282,8 @@ class HomeScreenState extends State<HomeScreen> {
                                   Colors.deepOrange.shade300, 20, 0)
                             ],
                           )),
-                    ),
+                    ):SizedBox(width:1)
+                    
                   ],
                 ),
               ),
@@ -280,6 +299,8 @@ class HomeScreenState extends State<HomeScreen> {
       context,
       MaterialPageRoute(builder: (context) => SignUp()),
     ).then((var value) {
+
+      setPrefs();
       //CODE HERE to execute if you back to this page from signup
     });
   }
@@ -298,7 +319,19 @@ class HomeScreenState extends State<HomeScreen> {
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
     ).then((var value) {
+      setPrefs();
       //CODE HERE to execute if you back to this page from signup
+    });
+  }
+  setPrefs()async{
+final SharedPreferences sp = await SharedPreferences.getInstance();
+    setState(() {
+      g.n = sp.get("name");
+      g.bg = sp.get("blood_group");
+      if(g.n==null){
+      g.n='';
+      g.bg='';
+    }
     });
   }
   
