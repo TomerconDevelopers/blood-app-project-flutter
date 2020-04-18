@@ -2,19 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import './details.dart';
+import 'utils.dart' as ut;
 
-class NewsFeed extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-      ),
-      home: MyHomePage(title: 'Newsfeed'),
-    );
-  }
-}
 
 //Emergency newsfeed
 class EmergencyGroupBox extends StatelessWidget {
@@ -51,19 +40,23 @@ class EmergencyGroupBox extends StatelessWidget {
                     autoPlay: true,
                     pauseAutoPlayOnTouch: Duration(seconds: 10),
                     items: <Widget>[
-                      EmergencyCard(
-                        name1: "Carl Alex Johnny",
-                        location1: "Calicut",
-                        units1: "2",
-                        hospital1: "MIMS Hospital",
-                        group1: "A+",
+                      Expanded(
+                                              child: EmergencyCard(
+                          name1: "Carl Alex Johnny",
+                          location1: "Calicut",
+                          units1: "2",
+                          hospital1: "MIMS Hospital",
+                          group1: "A+",
+                        ),
                       ),
-                      EmergencyCard(
-                        name1: "Mary Ann Jacob",
-                        location1: "Calicut",
-                        units1: "1",
-                        hospital1: "Baby Memorial",
-                        group1: "B+",
+                      Expanded(
+                                              child: EmergencyCard(
+                          name1: "Mary Ann Jacob",
+                          location1: "Calicut",
+                          units1: "1",
+                          hospital1: "Baby Memorial",
+                          group1: "B+",
+                        ),
                       )
                     ],
                   )
@@ -106,16 +99,20 @@ class GroupBox extends StatelessWidget {
               ),
               SliverList(
                 delegate: SliverChildListDelegate([
-                  RequestCard(
-                      name: "Shivani Sanjay",
-                      location: "Calicut",
-                      units: "5",
-                      hospital: "PVS Hosptital"),
-                  RequestCard(
-                      name: "Anjali Sanjay",
-                      location: "Calicut",
-                      units: "2",
-                      hospital: "Iqra Hospital"),
+                  Expanded(
+                                      child: RequestCard(
+                        name: "Shivani Sanjay",
+                        location: "Calicut",
+                        units: "5",
+                        hospital: "PVS Hosptital"),
+                  ),
+                  Expanded(
+                                      child: RequestCard(
+                        name: "Anjali Sanjay",
+                        location: "Calicut",
+                        units: "2",
+                        hospital: "Iqra Hospital"),
+                  ),
                 ]),
               )
             ],
@@ -380,66 +377,69 @@ class RequestCard extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class NewsFeed extends StatefulWidget {
+  NewsFeed({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _NewsFeedState createState() => _NewsFeedState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _NewsFeedState extends State<NewsFeed> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          leading:
-              IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: () {
-                Navigator.pop(context);
-              }),
-          title: Text(widget.title),
-          actions: <Widget>[
-            // action button
-            IconButton(
-                icon: Icon(Icons.update),
-                color: Colors.white,
-                onPressed: () {
-                  return showAlertDialog(context);
+    return MaterialApp(
+      theme:ut.maintheme(),
+          home: Scaffold(
+          appBar: AppBar(
+            leading:
+                IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: () {
+                  Navigator.pop(context);
                 }),
-          ],
-        ),
-        body: ListView(
-          scrollDirection: Axis.vertical,
-          children: <Widget>[
-            EmergencyGroupBox(),
-            GroupBox(
-              group: 'A+',
-            ),
-            GroupBox(
-              group: 'A-',
-            ),
-            GroupBox(
-              group: 'B+',
-            ),
-            GroupBox(
-              group: 'B-',
-            ),
-            GroupBox(
-              group: 'AB+',
-            ),
-            GroupBox(
-              group: 'AB-',
-            ),
-            GroupBox(
-              group: 'O+',
-            ),
-            GroupBox(
-              group: 'O-',
-            ),
-            Padding(padding: EdgeInsets.all(10))
-          ],
-        ));
+            title: Text("Newsfeed"),
+            actions: <Widget>[
+              // action button
+              IconButton(
+                  icon: Icon(Icons.update),
+                  color: Colors.white,
+                  onPressed: () {
+                    return showAlertDialog(context);
+                  }),
+            ],
+          ),
+          body: ListView(
+            scrollDirection: Axis.vertical,
+            children: <Widget>[
+              EmergencyGroupBox(),
+              GroupBox(
+                group: 'A+',
+              ),
+              GroupBox(
+                group: 'A-',
+              ),
+              GroupBox(
+                group: 'B+',
+              ),
+              GroupBox(
+                group: 'B-',
+              ),
+              GroupBox(
+                group: 'AB+',
+              ),
+              GroupBox(
+                group: 'AB-',
+              ),
+              GroupBox(
+                group: 'O+',
+              ),
+              GroupBox(
+                group: 'O-',
+              ),
+              Padding(padding: EdgeInsets.all(10))
+            ],
+          )),
+    );
   }
 }
 
