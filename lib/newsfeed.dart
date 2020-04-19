@@ -40,24 +40,26 @@ class EmergencyGroupBox extends StatelessWidget {
                     autoPlay: true,
                     pauseAutoPlayOnTouch: Duration(seconds: 10),
                     items: <Widget>[
-                      Expanded(
-                                              child: EmergencyCard(
+
+                      
+                                               EmergencyCard(
                           name1: "Carl Alex Johnny",
                           location1: "Calicut",
                           units1: "2",
                           hospital1: "MIMS Hospital",
                           group1: "A+",
                         ),
-                      ),
-                      Expanded(
-                                              child: EmergencyCard(
+
+                      
+                      
+                                               EmergencyCard(
                           name1: "Mary Ann Jacob",
                           location1: "Calicut",
                           units1: "1",
                           hospital1: "Baby Memorial",
                           group1: "B+",
                         ),
-                      )
+
                     ],
                   )
                 ]),
@@ -99,20 +101,25 @@ class GroupBox extends StatelessWidget {
               ),
               SliverList(
                 delegate: SliverChildListDelegate([
-                  Expanded(
-                                      child: RequestCard(
+
+                  
+                                       RequestCard(
                         name: "Shivani Sanjay",
                         location: "Calicut",
                         units: "5",
                         hospital: "PVS Hosptital"),
-                  ),
-                  Expanded(
-                                      child: RequestCard(
+
+                  
+                
+                                       RequestCard(
+
+                  
                         name: "Anjali Sanjay",
                         location: "Calicut",
                         units: "2",
                         hospital: "Iqra Hospital"),
-                  ),
+
+
                 ]),
               )
             ],
