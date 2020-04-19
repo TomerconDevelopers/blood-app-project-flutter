@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as g;
 import 'login_activity.dart';
 import 'utils.dart' as ut;
+import 'package:revive/faq.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -182,6 +183,14 @@ class HomeScreenState extends State<HomeScreen> {
                     context, MaterialPageRoute(builder: (context) => About()));
                 // Update the state of the app.
                 // ...
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.question_answer),
+              title: Text('FAQ'),
+              onTap: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Faq()));
               },
             ),
           ],
