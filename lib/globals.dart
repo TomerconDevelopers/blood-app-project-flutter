@@ -12,7 +12,7 @@ String bg_image = "assets/images/bg.png";//background image for all pages
 String cu_id;
 String cu_name;
 String cu_type;
-String bg='', n='';
+String bg='', n='',l='';
 //=======================================================================
 List bloodgroup = ['A+', 'A-', 'O+', 'O-', 'B+', 'B-', 'AB+', 'AB-'];
 Map<String, List<String>> tlk = {
