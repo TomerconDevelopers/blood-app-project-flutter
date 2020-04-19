@@ -352,7 +352,8 @@ TextEditingController fn = new TextEditingController();
     showMessage('Form is not valid!  Please review and correct.');
   } else {
     form.save(); 
-    postData1(context);//This invokes each onSaved event
+
+    postData1(context,g.baseUrl);//This invokes each onSaved event
   }
 }
 
@@ -361,8 +362,8 @@ void showMessage(String message, [MaterialColor color = Colors.red]) {
       .showSnackBar(new SnackBar(backgroundColor: color, content: new Text(message,style: TextStyle(fontSize: 16,),)));
 }
 
-postData1(BuildContext context)async{
 
+postData1(BuildContext context,String s)async{
   var bd=json.encode({
     "name":fn.text,
     "age":age.text,
@@ -375,7 +376,7 @@ postData1(BuildContext context)async{
     "alt_contacts":acn.text,
     "hospital":h.text,
   });
-    http.Response res=await http.post("http://192.168.111.2/blood-app-project-backend-master/request.php",body:bd);
+    http.Response res=await http.post(s+"/request.php",body:bd);
     print(res.statusCode);    
     print(res.body);
     re=jsonDecode(res.body);
