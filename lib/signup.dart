@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'globals.dart' as g;
 import 'utils.dart' as ut;
 
-/* creted by Sandra*/
+/* created by Sandra*/
 
 class SignUp extends StatefulWidget {
   @override
