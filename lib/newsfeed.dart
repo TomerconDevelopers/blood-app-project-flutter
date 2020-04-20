@@ -1,71 +1,90 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import './details.dart';
 import 'utils.dart' as ut;
+import 'package:http/http.dart' as http;
+import 'globals.dart' as g;
 
+List lis = [];
+int index = 0;
+Future<List> getData1() async {
+  final res = await http.get(
+     g.baseUrl+"/newsfeed.php");
+  print(res.statusCode);
+  return jsonDecode(res.body);
+}
 
 //Emergency newsfeed
 class EmergencyGroupBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Container(
-          margin: EdgeInsets.symmetric(vertical: 20.0),
-          height: 250.0,
-          child: CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                leading: Icon(Icons.local_hospital),
-                title: Text("Emergency requirements"),
-                backgroundColor: Colors.redAccent,
-                floating: true,
-                expandedHeight: 40,
-                actions: <Widget>[
-                  IconButton(
-                      icon: Icon(Icons.filter_list),
-                      color: Colors.white,
-                      onPressed: () {
-                        return filterAlertDialog(context);
-                      })
-                ],
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  CarouselSlider(
-                    scrollDirection: Axis.vertical,
-                    enableInfiniteScroll: true,
-                    autoPlayAnimationDuration: Duration(seconds: 2),
-                    autoPlay: true,
-                    pauseAutoPlayOnTouch: Duration(seconds: 10),
-                    items: <Widget>[
-
-                      
-                                               EmergencyCard(
-                          name1: "Carl Alex Johnny",
-                          location1: "Calicut",
-                          units1: "2",
-                          hospital1: "MIMS Hospital",
-                          group1: "A+",
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20.0),
+      height: 250.0,
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+                padding: EdgeInsets.all(10),
+                width: MediaQuery.of(context).size.width,
+                height: 70,
+                color: Colors.redAccent,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Icon(Icons.invert_colors,
+                            color: Colors.white, size: 20),
+                        SizedBox(width: 10),
+                        Text(
+                          "Emergency Requirements",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
                         ),
-
-                      
-                      
-                                               EmergencyCard(
-                          name1: "Mary Ann Jacob",
-                          location1: "Calicut",
-                          units1: "1",
-                          hospital1: "Baby Memorial",
-                          group1: "B+",
-                        ),
-
-                    ],
-                  )
-                ]),
-              )
-            ],
-          )),
+                      ],
+                    ),
+                    Icon(Icons.filter_list, color: Colors.white, size: 20)
+                  ],
+                )),
+          ),
+          FutureBuilder(
+              future: getData1(),
+              builder: (context, ss) {
+                 lis = ss.data;
+                if (ss.hasError) {
+                  return CircularProgressIndicator();
+                } else {
+                  return Expanded(
+                    child: SizedBox(
+                      height: 200,
+                      child: ListView.builder(
+                          itemCount: lis?.length ?? 0,
+                          itemBuilder: (context, index) {
+                            Widget w = lis[index]['status'] == 'Emergency'
+                                ? EmergencyCard(
+                                  i1:index,
+                                    group1: lis[index]['bloodgroup'],
+                                    name1: lis[index]['name'],
+                                    location1: lis[index]['taluk'],
+                                    units1: lis[index]['bloodqty'],
+                                    hospital1: lis[index]['hospital'])
+                                : SizedBox(width: 1);
+                            return w;
+                          }),
+                    ),
+                  );
+                }
+              }),
+        ],
+      ),
     );
   }
 }
@@ -80,50 +99,31 @@ class GroupBox extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Container(
-          margin: EdgeInsets.symmetric(vertical: 20.0),
-          height: 250.0,
-          child: CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                leading: Icon(Icons.opacity),
-                title: Text(group),
-                backgroundColor: Colors.redAccent,
-                floating: true,
-                expandedHeight: 40,
-                actions: <Widget>[
-                  IconButton(
-                      icon: Icon(Icons.filter_list),
-                      color: Colors.white,
-                      onPressed: () {
-                        return filterAlertDialog(context);
-                      })
-                ],
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate([
-
-                  
-                                       RequestCard(
-                        name: "Shivani Sanjay",
-                        location: "Calicut",
-                        units: "5",
-                        hospital: "PVS Hosptital"),
-
-                  
-                
-                                       RequestCard(
-
-                  
-                        name: "Anjali Sanjay",
-                        location: "Calicut",
-                        units: "2",
-                        hospital: "Iqra Hospital"),
-
-
-                ]),
-              )
-            ],
-          )),
+        margin: EdgeInsets.symmetric(vertical: 20.0),
+        height: 250.0,
+        child: FutureBuilder(
+            future: getData1(),
+            builder: (context, ss) {
+               lis = ss.data;
+              if (ss.hasError) {
+                return CircularProgressIndicator();
+              } else {
+                return ListView.builder(
+                    itemCount: lis?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      Widget w = lis[index]['bloodgroup'] == this.group
+                          ? RequestCard(
+                            i:index,
+                              name: lis[index]['name'],
+                              location: lis[index]['taluk'],
+                              units: lis[index]['bloodqty'],
+                              hospital: lis[index]['hospital'])
+                          : SizedBox(width: 1);
+                      return w;
+                    });
+              }
+            }),
+      ),
     );
   }
 }
@@ -135,13 +135,16 @@ class EmergencyCard extends StatelessWidget {
   final String units1;
   final String location1;
   final String group1;
+  final int i1;
 
   EmergencyCard(
       {@required this.name1,
       @required this.hospital1,
       @required this.location1,
       @required this.units1,
-      @required this.group1});
+      @required this.group1,
+      @required this.i1
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +152,18 @@ class EmergencyCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Details()),
+          MaterialPageRoute(builder: (context) => Details(name: lis[i1]['name'],
+                                        age: lis[i1]['age'],
+                                        date: lis[i1]['date'],
+                                        district: lis[i1]['district'],
+                                        location: lis[i1]['taluk'],
+                                        hospital: lis[i1]['hospital'],
+                                        group: lis[i1]['bloodgroup'],
+                                        number: lis[i1]
+                                            ['bystander_contacts'],
+                                        altNumber: lis[i1]
+                                            ['bystander_alt_contacts'],
+                                        units: lis[i1]['bloodqty'],)),
         );
       },
       child: new Container(
@@ -271,12 +285,14 @@ class RequestCard extends StatelessWidget {
   final String hospital;
   final String units;
   final String location;
+  final int i;
 
   RequestCard(
       {@required this.name,
       @required this.hospital,
       @required this.location,
-      @required this.units});
+      @required this.units,
+      @required this.i});
 
   @override
   Widget build(BuildContext context) {
@@ -286,7 +302,18 @@ class RequestCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Details()),
+          MaterialPageRoute(builder: (context) => Details(name: lis[i]['name'],
+                                        age: lis[i]['age'],
+                                        date: lis[i]['date'],
+                                        district: lis[i]['district'],
+                                        location: lis[i]['taluk'],
+                                        hospital: lis[i]['hospital'],
+                                        group: lis[i]['bloodgroup'],
+                                        number: lis[i]
+                                            ['bystander_contacts'],
+                                        altNumber: lis[i]
+                                            ['bystander_alt_contacts'],
+                                        units: lis[i]['bloodqty'],)),
         );
       },
       child: new Container(
@@ -397,11 +424,12 @@ class _NewsFeedState extends State<NewsFeed> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme:ut.maintheme(),
-          home: Scaffold(
+      theme: ut.maintheme(),
+      home: Scaffold(
           appBar: AppBar(
-            leading:
-                IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: () {
+            leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: () {
                   Navigator.pop(context);
                 }),
             title: Text("Newsfeed"),
@@ -419,29 +447,301 @@ class _NewsFeedState extends State<NewsFeed> {
             scrollDirection: Axis.vertical,
             children: <Widget>[
               EmergencyGroupBox(),
-              GroupBox(
-                group: 'A+',
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                        padding: EdgeInsets.all(10),
+                        width: MediaQuery.of(context).size.width,
+                        height: 70,
+                        color: Colors.redAccent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Icon(Icons.invert_colors,
+                                    color: Colors.white, size: 20),
+                                SizedBox(width: 10),
+                                Text(
+                                  'A+',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Icon(Icons.filter_list,
+                                color: Colors.white, size: 20)
+                          ],
+                        )),
+                  ),
+                  GroupBox(
+                    group: 'A+',
+                  ),
+                ],
               ),
-              GroupBox(
-                group: 'A-',
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                        padding: EdgeInsets.all(10),
+                        width: MediaQuery.of(context).size.width,
+                        height: 70,
+                        color: Colors.redAccent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Icon(Icons.invert_colors,
+                                    color: Colors.white, size: 20),
+                                SizedBox(width: 10),
+                                Text(
+                                  'A-',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Icon(Icons.filter_list,
+                                color: Colors.white, size: 20)
+                          ],
+                        )),
+                  ),
+                  GroupBox(
+                    group: 'A-',
+                  ),
+                ],
               ),
-              GroupBox(
-                group: 'B+',
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                        padding: EdgeInsets.all(10),
+                        width: MediaQuery.of(context).size.width,
+                        height: 70,
+                        color: Colors.redAccent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Icon(Icons.invert_colors,
+                                    color: Colors.white, size: 20),
+                                SizedBox(width: 10),
+                                Text(
+                                  'B+',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Icon(Icons.filter_list,
+                                color: Colors.white, size: 20)
+                          ],
+                        )),
+                  ),
+                  GroupBox(
+                    group: 'B+',
+                  ),
+                ],
               ),
-              GroupBox(
-                group: 'B-',
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                        padding: EdgeInsets.all(10),
+                        width: MediaQuery.of(context).size.width,
+                        height: 70,
+                        color: Colors.redAccent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Icon(Icons.invert_colors,
+                                    color: Colors.white, size: 20),
+                                SizedBox(width: 10),
+                                Text(
+                                  'B-',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Icon(Icons.filter_list,
+                                color: Colors.white, size: 20)
+                          ],
+                        )),
+                  ),
+                  GroupBox(
+                    group: 'B-',
+                  ),
+                ],
               ),
-              GroupBox(
-                group: 'AB+',
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                        padding: EdgeInsets.all(10),
+                        width: MediaQuery.of(context).size.width,
+                        height: 70,
+                        color: Colors.redAccent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Icon(Icons.invert_colors,
+                                    color: Colors.white, size: 20),
+                                SizedBox(width: 10),
+                                Text(
+                                  'AB+',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Icon(Icons.filter_list,
+                                color: Colors.white, size: 20)
+                          ],
+                        )),
+                  ),
+                  GroupBox(
+                    group: 'AB+',
+                  ),
+                ],
               ),
-              GroupBox(
-                group: 'AB-',
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                        padding: EdgeInsets.all(10),
+                        width: MediaQuery.of(context).size.width,
+                        height: 70,
+                        color: Colors.redAccent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Icon(Icons.invert_colors,
+                                    color: Colors.white, size: 20),
+                                SizedBox(width: 10),
+                                Text(
+                                  'AB-',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Icon(Icons.filter_list,
+                                color: Colors.white, size: 20)
+                          ],
+                        )),
+                  ),
+                  GroupBox(
+                    group: 'AB-',
+                  ),
+                ],
               ),
-              GroupBox(
-                group: 'O+',
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                        padding: EdgeInsets.all(10),
+                        width: MediaQuery.of(context).size.width,
+                        height: 70,
+                        color: Colors.redAccent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Icon(Icons.invert_colors,
+                                    color: Colors.white, size: 20),
+                                SizedBox(width: 10),
+                                Text(
+                                  'O+',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Icon(Icons.filter_list,
+                                color: Colors.white, size: 20)
+                          ],
+                        )),
+                  ),
+                  GroupBox(
+                    group: 'O+',
+                  ),
+                ],
               ),
-              GroupBox(
-                group: 'O-',
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                        padding: EdgeInsets.all(10),
+                        width: MediaQuery.of(context).size.width,
+                        height: 70,
+                        color: Colors.redAccent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Icon(Icons.invert_colors,
+                                    color: Colors.white, size: 20),
+                                SizedBox(width: 10),
+                                Text(
+                                  'O-',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Icon(Icons.filter_list,
+                                color: Colors.white, size: 20)
+                          ],
+                        )),
+                  ),
+                  GroupBox(
+                    group: 'O-',
+                  ),
+                ],
               ),
               Padding(padding: EdgeInsets.all(10))
             ],
