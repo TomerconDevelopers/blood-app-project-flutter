@@ -135,7 +135,7 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
               final SharedPreferences sp=await SharedPreferences.getInstance();
           Future<bool> u = sp.setString("name", r['name']);
           Future<bool> v= sp.setString("username", r['userid']);
-          Future<bool> w = sp.setString("password", r['pass']);
+          Future<bool> w = sp.setString("password", r['password']);
           //print(u);
           Future<bool> pa = sp.setString("location", r['localty']);
           setState(() {
