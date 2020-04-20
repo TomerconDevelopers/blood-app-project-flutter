@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'utils.dart' as ut;
+
 
 //usermodel class
 class UserModel {     
@@ -38,6 +40,64 @@ class _EditState extends State<EditProfile> {
   bool index = true;
   bool isLoading = false;
   bool hiddenText = true;
+  Map f={};
+
+  //textediting controllers for all fields
+  TextEditingController fn ;
+  TextEditingController age ;
+  TextEditingController weight ;
+  TextEditingController cn ;
+  TextEditingController acn ;
+  TextEditingController mail ;
+  TextEditingController ld ;
+  TextEditingController forTime ;
+  TextEditingController ft ;
+  TextEditingController un ;
+  TextEditingController pass;
+  TextEditingController repass ;
+
+  //required variables
+  var t, r;
+  Widget w = SizedBox(height: 10);
+  String reg = "", sbg, st, gen, d, tl, p, m;
+  final GlobalKey<FormState> _key1 = new GlobalKey<FormState>();
+
+  List gender = ['Male', 'Female', 'Others'];
+  bool checked = false;
+  List status = ['Available anytime', 'Available for', 'Unavailable for'];
+
+  List med = [
+    'None',
+    'HIV',
+    'Heart disease',
+    'Hypertension',
+    'Cancer',
+    'Received Hepatitis B vaccine',
+    'Major dental procedures/general surgeries in the past 1 month',
+    'Fits',
+    'Asthma',
+    'Epilepsy',
+    'Kidney ailments',
+    'Diabetes',
+    'Ear/body piercing/tatoo in past 6 months',
+    'Undergone Immunization in the past 1 month',
+    'Treated for rabies',
+    'Pregnant/breast feeding',
+    'Women undergone miscarriage in the past 6 months',
+    'Tuberculosis',
+    'Allergy to a substance used in blood donation/Severe allergy/unwell at the time of donation due to allergy'
+  ];
+  //list of districts
+
+  List l = [];
+  //mapping districts to their taluks
+
+
+//required variables
+ // var t, r;
+ // Widget w = SizedBox(height: 10);
+ // String reg = "", sbg, st, gen, d, tl, p, m;
+
   UserModel user = UserModel(
         id: "",
         name: "",
@@ -171,7 +231,8 @@ class _EditState extends State<EditProfile> {
               label: "Fullname",
               hint: "Ex: Marquees Brownlee",
               onValidate: (value) {
-                if (value.isEmpty) return 'This field can\'t be empty';
+                // ignore: missing_return
+                if (value.isEmpty) return "This field can't be empty";
               },
             ),
             SizedBox(
@@ -185,7 +246,8 @@ class _EditState extends State<EditProfile> {
               onValidate: (value) {
                 if (value.length != 10)
                   return 'Phone Number must be of 10 digits';
-                else if (value.isEmpty) return 'This field can\'t be empty';
+                else if (value.isEmpty) return "This field can't be empty";
+                else return "error";
               },
               label: 'Contact',
               hint: 'Ex:9880124587',
@@ -275,7 +337,7 @@ class _EditState extends State<EditProfile> {
   
   
   
-        ),
+        ]),
       );
     }
   
@@ -315,7 +377,7 @@ class _EditState extends State<EditProfile> {
   
     }
     postData() async {
-      String fullName = fn.text + " " + mn.text + " " + ln.text;
+      String fullName = fn.text ;//+ " " + mn.text + " " + ln.text;
       String g = gen.toLowerCase();
       p=ut.encrypt(pass.text);
       await setPrefs();
