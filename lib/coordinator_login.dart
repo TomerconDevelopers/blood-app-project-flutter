@@ -7,15 +7,15 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as g;
 /*
-UI created by Alan (31/03/2020)
+UI created by Sandra 
  */
 
-class LoginPage extends StatefulWidget {
+class CoordinatorLoginPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _CoordinatorLoginPageState createState() => _CoordinatorLoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
   http.Response res;
   bool _isHidden = true;
 
@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 20.0,
                 ),
                 Text(
-                  "User Login",
+                  "Coordinator Login",
                   style: TextStyle(
                       fontSize: 32.0,
                       fontWeight: FontWeight.w500,
@@ -81,28 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 10.0,
                 ),
-                Container(
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text("Don't have an account?"),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        InkWell(
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignUp())),
-                            child: Text("SIGN UP",
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                )))
-                      ],
-                    ),
-                  ),
-                ),
+                
               ],
             ),
           ),
@@ -144,9 +123,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget buildButtonContainer() {
     return InkWell(
       onTap: () async {
-        var bd = json.encode({"uname": em.text, "pass": ut.encrypt(pass.text)});
+        var bd = json.encode({"uname": em.text, "pass":pass.text});
         res = await http.post(
-          g.baseUrl+"/UserLogin.php",
+          g.baseUrl+"/coordinator_login.php",
             body: bd);
         print(res.statusCode);
         if (res.body != "Invalid Username/Password") {
@@ -155,10 +134,10 @@ class _LoginPageState extends State<LoginPage> {
           String capname = r['name'];
               final SharedPreferences sp=await SharedPreferences.getInstance();
           Future<bool> u = sp.setString("name", r['name']);
-          Future<bool> v= sp.setString("username", r['username']);
+          Future<bool> v= sp.setString("username", r['userid']);
           Future<bool> w = sp.setString("password", r['pass']);
           //print(u);
-          Future<bool> pa = sp.setString("blood_group", r['bloodgroup']);
+          Future<bool> pa = sp.setString("location", r['localty']);
           setState(() {
             Navigator.pop(context,(){
               setState(() {
@@ -169,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                 context: context,
                 child: AlertDialog(
                   content: Text(
-                    "Welcome " + capname.toUpperCase(),
+                    "Welcome back " + capname.toUpperCase(),
                     style: TextStyle(fontSize: 20, color: Color(0xFFEE5623)),
                   ),
                   

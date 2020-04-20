@@ -1,3 +1,4 @@
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'globals.dart';
@@ -147,3 +148,39 @@ Widget empty_server(String txt){
       )
   );
 }
+//box shadow
+bs(double r) => BoxShadow(color: Colors.grey,blurRadius: r);
+BoxDecoration buttonstyle()=>BoxDecoration(
+    borderRadius: BorderRadius.all(Radius.circular(80.0)),
+    gradient: LinearGradient(
+        colors: [Colors.orange,Colors.red]
+    ),
+    boxShadow: [bs(2)]
+);
+TextStyle bt()=>TextStyle(color: Colors.white,
+    fontWeight: FontWeight.bold,fontSize: 18);
+Widget image_carousel() => Container(
+  height: 200,
+  child: new Carousel(
+    boxFit : BoxFit.cover,
+    images: [
+      AssetImage('assets/images/image7.jpeg'),
+      AssetImage('assets/images/image5.jpg'),
+      AssetImage('assets/images/image6.jpeg')
+    ],
+    autoplay: true,
+    overlayShadowColors: Colors.white,
+    animationCurve: Curves.fastOutSlowIn,
+    animationDuration: Duration(milliseconds: 1000),
+    dotSize: 4.0,
+    dotBgColor: Colors.transparent,
+    indicatorBgPadding: 10.0,
+  ),
+);
+btext(String txt)=>Text(txt,
+style: TextStyle(color:Colors.red[400],
+fontWeight: FontWeight.w700, fontSize: 20));
+Text caption()=>
+    Text("Where donor meets recepients",
+      style: TextStyle(fontStyle: FontStyle.italic,color: Colors.white),);
+

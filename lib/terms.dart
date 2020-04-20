@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'utils.dart' as ut;
 
 class Terms extends StatefulWidget {
   @override
@@ -72,23 +73,21 @@ class _TermsState extends State<Terms> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         appBar: AppBar(
           title: Text(
             'Terms & Conditions',
             style: TextStyle(color: Colors.white),
           ),
           centerTitle: true,
-          backgroundColor: Colors.red[900],
-          actions: <Widget>[Padding(
-            padding: const EdgeInsets.only(right:15.0),
-            child: Icon(Icons.menu,color: Colors.white,),
-          )],
-          leading: Icon(Icons.arrow_back_ios),
+          backgroundColor: Colors.red[400],
+          leading: InkWell(child:Icon(Icons.arrow_back_ios),onTap: (){
+            Navigator.pop(context);
+          }),
           elevation: 0.0,
         ),
         body: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage('images/bg.png'),fit: BoxFit.cover)),  //background image
+            decoration:ut.bg(),  //background image
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: Column(
@@ -159,6 +158,15 @@ class _TermsState extends State<Terms> {
                 SizedBox(height: 20,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                    children:[
+
+                      InkWell(child:
+                      ut.roundicon(Icons.keyboard_arrow_left,
+                          Colors.white, Colors.grey[700], 30, 2),
+                      onTap: (){prev();},),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: map<Widget>(h,(index,s){
                     return Container(
                         width: 10.0,
@@ -168,20 +176,15 @@ class _TermsState extends State<Terms> {
                           shape: BoxShape.circle,color: _current==index?Colors.red[900]:Colors.grey
                         ),
                     );
-                  })
-
-                  ,
+                  }),
+                ),
+                      InkWell(child:
+                      ut.roundicon(Icons.keyboard_arrow_right,
+                          Colors.white, Colors.grey[700], 30, 2),
+                        onTap: (){next();},),
+                ]
                 ),
                 SizedBox(height: 20,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    //arrow to navigate to the previous slide
-                    RaisedButton(onPressed:prev,child:Icon(Icons.arrow_back_ios,color: Colors.white,),color: Colors.red[900],),
-                    //arrow to navigate to the next slide
-                     RaisedButton(onPressed:next,child:Icon(Icons.arrow_forward_ios,color: Colors.white,),color: Colors.red[900],)
-                  ],
-                )
               ],
             )));
   }
