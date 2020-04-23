@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:revive/edit_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'globals.dart';
 import 'utils.dart' as ut;
+import 'globals.dart' as g;
 
 class Profile extends StatefulWidget {
   @override
@@ -28,37 +30,28 @@ class _ProfileState extends State<Profile> {
       s = '',
       at = '',
       un = '';
-      //function which takes the username and password of the current user logged in and posts it to fetch the details
+  //function which takes the username and password of the current user logged in and posts it to fetch the details
   postValues() async {
-    final SharedPreferences sp=await SharedPreferences.getInstance();
-    uname=sp.getString('username');
-    pass=sp.getString('password');
-    var bd = json.encode({"uname": uname, "pass": pass});
-    
-    var response = await http.post(
-        baseUrl+"/profile.php",
-        
-        body: bd);
-    print(response.statusCode);
-    r = jsonDecode(response.body);
-    print(r);
-    //stores the details to string variables
+    final SharedPreferences sp = await SharedPreferences.getInstance();
+    uname = sp.getString('username');
+    pass = sp.getString('password');
+
     setState(() {
-      f = r['name'][0];
-      n = r['name'];
-      a = r['age'];
-      g = r['gender'];
-      w = r['weight'];
-      b = r['bloodgroup'];
-      d = r['district'];
-      l = r['localty'];
-      c = r['contacts'];
-      ac = r['alt_contact_no'];
-      e = r['email'];
-      ld = r['last_don'];
-      s = r['status'];
-      at = r['for_time'];
-      un = r['username'];
+      f = sp.getString('name');
+      n = f[0];
+      a = sp.getString('age');
+      g = sp.getString('gender');
+      w = sp.getString('weight');
+      b = sp.getString('blood_group');
+      d = sp.getString('district');
+      l = sp.getString('taluk');
+      c = sp.getString('contacts');
+      ac = sp.getString('alt_contact');
+      e = sp.getString('email');
+      ld = sp.getString('last_don');
+      s = sp.getString('status');
+      at = sp.getString('for_time');
+      un = uname;
     });
   }
 
@@ -71,25 +64,63 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+   
     return MaterialApp(
-      theme:ut.maintheme() ,
-          home: Scaffold(
+      theme: ut.maintheme(),
+      home: Scaffold(
         appBar: AppBar(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[Text('Profile'), Icon(Icons.edit)],
+            children: <Widget>[
+              Text('Profile'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditProfile(
+                              name: f,
+                              age: a,
+                              gender: g,
+                              weight: w,
+                              group: b,
+                              district: d,
+                              location: l,
+                              contacts: c,
+                              alt_contacts: ac,
+                              email: e,
+                              last_don: ld,
+                              status: s,
+                              for_time: at,
+                              username: un)),
+                    ).then((var value) {
+                      setState(() {
+                        postValues();
+                      });
+                    }),
+                  )
+                ],
+              )
+            ],
           ),
-          leading: IconButton(icon:Icon(Icons.arrow_back_ios),onPressed:()=>Navigator.pop(context),),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
         body: Stack(
           children: <Widget>[
             Container(
-                child:Image.asset('assets/images/bg.png'),
+                child: Image.asset('assets/images/bg.png'),
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height),
             Positioned(
-                top:100,
-                bottom:20,
+                top: 100,
+                bottom: 20,
                 left: 20,
                 right: 20,
                 child: SizedBox(
@@ -126,7 +157,7 @@ class _ProfileState extends State<Profile> {
                         children: <Widget>[
                           CircleAvatar(
                               child: Center(
-                                  child: Text(f,
+                                  child: Text(n,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w500,
@@ -138,7 +169,7 @@ class _ProfileState extends State<Profile> {
                           ),
                           Center(
                               child: Text(
-                            n.toUpperCase(),
+                            f.toUpperCase(),
                             style: Theme.of(context).textTheme.title,
                           )),
                           SizedBox(
@@ -195,7 +226,6 @@ class _ProfileState extends State<Profile> {
                             children: <Widget>[
                               Text('Blood Group',
                                   style: Theme.of(context).textTheme.title),
-                              
                               Text(b, style: Theme.of(context).textTheme.title)
                             ],
                           ),
@@ -210,11 +240,12 @@ class _ProfileState extends State<Profile> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Expanded(
-                                                              child: Text('District',
+                                child: Text('District',
                                     style: Theme.of(context).textTheme.title),
                               ),
-                              
-                              Expanded(child: Text(d, style: Theme.of(context).textTheme.title))
+                              Expanded(
+                                  child: Text(d,
+                                      style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -228,11 +259,12 @@ class _ProfileState extends State<Profile> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Expanded(
-                                                              child: Text('Localty',
+                                child: Text('Localty',
                                     style: Theme.of(context).textTheme.title),
                               ),
-                             
-                              Expanded(child: Text(l, style: Theme.of(context).textTheme.title))
+                              Expanded(
+                                  child: Text(l,
+                                      style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -246,11 +278,12 @@ class _ProfileState extends State<Profile> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Expanded(
-                                                              child: Text('Contact number',
+                                child: Text('Contact number',
                                     style: Theme.of(context).textTheme.title),
                               ),
-                              
-                              Expanded(child: Text(c, style: Theme.of(context).textTheme.title))
+                              Expanded(
+                                  child: Text(c,
+                                      style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -264,11 +297,12 @@ class _ProfileState extends State<Profile> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Expanded(
-                                                              child: Text('Alternate Contact number',
+                                child: Text('Alternate Contact number',
                                     style: Theme.of(context).textTheme.title),
                               ),
-                             
-                              Expanded(child: Text(ac, style: Theme.of(context).textTheme.title))
+                              Expanded(
+                                  child: Text(ac,
+                                      style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -283,7 +317,6 @@ class _ProfileState extends State<Profile> {
                             children: <Widget>[
                               Text('Email',
                                   style: Theme.of(context).textTheme.title),
-                              
                               Text(e, style: Theme.of(context).textTheme.title)
                             ],
                           ),
@@ -298,11 +331,12 @@ class _ProfileState extends State<Profile> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Expanded(
-                                                              child: Text('Last Donation Date',
+                                child: Text('Last Donation Date',
                                     style: Theme.of(context).textTheme.title),
                               ),
-                              
-                              Expanded(child: Text(ld, style: Theme.of(context).textTheme.title))
+                              Expanded(
+                                  child: Text(ld,
+                                      style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -316,11 +350,12 @@ class _ProfileState extends State<Profile> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Expanded(
-                                                              child: Text('Status',
+                                child: Text('Status',
                                     style: Theme.of(context).textTheme.title),
                               ),
-                              
-                              Expanded(child: Text(s, style: Theme.of(context).textTheme.title))
+                              Expanded(
+                                  child: Text(s,
+                                      style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -334,11 +369,12 @@ class _ProfileState extends State<Profile> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Expanded(
-                                                              child: Text('Status active period',
+                                child: Text('Status active period',
                                     style: Theme.of(context).textTheme.title),
                               ),
-                              
-                              Expanded(child: Text(at, style: Theme.of(context).textTheme.title))
+                              Expanded(
+                                  child: Text(at,
+                                      style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -352,11 +388,12 @@ class _ProfileState extends State<Profile> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Expanded(
-                                                              child: Text('Username',
+                                child: Text('Username',
                                     style: Theme.of(context).textTheme.title),
                               ),
-                              
-                              Expanded(child: Text(un, style: Theme.of(context).textTheme.title))
+                              Expanded(
+                                  child: Text(un,
+                                      style: Theme.of(context).textTheme.title))
                             ],
                           ),
                           Divider(
@@ -371,7 +408,31 @@ class _ProfileState extends State<Profile> {
                                 width: 100.0,
                                 height: 40,
                                 child: RaisedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => EditProfile(
+                                              name: f,
+                                              age: a,
+                                              gender: g,
+                                              weight: w,
+                                              group: b,
+                                              district: d,
+                                              location: l,
+                                              contacts: c,
+                                              alt_contacts: ac,
+                                              email: e,
+                                              last_don: ld,
+                                              status: s,
+                                              for_time: at,
+                                              username: un)),
+                                    ).then((var value) {
+                                      setState(() {
+                                        postValues();
+                                      });
+                                    });
+                                  },
                                   child: Text('Edit',
                                       style: TextStyle(
                                           color: Colors.white,
@@ -395,4 +456,5 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
+ 
 }
