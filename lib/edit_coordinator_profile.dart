@@ -1,374 +1,462 @@
-
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:revive/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:strings/strings.dart';
+import 'dart:convert';
 import 'globals.dart' as g;
+import 'utils.dart' as ut;
+
+/* creted by Sandra*/
 
 class EditCoordinatorProfile extends StatefulWidget {
-  EditCoordinatorProfile({Key key, this.title}) : super(key: key);
-
-  final String title;
-
+  final String name;
+  final String contacts;
+  final String profession;
+  final String location;
+  final String email;
+  final String vdr;
+  final String exp;
+  final String username;
+  final String district;
+  EditCoordinatorProfile({
+    Key key,
+    @required this.name,
+    @required this.contacts,
+    @required this.profession,
+    @required this.location,
+    @required this.email,
+    @required this.vdr,
+    @required this.exp,
+    @required this.username,
+    @required this.district,
+  }) : super(key: key);
   @override
-  _EditCoordinatorProfileState createState() => _EditCoordinatorProfileState();
+  _EditCoordinatorProfileState createState() => _EditCoordinatorProfileState(
+      name,
+      contacts,
+      profession,
+      location,
+      email,
+      vdr,
+      exp,
+      username,
+      district);
 }
 
+final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
 class _EditCoordinatorProfileState extends State<EditCoordinatorProfile> {
-  Map f={};
-  String u=g.baseUrl;
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  String sbg,db,tl;
-  TextEditingController un = new TextEditingController();
-  TextEditingController c = new TextEditingController();
-  TextEditingController e = new TextEditingController();
-  TextEditingController l = new TextEditingController();
-  TextEditingController d = new TextEditingController();
-  List s=[];
+  String name;
+  String contacts;
+  String profession;
+  String location;
+  String email;
+  String vdr;
+  String exp;
+  String username;
+  String district;
+  _EditCoordinatorProfileState(
+    String name,
+    String contacts,
+    String profession,
+    String location,
+    String email,
+    String vdr,
+    String exp,
+    String username,
+    String district,
+  ) {
+    this.name = name;
+    this.contacts = contacts;
+    this.profession = profession;
+    this.location = location;
+    this.email = email;
+    this.vdr = vdr;
+    this.exp = exp;
+    this.username = username;
+    this.district = district;
+  }
 
-  @override
-  void initState() {
-    postValues();
+  initState() {
     super.initState();
+    fn = new TextEditingController(text: this.name);
+    pr = new TextEditingController(text: this.profession);
+    cn = new TextEditingController(text: this.contacts);
+    vd = new TextEditingController(text: this.vdr);
+    mail = new TextEditingController(text: this.email);
+    coexp = new TextEditingController(text: this.exp);
+    d=this.district;
+    tl=this.location;
+    l=g.tlk[d];
   }
 
-  String uname = '';
-  var r;
-  String n = '',
-      pr = '',
-    // d = '',
-    //  l = '',
-    //  c = '',
-     re = '',
-      ex = '',
-  //    e = '',
-  //    un = '';
+  //textediting controllers for all fields
+  TextEditingController fn;
+  TextEditingController pr;
+  TextEditingController vd;
+  TextEditingController cn;
+  TextEditingController coexp;
+  TextEditingController mail;
 
-  //function to post userid and password and accepts full details
-  postValues() async {
-    var bd = json.encode({"userid": uname});
-    var response = await http.post(
-        u + "/coordinator_profile.php",
-        body: bd);
-    print(response.statusCode);
-    r = jsonDecode(response.body);
-    print(r);
-    //stores the details to string variables
-    setState(() {
-      n = r['name'];
-      d = r['district'];
-      l = r['localty'];
-      c = r['phone'];
-      e = r['email'];
-      re = r['verified_requests'];
-      ex = r['experience'];
-      pr = r['profession'];
-      un = r['userid'];
-    });
-  }
+//required variables
+  var t, r;
+  Widget w = SizedBox(height: 10);
+  String reg = "", d, tl, p;
+  final GlobalKey<FormState> _key1 = new GlobalKey<FormState>();
+
+ 
+
+  List l = [];
+  //mapping districts to their taluks
 
   @override
   Widget build(BuildContext context) {
-    f = ModalRoute
-        .of(context)
-        .settings
-        .arguments;
-    uname = f['username'];
-    return Scaffold(
-        floatingActionButton: FloatingActionButton(onPressed: () {},
-        child: Icon(Icons.edit),
-          backgroundColor: Colors.deepOrange,),
-          appBar: AppBar(
+    return MaterialApp(
+      theme: ut.maintheme(),
+      home: Scaffold(
+        appBar: AppBar(
           title: Text('Edit Coordinator Profile'),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            ),
+            onPressed: () => Navigator.pop(context),
           ),
-          body: ListView(
+        ),
+        key: _scaffoldKey,
+        resizeToAvoidBottomInset: true,
+        body: Container(
+          //upper beizer curved container
+          decoration: ut.bg(),
+          child: Scrollbar(
+            child: ListView(
               children: <Widget>[
-              //background settings for profile pic
-              Container(
-                  height: 200,
-                  decoration: BoxDecoration(
-                  image: DecorationImage(
-                  image: AssetImage("images/blood_doodle.jpg"),
-                  fit: BoxFit.cover,
-                  colorFilter: new ColorFilter.mode(
-                  Colors.black.withOpacity(0.2), BlendMode.dstATop),),
-                  color: Colors.deepOrange.shade300,
-                  ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                      //profile picture
-                    CircleAvatar(
-                      minRadius: 60,
-                      backgroundColor: Colors.deepOrange.shade300,
-                      child: CircleAvatar(
-                        //backgroundImage: new AssetImage("images/profile.jpg"),
-                        minRadius: 50,
-                        ),
-                        ),
-                        ],
-                        ),
-                        //Name and profession details
-                    SizedBox(height: 10,),
-                    Text(n.toUpperCase(), style: TextStyle(fontSize: 22.0,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),),
-                    Text(
-                        pr, style: TextStyle(fontSize: 14.0, color: Colors.white),)
-                        ],),
-                        ),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      autovalidate: true,
+                      key: _key1,
+                      child: Column(
+                        children: <Widget>[
+                          TextFormField(
+                            //first name
+                            validator: (value) =>
+                                value.isEmpty ? 'Field required...' : null,
 
-              Container(
-              // height: 50,
-                child: Row(
-                  children: <Widget>[
-                    //Experience details
-                  Expanded(
-                    child: Container(
-                      color: Colors.deepOrange.shade400,
-                      child: ListTile(
-                        title: Text("$ex years", textAlign: TextAlign.center,
-                          style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24.0
-                          ),),
-                        subtitle: Text(
-                          "of trusted service", textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white,
-                          fontStyle: FontStyle.italic),),
+                            controller: fn,
+                            style: TextStyle(fontSize: 20),
+
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.mood,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    borderSide:
+                                        BorderSide(color: Color(0xFFFB415B))),
+                                labelText: 'Name',
+                                labelStyle: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
                           ),
-                          ),
-                          ),
-                          //Details of donors' verified
-                  Expanded(
-                    child: Container(
-                      color: Colors.red,
-                      child: ListTile(
-                        title: Text(
-                        re, textAlign: TextAlign.center, style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24.0
-                        ),),
-                        subtitle: Text("verified donor requests",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white,
-                          fontStyle: FontStyle.italic),),
-                          ),
-                          ),
-                          ),
-                        SizedBox(
+                          
+                          SizedBox(
                             height: 20,
-                            ),
-                            EditForm()
-                          ],
                           ),
-                          ),
-                          ],
-    ); }
-
-        EditForm {
-            @override
-            Widget build(BuildContext context) {
-              return new Scaffold(
-                  key: _scaffoldKey,
-                  appBar: new AppBar(
-                    title: new Text(widget.title),
-                  ),
-
-                  body: new SafeArea(
-                      top: false,
-                      bottom: false,
-                      child: new Form(
-                        key: _formKey,
-                        autovalidate: true,
-                        child: new ListView(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                            children: <Widget>[
-                              SizedBox(height: 30,),
-                              new TextFormField(
-                                //first name
-                                validator: (value) =>
-                                value.isEmpty? 'Field required...' : null,
-
-                                controller: un,
-                                style: TextStyle(fontSize: 20),
-
-                                decoration: InputDecoration(
-                                    prefixIcon: (Icon(Icons.mood,color:Color(0xFFFB415B))),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(20.0),
-                                        borderSide: BorderSide(color:Color(0xFFFB415B))
-                                    ),
-                                    labelText: 'Coordinator ID',
-                                    labelStyle:
-                                    TextStyle(color: Colors.deepOrange, fontSize: 12.0)),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-
-
-                              TextFormField(
-                                validator: (value) {
-                                  var potentialNum = int.tryParse(value);
-                                  if (potentialNum == null) {
-                                    return 'Please enter a valid contact number';
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                                controller: c,
-                                keyboardType: TextInputType.phone,
-                                style: TextStyle(fontSize: 20),
-                                decoration: InputDecoration(
-                                    prefixIcon: (Icon(Icons.phone,color:Color(0xFFFB415B))),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    labelText: 'Phone',
-                                    labelStyle:
-                                    TextStyle(color: Colors.deepOrange, fontSize: 12.0)),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-
-                              TextFormField(
-                                validator: (value) =>
-                                value.isEmpty? 'Field required...' : null,
-
+                          //district selector
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.home,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0))),
+                            isExpanded: true,
+                            validator: (value) =>
+                                value == null ? 'Field required...' : null,
+                            hint: Text('Choose District',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                    color: Colors.black, fontSize: 20)),
+                            items: g.districts.map((lisVal) {
+                              return DropdownMenuItem<String>(
+                                value: lisVal,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(lisVal,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20)),
+                                    Divider()
+                                  ],
                                 ),
-                                controller: e,
-                                keyboardType: TextInputType.emailAddress,
-                                decoration: InputDecoration(
-                                    prefixIcon: (Icon(Icons.email,color:Color(0xFFFB415B))),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(20.0),
-                                        borderSide: BorderSide(color:Color(0xFFFB415B))
-                                    ),
-                                    labelText: 'Email',
-                                    labelStyle:
-                                    TextStyle(color: Colors.deepOrange, fontSize: 12.0)),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-
-                              DropdownButtonFormField<String>(
-                                decoration: InputDecoration(
-                                    prefixIcon: (Icon(Icons.home,color:Color(0xFFFB415B))),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(20.0)
-                                    )
-                                ),
-                                isExpanded: true,
-                                validator: (value) =>
+                              );
+                            }).toList(),
+                            onChanged: (String val) {
+                              setState(() {
+                                this.d = val;
+                                l = g.tlk[d];
+                              });
+                              tl = null;
+                            },
+                            value: this.d,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //taluk selector
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.home,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0))),
+                            isExpanded: true,
+                            validator: (value) =>
                                 value == null ? 'Field required...' : null,
-                                hint: Text('Choose District',
-                                    style:
-                                    TextStyle(color: Colors.black, fontSize: 20)),
-                                items: g.districts.map((lisVal) {
-                                  return DropdownMenuItem<String>(
-                                    value: lisVal,
-                                    child: Column(
-                                      crossAxisAlignment:CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(lisVal,
-                                            style: TextStyle(
-                                                color: Colors.deepOrange, fontSize: 12.0)),Divider()
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (String val) {
-                                  setState(() {
-                                    this.d = val;
-                                    l = g.tlk[d];
-                                  });
-                                  tl = null;
-                                },
-                                value: this.d,
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              //taluk selector
-                              DropdownButtonFormField<String>(
-                                decoration: InputDecoration(
-                                    prefixIcon: (Icon(Icons.home,color:Color(0xFFFB415B))),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(20.0)
-                                    )
+                            hint: Text('Choose Taluk',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                            items: l.map((lisVal) {
+                              return DropdownMenuItem<String>(
+                                value: lisVal,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(lisVal,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20)),
+                                    Divider()
+                                  ],
                                 ),
-                                isExpanded: true,
-                                validator: (value) =>
-                                value == null ? 'Field required...' : null,
-                                hint: Text('Choose Taluk',
-                                    style:
-                                    TextStyle(color: Colors.black, fontSize: 20)),
-                                items: s.map((lisVal) {
-                                  return DropdownMenuItem<String>(
-                                    value: lisVal,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(lisVal,
-                                            style: TextStyle(
-                                                color: Colors.deepOrange, fontSize: 12.0)),Divider()
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (String val) {
-                                  setState(() {
-                                    this.tl = val;
-                                    print(tl);
-                                  });
-                                },
-                                value: this.tl,
+                              );
+                            }).toList(),
+                            onChanged: (String val) {
+                              setState(() {
+                                this.tl = val;
+                                print(tl);
+                              });
+                            },
+                            value: this.tl,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //contact number
+                          TextFormField(
+                            validator: (value) => value.isEmpty
+                                ? 'Field required...'
+                                : value.length != 10
+                                    ? 'Enter a valid number'
+                                    : null,
+                            controller: cn,
+                            keyboardType: TextInputType.phone,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.phone,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: 'Contact number',
+                                labelStyle: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //alternate contact number
+                          TextFormField(
+                            validator: (value)=> value.isEmpty
+                                ? 'Field required...'
+                                    : null,
+                            controller:coexp,
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.calendar_today,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: 'Experience',
+                                labelStyle: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //email
+                          TextFormField(
+                            controller: mail,
+                            keyboardType: TextInputType.emailAddress,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.mail,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: 'Email',
+                                labelStyle: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //last donated
+                          TextFormField(
+                            controller: pr,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                              prefixIcon: (Icon(Icons.calendar_today,
+                                  color: Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
                               ),
-                              SizedBox(
-                                height: 20,
+                              labelText: 'Profession',
+                              labelStyle:
+                                  TextStyle(color: Colors.black, fontSize: 20),
+                              
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          
+
+                         
+                          //button
+                          InkWell(
+                            onTap: () {
+                              callIt(context);
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(30),
+                              height: 56.0,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40.0),
+                                gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFFFB415B),
+                                      Color(0xFFEE5623)
+                                    ],
+                                    begin: Alignment.centerRight,
+                                    end: Alignment.centerLeft),
                               ),
-
-
-                              Center(
+                              child: Center(
                                 child: Text(
-                                  "SUBMIT",
+                                  "UPDATE",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18.0,
                                   ),
                                 ),
                               ),
-                            ]
-                        ),
-                      )));
-            }
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-        }
-        void _submitForm() {
-        final FormState form = _formKey.currentState;
+  void _submitForm() {
+    final FormState form = _key1.currentState;
+    if (!_key1.currentState.validate()) {
+      showMessage('Form is not valid!  Please review and correct.');
+    } else {
+      form.save(); //This invokes each onSaved event
+     
+    }
+  }
 
-        if (!_formKey.currentState.validate()) {
-        showMessage('Form is not valid!  Please review and correct.');
-        } else {
-        form.save(); //This invokes each onSaved event
-        print('Your profile is edited.. ');
+  void showMessage(String message, [MaterialColor color = Colors.red]) {
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+        backgroundColor: color,
+        content: new Text(
+          message,
+          style: TextStyle(
+            fontSize: 16,
+          ),
+        )));
+  }
 
-        }
-        }
+  callIt(BuildContext context) {
+    setState(() {
+      //checking weight and age
+      if (!_key1.currentState.validate()) {
+        _submitForm();
+      } else {
+        
+        // if every data is available post details
+        
+          postData(g.baseUrl, context);
+      }
+    });
+  }
 
-        void showMessage(String message, [MaterialColor color = Colors.red]) {
-        _scaffoldKey.currentState
-            .showSnackBar(new SnackBar(backgroundColor: color, content: new Text(message,style: TextStyle(fontSize: 16,),)));
-        }
+  //to set username and password
+  setPrefs1() async {
+    final SharedPreferences sp = await SharedPreferences.getInstance();
+    sp.setString("name", fn.text);
+   
+    sp.setString("district", d);
+    sp.setString("email", mail.text);
+    sp.setString("profession", pr.text);
+    sp.setString("location", tl);
+    sp.setString("phone", cn.text);
+    sp.setString("experience", coexp.text);
+    sp.setString("verified_requests", vd.text);
+  }
 
+  postData(String s, BuildContext context) async {
+    
 
+    var bd = json.encode({
+      "name": fn.text,
+      "district": d,
+      "localty": tl,
+      "contacts": cn.text,
+      "profession": pr.text,
+      "email": mail.text,
+      "experience": coexp.text,
+      "requests":vd.text,
+      "uname": username,
+    });
+    var res = await http.post(
+        g.baseUrl+"/edit_coordinator_profile.php",
+        body: bd);
+    print(res.statusCode);
+    reg = jsonDecode(res.body);
+    print(res.body);
+    if (reg != "Contact number Already Exists..!") {
+      Navigator.pop(context, () {
+        setState(() {});
+      });
+      setPrefs1();
+    }
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text(
+              jsonDecode(res.body),
+              style: TextStyle(fontSize: 20, color:Color(0xFFEE5623)),
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            contentPadding: EdgeInsets.all(20),
+          );
+        });
+    reg = '';
+  }
+
+}
