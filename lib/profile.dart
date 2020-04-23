@@ -49,8 +49,10 @@ class _ProfileState extends State<Profile> {
       ac = sp.getString('alt_contact');
       e = sp.getString('email');
       ld = sp.getString('last_don');
+      ld=ld==null?'':ld;
       s = sp.getString('status');
       at = sp.getString('for_time');
+      at=at==null?'':at.isEmpty?'':at;
       un = uname;
     });
   }
