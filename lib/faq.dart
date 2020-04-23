@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:revive/utils.dart' as ut;
+
+
 class Faq extends StatelessWidget {
   String what = "Donating blood is a life saving measure especially when you have a rare blood type. Donating blood is safe and simple. It takes approximately 10-15 minutes to complete the blood donation process. We can save up to 3 to 4 precious lives by donating blood.";
   String process ="1) You walk into a reputed and safe blood donation centre or a mobile camp organized by a reputed institution.\n2) A few questions will be asked to determine your health status (general questions on health, donation history etc). Usually you will be asked to fill out a short form.\n3) Then a quick physical check will be done to check temperature, blood pressure, pulse and hemoglobin content in blood to ensure you are a healthy donor.\n4) If found fit to donate, then you will be asked to lie down on a resting chair or a bed. Your arm will be thoroughly cleaned. Then using sterile equipments blood will be collected in a special plastic bag. Approximately 350 ml of blood will be collected in one donation. Those who weigh more than 60 Kg can donate 450 ml of blood.\n5) Then you must rest and relax for a few minutes with a light snack and something refreshing to drink. Some snacks and juice will be provided.\n6) Blood will be separated into components within eight hours of donation.\n7) The blood will then be taken to the laboratory for testing.\n8) Once found safe, it will be kept in special storage and released when required.\n9) The blood is now ready to be taken to the hospital, to save lives.";
@@ -18,12 +20,12 @@ class Faq extends StatelessWidget {
         title: Text("FAQ"),
         centerTitle: true,
         leading: IconButton(icon:Icon(Icons.arrow_back_ios),onPressed:(){
-          //Navigator.pop(context);
+           Navigator.pop(context);
         },),
         backgroundColor: Colors.red[400],
       ),
       body: Container(
-        width: 360,
+        width:MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(10.0),
         //color: Colors.red[400],
         decoration: ut.bg(),
@@ -31,7 +33,6 @@ class Faq extends StatelessWidget {
           ListView(
             padding: EdgeInsets.all(5.0),
             children: <Widget>[
-              Divider(),
               ExpansionTile(
                 title: Text("What is blood donation?",
                   style: TextStyle(
@@ -170,7 +171,7 @@ class Faq extends StatelessWidget {
                     ),),
                 ],
               ),
-              Divider(),
+             
             ],
           )
       ),
