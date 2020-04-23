@@ -7,6 +7,7 @@ import 'package:revive/blood_banks.dart';
 import 'package:revive/coordinator_login.dart';
 import 'package:revive/coordinator_profile.dart';
 import 'package:revive/coordinator_requests_list.dart';
+import 'package:revive/faq.dart';
 import 'package:revive/newsfeed.dart';
 import 'package:revive/profile.dart';
 import 'package:revive/request.dart';
@@ -333,6 +334,18 @@ class HomeScreenState extends State<HomeScreen> {
                 : SizedBox(
                     width: 1,
                   ),
+                  ListTile(
+              leading: Icon(Icons.question_answer),
+              title: Text('FAQs'),
+              onTap: () {
+               Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Faq()),
+    ).then((var value) {
+      //CODE HERE to execute if you back to this page from signup
+    });
+              },
+            ),
             ListTile(
               leading: Icon(Icons.import_contacts),
               title: Text('Terms and conditions'),
@@ -437,7 +450,7 @@ class HomeScreenState extends State<HomeScreen> {
                                 ? Container(
                                     padding:
                                         EdgeInsets.only(top: 30, bottom: 30),
-                                    height: 120,
+                                    height: 80,
                                     width: 100,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
@@ -464,7 +477,7 @@ class HomeScreenState extends State<HomeScreen> {
                                 ? Container(
                                     padding:
                                         EdgeInsets.only(top: 30, bottom: 30),
-                                    height: 120,
+                                    height: 80,
                                     width: 100,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
@@ -491,7 +504,7 @@ class HomeScreenState extends State<HomeScreen> {
                             g.g_n.isEmpty
                                 ? Container(
                                     padding: EdgeInsets.only(top: 30, left: 8),
-                                    height: 120,
+                                    height: 80,
                                     width: 100,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
