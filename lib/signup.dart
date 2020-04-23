@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'globals.dart' as g;
 import 'utils.dart' as ut;
 
-/* created by Sandra*/
+/* creted by Sandra*/
 
 class SignUp extends StatefulWidget {
   @override
@@ -110,7 +110,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 40.0, left: 20),
+                          padding: const EdgeInsets.only(top: 20.0, left: 20),
                           child: Text(
                             'Welcome',
                             style: TextStyle(
@@ -729,9 +729,9 @@ class _SignUpState extends State<SignUp> {
               builder: (BuildContext context) {
                 return AlertDialog(
                   content: Text("Sorry,You're not eligible to register",
-                      style: TextStyle(fontSize: 30, color: Colors.red)),
+                      style: TextStyle(fontSize: 20, color: Colors.red)),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(40))),
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
                   contentPadding: EdgeInsets.all(20),
                 );
               });
@@ -751,6 +751,17 @@ class _SignUpState extends State<SignUp> {
     Future<bool> u = sp.setString("username", un.text);
     Future<bool> v = sp.setString("name", fn.text);
     Future<bool> w = sp.setString("blood_group", sbg);
+    sp.setString("gender",gen.toLowerCase());
+    sp.setString("district", d);
+    sp.setString("age",age.text);
+    sp.setString("weight", weight.text);
+    sp.setString("taluk", tl);
+     sp.setString( "contacts", cn.text);
+      sp.setString("alt_contact", acn.text);
+       sp.setString("email", mail.text);
+       sp.setString("last_don", ld.text);
+       sp.setString("status", st);
+       sp.setString("for_time",forTime.text);
     //print(u);
     Future<bool> pa = sp.setString("password",ut.encrypt(pass.text));
     // print(pa);
@@ -792,10 +803,10 @@ class _SignUpState extends State<SignUp> {
             return AlertDialog(         
               content: Text(
                 jsonDecode(res.body),
-                style: TextStyle(fontSize: 30, color: Colors.purpleAccent),
+                style: TextStyle(fontSize: 20, color:  Color(0xFFEE5623)),
               ),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(40))),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
               contentPadding: EdgeInsets.all(20),
             );
           });
