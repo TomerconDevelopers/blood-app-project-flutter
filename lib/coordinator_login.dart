@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:revive/home.dart';
-import 'package:revive/signup.dart';
 import 'utils.dart' as ut;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,59 +32,61 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
     return MaterialApp(
         theme: ut.maintheme(),
         home: Scaffold(
-            body: SingleChildScrollView(
+            body: Container(
+              decoration: ut.bg(),
+              child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.only(
-                top: 100.0, right: 20.0, left: 20.0, bottom: 20.0),
-            decoration: ut.bg(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                ut.logo(),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Text(
-                  "Coordinator Login",
-                  style: TextStyle(
-                      fontSize: 32.0,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey[800]),
-                ),
-                SizedBox(
-                  height: 40.0,
-                ),
-                buildTextField("Username", em),
-                SizedBox(
-                  height: 20.0,
-                ),
-                buildTextField("Password", pass),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Text(
-                        "Forgotten Password?",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ],
+              padding: EdgeInsets.only(
+                  top: 100.0, right: 20.0, left: 20.0, bottom: 20.0),
+              
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  ut.logo(),
+                  SizedBox(
+                    height: 20.0,
                   ),
-                ),
-                SizedBox(height: 50.0),
-                buildButtonContainer(),
-                SizedBox(
-                  height: 10.0,
-                ),
-                
-              ],
-            ),
+                  Text(
+                    "Coordinator Login",
+                    style: TextStyle(
+                        fontSize: 32.0,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey[800]),
+                  ),
+                  SizedBox(
+                    height: 40.0,
+                  ),
+                  buildTextField("Username", em),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  buildTextField("Password", pass),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          "Forgotten Password?",
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 50.0),
+                  buildButtonContainer(),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                ],
+              ),
           ),
-        )));
+        ),
+            )));
   }
 
   Widget buildTextField(String hintText, TextEditingController t) {
@@ -123,26 +124,30 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
   Widget buildButtonContainer() {
     return InkWell(
       onTap: () async {
-        var bd = json.encode({"uname": em.text, "pass":pass.text});
-        res = await http.post(
-          g.baseUrl+"/coordinator_login.php",
+        var bd = json.encode({"uname": em.text, "pass": pass.text});
+        res = await http.post(g.baseUrl + "/coordinator_login.php",
             body: bd);
         print(res.statusCode);
-        if (res.body != "Invalid Username/Password") {
+        print(res.body);
+        var reg=jsonDecode(res.body);
+        if (reg != "Invalid Username/Password") {
           var r = json.decode(res.body);
           print(r['name']);
           String capname = r['name'];
-              final SharedPreferences sp=await SharedPreferences.getInstance();
-          Future<bool> u = sp.setString("name", r['name']);
-          Future<bool> v= sp.setString("username", r['userid']);
-          Future<bool> w = sp.setString("password", r['password']);
-          //print(u);
-          Future<bool> pa = sp.setString("location", r['localty']);
+          final SharedPreferences sp = await SharedPreferences.getInstance();
+          sp.setString("name", r['name']);
+          sp.setString("username", r['userid']);
+          sp.setString("password", r['password']);
+          sp.setString("district", r['district']);
+          sp.setString("phone", r['phone']);
+          sp.setString("email", r['email']);
+          sp.setString("verified_requests", r['verified_requests']);
+          sp.setString("location", r['localty']);
+          sp.setString("experience", r['experience']);
+          sp.setString("profession", r['profession']);
           setState(() {
-            Navigator.pop(context,(){
-              setState(() {
-                
-              });
+            Navigator.pop(context, () {
+              setState(() {});
             });
             showDialog(
                 context: context,
@@ -151,27 +156,28 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
                     "Welcome back " + capname.toUpperCase(),
                     style: TextStyle(fontSize: 20, color: Color(0xFFEE5623)),
                   ),
-                  
                 ));
           });
-          
         } else {
+          print("invalid");
           setState(() {
             showDialog(
                 context: context,
                 child: AlertDialog(
-                  content: Text(res.body,
+                  content: Text("Invalid Username/Password",
                       style: TextStyle(fontSize: 20, color: Color(0xFFEE5623))),
                   actions: <Widget>[
                     InkWell(
-                      onTap: () => Navigator.pop(context),
-                      child: Text("OK",style: TextStyle(fontSize: 15, color: Color(0xFFEE5623),))
-                    )
+                        onTap: () => Navigator.pop(context),
+                        child: Text("OK",
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Color(0xFFEE5623),
+                            )))
                   ],
                 ));
           });
         }
-
       },
       child: Container(
         height: 56.0,
