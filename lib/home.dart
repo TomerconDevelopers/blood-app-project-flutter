@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:revive/about.dart';
 import 'package:revive/blood_banks.dart';
 import 'package:revive/coordinator_login.dart';
@@ -13,6 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as g;
 import 'login_activity.dart';
 import 'utils.dart' as ut;
+import 'package:mongo_dart/mongo_dart.dart' as mon;
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -61,7 +66,7 @@ class HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     width: 15,
                   ),
-                  g.l.isNotEmpty
+                  g.g_l.isNotEmpty
                       ? IconButton(
                           icon: Icon(
                             Icons.account_circle,
@@ -72,18 +77,20 @@ class HomeScreenState extends State<HomeScreen> {
                               MaterialPageRoute(
                                   builder: (context) => CoordinatorProfile())),
                         )
-                      : g.bg.isNotEmpty?IconButton(
-                          icon: Icon(
-                            Icons.account_circle,
-                            size: 25,
-                          ),
-                          onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>Profile())),
-                        ):SizedBox(
-                          height: 1,
-                        ),
+                      : g.g_bg.isNotEmpty
+                          ? IconButton(
+                              icon: Icon(
+                                Icons.account_circle,
+                                size: 25,
+                              ),
+                              onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Profile())),
+                            )
+                          : SizedBox(
+                              height: 1,
+                            ),
                 ],
               ),
             ),
@@ -144,7 +151,7 @@ class HomeScreenState extends State<HomeScreen> {
                 // ...
               },
             ),
-            g.bg.isNotEmpty
+            g.g_bg.isNotEmpty
                 ? ListTile(
                     leading: Icon(Icons.account_circle),
                     title: Text('Profile'),
@@ -155,27 +162,35 @@ class HomeScreenState extends State<HomeScreen> {
                       // ...
                     },
                   )
-                :(g.l.isNotEmpty?ListTile(
-                    leading: Icon(Icons.account_circle),
-                    title: Text('Profile'),
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => CoordinatorProfile()));
-                      // Update the state of the app.
-                      // ...
-                    },
-                  ):SizedBox(width: 1)),
-                g.l.isNotEmpty?ListTile(
+                : (g.g_l.isNotEmpty
+                    ? ListTile(
+                        leading: Icon(Icons.account_circle),
+                        title: Text('Profile'),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CoordinatorProfile()));
+                          // Update the state of the app.
+                          // ...
+                        },
+                      )
+                    : SizedBox(width: 1)),
+            g.g_l.isNotEmpty
+                ? ListTile(
                     leading: Icon(Icons.list),
                     title: Text('Request List'),
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) =>RequestList()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RequestList()));
                       // Update the state of the app.
                       // ...
                     },
-                  ):SizedBox(width: 1),
-            g.n.isNotEmpty
+                  )
+                : SizedBox(width: 1),
+            g.g_n.isNotEmpty
                 ? ListTile(
                     leading: Icon(Icons.power_settings_new),
                     title: Text('Log out'),
@@ -194,10 +209,21 @@ class HomeScreenState extends State<HomeScreen> {
                                       sp.setString('blood_group', '');
                                       sp.setString('password', '');
                                       sp.setString('location', '');
+                                      sp.setString("gender", '');
+                                      sp.setString("district", '');
+                                      sp.setString("age", '');
+                                      sp.setString("weight", '');
+                                      sp.setString("taluk", '');
+                                      sp.setString("contacts", '');
+                                      sp.setString("alt_contact", '');
+                                      sp.setString("email", '');
+                                      sp.setString("last_don", '');
+                                      sp.setString("status", '');
+                                      sp.setString("for_time", '');
                                       setState(() {
-                                        g.n = '';
-                                        g.bg = '';
-                                        g.l='';
+                                        g.g_n = '';
+                                        g.g_bg = '';
+                                        g.g_l = '';
                                       });
                                       Navigator.pop(context);
                                     },
@@ -232,6 +258,81 @@ class HomeScreenState extends State<HomeScreen> {
                     },
                   )
                 : SizedBox(width: 1),
+            g.g_bg.isNotEmpty
+                ? ListTile(
+                    title: Text('Delete Account'),
+                    leading: Icon(Icons.delete),
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              actions: <Widget>[
+                                FlatButton(
+                                    onPressed: () async {
+                                      final SharedPreferences sp =
+                                          await SharedPreferences.getInstance();
+                                      String uname = sp.getString("username");
+                                      var bd = jsonEncode({"username": uname});
+                                      var result = await http.post(
+                                          g.baseUrl + "/delete_account.php",
+                                          body: bd);
+                                      Navigator.pop(context);
+                                      ut.showtoast(
+                                          jsonDecode(result.body), Colors.red);
+                                      sp.setString('name', '');
+                                      sp.setString('username', '');
+                                      sp.setString('blood_group', '');
+                                      sp.setString('password', '');
+                                      sp.setString('location', '');
+                                      sp.setString("gender", '');
+                                      sp.setString("district", '');
+                                      sp.setString("age", '');
+                                      sp.setString("weight", '');
+                                      sp.setString("taluk", '');
+                                      sp.setString("contacts", '');
+                                      sp.setString("alt_contact", '');
+                                      sp.setString("email", '');
+                                      sp.setString("last_don", '');
+                                      sp.setString("status", '');
+                                      sp.setString("for_time", '');
+                                      setState(() {
+                                        g.g_n = '';
+                                        g.g_bg = '';
+                                        g.g_l = '';
+                                      });
+                                    },
+                                    child: Text(
+                                      'Yes',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Color(0xFFEE5623)),
+                                    )),
+                                FlatButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Color(0xFFEE5623)),
+                                    ))
+                              ],
+                              content: Text(
+                                "Do you want to delete account?",
+                                style: TextStyle(
+                                    fontSize: 20, color: Color(0xFFEE5623)),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              contentPadding: EdgeInsets.all(20),
+                            );
+                          });
+                    },
+                  )
+                : SizedBox(
+                    width: 1,
+                  ),
             ListTile(
               leading: Icon(Icons.import_contacts),
               title: Text('Terms and conditions'),
@@ -251,142 +352,182 @@ class HomeScreenState extends State<HomeScreen> {
             ),
           ],
         )),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(bottom: 20),
-              height: 400,
-              child: ut.image_carousel(),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              "WELCOME " + g.n.toUpperCase(),
-              style: TextStyle(
-                  fontSize: 20,
-                  color: Color(0xFFEE5623),
-                  fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            //Emergency requirements button
-            InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => NewsFeed()));
-              },
-              child: Container(
-                padding: EdgeInsets.all(10),
-                decoration: ut.buttonstyle(),
-                width: 250,
-                child: Text(
-                  "Emergency requirements",
-                  style: ut.bt(),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => BloodRequest()));
-
-                //Request donor redirection code
-              },
-              child: Container(
-                padding: EdgeInsets.all(10),
-                decoration: ut.buttonstyle(),
-                width: 250,
-                child: Text(
-                  "Request blood",
-                  style: ut.bt(),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-
-            //Login and signup button
-            Expanded(
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+        body: LayoutBuilder(builder:
+            (BuildContext context, BoxConstraints viewportConstraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints:
+                  BoxConstraints(minHeight: viewportConstraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    g.n.isEmpty
-                        ? Expanded(
-                                                  child: InkWell(
-                              onTap: () {
-                                login();
-                              },
-                              child: Container(
-                                  padding: EdgeInsets.all(20),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Expanded(child: ut.btext("User Login")),
-                                      Expanded(child: ut.roundicon(
-                                          Icons.keyboard_arrow_right,
-                                          Colors.white,
-                                          Colors.deepOrange.shade300,
-                                          20,
-                                          0))
-                                    ],
-                                  )),
-                            ),
-                        )
-                        : SizedBox(width: 1),
-                    g.n.isEmpty
-                        ? Expanded(
-                                                  child: InkWell(
-                              onTap: () {
-                                signup();
-                              },
-                              child: Container(
-                                  padding: EdgeInsets.all(20),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Expanded(child: ut.btext("Sign Up")),
-                                      Expanded(child: ut.roundicon(Icons.list, Colors.white,
-                                          Colors.deepOrange.shade300, 20, 0))
-                                    ],
-                                  )),
-                            ),
-                        )
-                        : SizedBox(width: 1),
-                         g.n.isEmpty
-                        ? Expanded(
-                                                  child: InkWell(
-                              onTap: () {
-                                coordinatorLogin();
-                              },
-                              child: Container(
-                                  padding: EdgeInsets.all(20),
-                                  child: Row(
-                                    children: <Widget>[
-                                     Expanded(child: ut.btext("Coordinator Login")),
-                                      Expanded(child:ut.roundicon(
-                                          Icons.keyboard_arrow_right,
-                                          Colors.white,
-                                          Colors.deepOrange.shade300,
-                                          20,
-                                          0))
-                                    ],
-                                  )),
-                            ),
-                        )
-                        : SizedBox(width: 1),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      height: 400,
+                      child: ut.image_carousel(),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "WELCOME " + g.g_n.toUpperCase(),
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Color(0xFFEE5623),
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    //Emergency requirements button
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NewsFeed()));
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: ut.buttonstyle(),
+                        width: 250,
+                        child: Text(
+                          "Emergency requirements",
+                          style: ut.bt(),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BloodRequest()));
+
+                        //Request donor redirection code
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: ut.buttonstyle(),
+                        width: 250,
+                        child: Text(
+                          "Request blood",
+                          style: ut.bt(),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    //Login and signup button
+                    Expanded(
+                      child: Align(
+                        alignment: FractionalOffset.bottomCenter,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            g.g_n.isEmpty
+                                ? Container(
+                                    padding:
+                                        EdgeInsets.only(top: 30, bottom: 30),
+                                    height: 120,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      gradient: LinearGradient(
+                                          colors: [Colors.orange, Colors.red]),
+                                    ),
+                                    child: InkWell(
+                                        onTap: () {
+                                          login();
+                                        },
+                                        child: Column(
+                                          children: <Widget>[
+                                            Text(
+                                              "User Login",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        )),
+                                  )
+                                : SizedBox(width: 1),
+                            g.g_n.isEmpty
+                                ? Container(
+                                    padding:
+                                        EdgeInsets.only(top: 30, bottom: 30),
+                                    height: 120,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      gradient: LinearGradient(
+                                          colors: [Colors.orange, Colors.red]),
+                                    ),
+                                    child: InkWell(
+                                        onTap: () {
+                                          signup();
+                                        },
+                                        child: Column(
+                                          children: <Widget>[
+                                            Expanded(
+                                                child: Text(
+                                              "Sign Up",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            )),
+                                          ],
+                                        )),
+                                  )
+                                : SizedBox(width: 1),
+                            g.g_n.isEmpty
+                                ? Container(
+                                    padding: EdgeInsets.only(top: 30, left: 8),
+                                    height: 120,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      gradient: LinearGradient(
+                                          colors: [Colors.orange, Colors.red]),
+                                    ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        coordinatorLogin();
+                                      },
+                                      child: Column(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              "Coordinator Login",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(width: 1),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20)
                   ],
                 ),
               ),
-            )
-          ],
-        ),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -401,7 +542,7 @@ class HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  coordinatorLogin(){
+  coordinatorLogin() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => CoordinatorLoginPage()),
@@ -409,6 +550,7 @@ class HomeScreenState extends State<HomeScreen> {
       coordinatorsetPrefs();
     });
   }
+
   terms() {
     Navigator.push(
       context,
@@ -431,23 +573,23 @@ class HomeScreenState extends State<HomeScreen> {
   setPrefs() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     setState(() {
-      g.n = sp.get("name");
-      g.bg = sp.get("blood_group");
-      if (g.n == null) {
-        g.n = '';
-        g.bg = '';
+      g.g_n = sp.get("name");
+      g.g_bg = sp.get("blood_group");
+      if (g.g_n == null || g.g_bg == null) {
+        g.g_n = '';
+        g.g_bg = '';
       }
     });
   }
-  coordinatorsetPrefs()async{
+
+  coordinatorsetPrefs() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     setState(() {
-      g.n = sp.get("name");
-      g.l=sp.get("location");
-      g.bg='';
-      if (g.n == null) {
-        g.n = '';
-        g.l='';
+      g.g_n = sp.get("name");
+      g.g_l = sp.get("location");
+      if (g.g_n == null || g.g_l == null) {
+        g.g_n = '';
+        g.g_l = '';
       }
     });
   }
