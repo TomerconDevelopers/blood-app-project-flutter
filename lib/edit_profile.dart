@@ -1,62 +1,143 @@
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:revive/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:strings/strings.dart';
 import 'dart:convert';
+import 'globals.dart' as g;
 import 'utils.dart' as ut;
 
-
-//usermodel class
-class UserModel {     
-  String id,name,blood,contact,email;
-  double longitude,latitude;
-
-  UserModel({String id,String name,String blood,String contact,double longitude,double latitude,String email}){
-    this.id=id;
-    this.name=name;
-    this.blood=blood;
-    this.contact=contact;
-    this.longitude=longitude;
-    this.latitude=latitude;
-    this.email=email;
-  }
-}
+/* creted by Sandra*/
 
 class EditProfile extends StatefulWidget {
-  EditProfile({this.userModel});
-  final UserModel userModel;
+  final String name;
+  final String age;
+  final String contacts;
+  final String alt_contacts;
+  final String gender;
+  final String weight;
+  final String location;
+  final String group;
+  final String last_don;
+  final String email;
+  final String status;
+  final String for_time;
+  final String username;
+  final String district;
+  EditProfile(
+   { Key key,
+     @required this.name,
+    @required this.age,
+    @required this.gender,
+    @required this.weight,
+    @required this.group,
+    @required this.district,
+    @required this.location,
+    @required this.contacts,
+    @required this.alt_contacts,
+    @required this.email,
+    @required this.last_don,
+    @required this.status,
+    @required this.for_time,
+    @required this.username,}
+  ) : super(key: key);
   @override
-  _EditState createState() => _EditState();
+  _EditProfileState createState() => _EditProfileState(
+      name,
+      age,
+      gender,
+      weight,
+      group,
+      district,
+      location,
+      contacts,
+      alt_contacts,
+      email,
+      last_don,
+      status,
+      for_time,
+      username);
 }
 
-class _EditState extends State<EditProfile> {
-  GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-  var _user = TextEditingController();
-  var _phone = TextEditingController();
-  String selectedValue;
-  var _scaffoldkey = GlobalKey<ScaffoldState>();
-  String text = "Edit profile";
-  String locationName = 'Location';
-  bool index = true;
-  bool isLoading = false;
-  bool hiddenText = true;
-  Map f={};
+final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+class _EditProfileState extends State<EditProfile> {
+  String k='';
+  String name;
+  String ag;
+  String contacts;
+  String alt_contacts;
+  String gend;
+  String weigh;
+  String location;
+  String group;
+  String last_don;
+  String email;
+  String sta;
+  String for_time;
+  String username;
+  String district;
+  _EditProfileState(
+      String name,
+      String ag,
+      String gend,
+      String weigh,
+      String group,
+      String district,
+      String location,
+      String contacts,
+      String alt_contacts,
+      String email,
+      String last_don,
+      String sta,
+      String for_time,
+      String username) {
+    this.name = name;
+    this.ag = ag;
+    this.gend = gend;
+    this.weigh = weigh;
+    this.group = group;
+    this.district = district;
+    this.location = location;
+    this.contacts = contacts;
+    this.alt_contacts = alt_contacts;
+    this.email = email;
+    this.last_don = last_don;
+    this.sta = sta;
+    this.for_time = for_time;
+    this.username = username;
+  }
+  initState() {
+    super.initState();
+    fn = new TextEditingController(text: this.name);
+    age = new TextEditingController(text: this.ag);
+    weight = new TextEditingController(text: this.weigh);
+    cn = new TextEditingController(text: this.contacts);
+    acn = new TextEditingController(text: this.alt_contacts);
+    mail = new TextEditingController(text: this.email);
+    ld = new TextEditingController(text: this.last_don);
+    forTime = new TextEditingController(text: this.for_time);
+    un = new TextEditingController(text: this.username);
+    sbg = this.group;
+    st = this.sta;
+     gen = capitalize(this.gend) ;
+    d = this.district;
+    l=g.tlk[d];
+    tl = this.location;
+  }
 
   //textediting controllers for all fields
-  TextEditingController fn ;
-  TextEditingController age ;
-  TextEditingController weight ;
-  TextEditingController cn ;
-  TextEditingController acn ;
-  TextEditingController mail ;
-  TextEditingController ld ;
-  TextEditingController forTime ;
-  TextEditingController ft ;
-  TextEditingController un ;
-  TextEditingController pass;
-  TextEditingController repass ;
+  TextEditingController fn;
+  TextEditingController age;
+  TextEditingController weight;
+  TextEditingController cn;
+  TextEditingController acn;
+  TextEditingController mail;
+  TextEditingController ld;
+  TextEditingController forTime;
+  TextEditingController un;
 
-  //required variables
+//required variables
   var t, r;
   Widget w = SizedBox(height: 10);
   String reg = "", sbg, st, gen, d, tl, p, m;
@@ -92,384 +173,683 @@ class _EditState extends State<EditProfile> {
   List l = [];
   //mapping districts to their taluks
 
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ut.maintheme(),
+      home: Scaffold(
+        appBar: AppBar(title: Text('Edit Profile'),leading: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Colors.white,
+                                  
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                              ),),
+        key: _scaffoldKey,
+        resizeToAvoidBottomInset: true,
+        body: Container(
+          //upper beizer curved container
+          decoration: ut.bg(),
+          child: Scrollbar(
+            child: ListView(
+              children: <Widget>[
+                
+                 Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: SingleChildScrollView(
+                      child: Form(
+                        autovalidate: true,
+                        key: _key1,
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
+                              //first name
+                              validator: (value) =>
+                                  value.isEmpty ? 'Field required...' : null,
 
-//required variables
- // var t, r;
- // Widget w = SizedBox(height: 10);
- // String reg = "", sbg, st, gen, d, tl, p, m;
+                              controller: fn,
+                              style: TextStyle(fontSize: 20),
 
-  UserModel user = UserModel(
-        id: "",
-        name: "",
-        blood: "",
-        contact: "",
-        longitude: 0,
-        latitude: 0,
-        email: "");
-    static const blood = <String>['A+', 'A-', 'B+', 'B-', 'O+', 'O-'];
-    final List<DropdownMenuItem<String>> _bloodgroups = blood
-        .map(
-          (String value) => DropdownMenuItem<String>(
-                value: value,
-                child: Text(value,
-                    style: TextStyle(
-                      color: Colors.red,
-                    )),
-              ),
-        )
-        .toList();
-  
-    void _update() async {
-      if (_formkey.currentState.validate()) {
-        _formkey.currentState.save();
-      } else
-        return;
-  
-      try {
-        setState(() {
-          isLoading = true;
-        });
-  
-        await FirestoreProvider().updateUser(user);
-  
-        setState(() {
-          index = true;
-          isLoading = false;
-        });
-        Navigator.of(context).pop(context);
-      } catch (err) {
-        setState(() {
-          isLoading = false;
-        });
-        showSnackbar(err.message);
-      }
-    }
-  
-    showSnackbar(message) {
-      _scaffoldkey.currentState.showSnackBar(SnackBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        content: Text(message ?? "Something went wrong, try again later."),
-      ));
-    }
-  
-    @override
-    void initState() {
-      super.initState();
-      if (widget.userModel != null) {
-        _user.text = widget.userModel.name;
-        _phone.text = widget.userModel.contact;
-        selectedValue = widget.userModel.blood;
-        locationName =
-            "${widget.userModel.latitude},${widget.userModel.longitude}";
-        setUser();
-        user = widget.userModel;
-      }
-    }
-  
-    setUser() async {
-      var userr = await FirebaseAuthProvider().getCurrentUser();
-      user.id = userr.uid;
-    }
-  
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        backgroundColor: Color(0xff44130f),
-        key: _scaffoldkey,
-        body: BaseScreen(
-          child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.mood,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderSide:
+                                          BorderSide(color: Color(0xFFFB415B))),
+                                  labelText: 'Name',
+                                  labelStyle: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+
+                            //gender dropdown
+                            DropdownButtonFormField<String>(
+                              
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.wc,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0))),
+                              isExpanded: true,
+                              validator: (value) =>
+                                  value == null ? 'Field required...' : null,
+                              hint: Text('Choose gender',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                              items: gender.map((lisVal) {
+                                return DropdownMenuItem<String>(
+                                  value: lisVal,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(lisVal,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20)),
+                                      Divider(),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String val) {
+                                setState(() {
+                                  this.gen = val;
+                                });
+                              },
+                              value: this.gen,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //age field
+                            TextFormField(
+                              validator: (value) =>
+                                  value.isEmpty ? 'Field required...' : null,
+                              controller: age,
+                              keyboardType: TextInputType.number,
+                              style: TextStyle(fontSize: 20),
+                              decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.cake,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: 'Age',
+                                labelStyle: TextStyle(
+                                    color: Colors.black, fontSize: 20),
+                                hintText: 'Between 18 and 65',
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //weight field
+                            TextFormField(
+                              validator: (value) =>
+                                  value.isEmpty ? 'Field required...' : null,
+                              controller: weight,
+                              keyboardType: TextInputType.number,
+                              style: TextStyle(fontSize: 20),
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.timelapse,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  labelText: 'Weight(in Kg)',
+                                  labelStyle: TextStyle(
+                                      color: Colors.black, fontSize: 20),
+                                  hintText: 'Should be 50 or above'),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //blood group dropdown
+                            DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.invert_colors,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0))),
+                              isExpanded: true,
+                              validator: (value) =>
+                                  value == null ? 'Field required...' : null,
+                              hint: Text('Choose Blood group',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                              items: g.bloodgroup.map((lisVal) {
+                                return DropdownMenuItem<String>(
+                                  value: lisVal,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(lisVal,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20)),
+                                      Divider()
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String val) {
+                                setState(() {
+                                  this.sbg = val;
+                                });
+                              },
+                              value: this.sbg,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //district selector
+                            DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.home,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0))),
+                              isExpanded: true,
+                              validator: (value) =>
+                                  value == null ? 'Field required...' : null,
+                              hint: Text('Choose District',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                              items: g.districts.map((lisVal) {
+                                return DropdownMenuItem<String>(
+                                  value: lisVal,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(lisVal,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20)),
+                                      Divider()
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String val) {
+                                setState(() {
+                                  this.d = val;
+                                  l = g.tlk[d];
+                                });
+                                tl =null;
+                              },
+                              value: this.d,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //taluk selector
+                            DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.home,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0))),
+                              isExpanded: true,
+                              validator: (value) =>
+                                  value == null ? 'Field required...' : null,
+                              hint: Text('Choose Taluk',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                              items: l.map((lisVal) {
+                                return DropdownMenuItem<String>(
+                                  value: lisVal,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(lisVal,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20)),
+                                      Divider()
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String val) {
+                                setState(() {
+                                  this.tl = val;
+                                  print(tl);
+                                });
+                              },
+                              value: this.tl,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //contact number
+                            TextFormField(
+                              validator: (value) => value.isEmpty
+                                  ? 'Field required...'
+                                  : value.length != 10
+                                      ? 'Enter a valid number'
+                                      : null,
+                              controller: cn,
+                              keyboardType: TextInputType.phone,
+                              style: TextStyle(fontSize: 20),
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.phone,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  labelText: 'Contact number',
+                                  labelStyle: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //alternate contact number
+                            TextFormField(
+                              validator: (value) {
+                                if (value.isNotEmpty && value.length != 10) {
+                                  return 'Please enter a valid contact number';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              controller: acn,
+                              keyboardType: TextInputType.phone,
+                              style: TextStyle(fontSize: 20),
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.phone,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  labelText: 'Alternate Contact number',
+                                  labelStyle: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //email
+                            TextFormField(
+                              controller: mail,
+                              keyboardType: TextInputType.emailAddress,
+                              style: TextStyle(fontSize: 20),
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.mail,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  labelText: 'Email',
+                                  labelStyle: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //last donated
+                            TextFormField(
+                              controller: ld,
+                              keyboardType: TextInputType.datetime,
+                              style: TextStyle(fontSize: 20),
+                              decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.calendar_today,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: 'Last Donated on',
+                                labelStyle: TextStyle(
+                                    color: Colors.black, fontSize: 20),
+                                hintText: 'YYYY-MM-DD',
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //status-available or unavailable
+                            DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.event_available,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0))),
+                              isExpanded: true,
+                              validator: (value) =>
+                                  value == null ? 'Field required...' : null,
+                              hint: Text('Choose Status',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                              items: status.map((lisVal) {
+                                return DropdownMenuItem<String>(
+                                  value: lisVal,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(lisVal,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20)),
+                                      Divider()
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String val) {
+                                setState(() {
+                                  this.st = val;
+                                  if (st != status[0]) {
+                                    w = callFor();
+                                  } else {
+                                    w = SizedBox(height: 10);
+                                  }
+                                });
+                              },
+                              value: this.st,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            w, //if available for/unavailable for till when its valid
+
+                            DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.local_hospital,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0))),
+                              isExpanded: true,
+                              validator: (value) =>
+                                  value == null ? 'Field required...' : null,
+                              hint: Text(
+                                  'Do you have any of the medical conditions given?',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                              items: med.map((lisVal) {
+                                return DropdownMenuItem<String>(
+                                  value: lisVal,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(lisVal,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20)),
+                                      Divider(),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String val) {
+                                setState(() {
+                                  this.m = val;
+                                });
+                              },
+                              value: this.m,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //username
+
+
+                            //button
+                            InkWell(
+                              onTap: () {
+                                callIt(context);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(30),
+                                height: 56.0,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(40.0),
+                                  gradient: LinearGradient(
+                                      colors: [
+                                        Color(0xFFFB415B),
+                                        Color(0xFFEE5623)
+                                      ],
+                                      begin: Alignment.centerRight,
+                                      end: Alignment.centerLeft),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "UPDATE",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                        onPressed: () => Navigator.of(context).pop(context),
                       ),
-                    ],
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      GestureDetector(
-                        child: Text(
-                          text,
-                          style: TextStyle(color: Colors.white, fontSize: 35),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  buildSignupForm()
-                ],
-              ),
+                
+              ],
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
+
+  void _submitForm() {
+    final FormState form = _key1.currentState;
+    if (!_key1.currentState.validate()) {
+      showMessage('Form is not valid!  Please review and correct.');
+    } else {
+      form.save(); //This invokes each onSaved event
+      print('Your request has been recorded.. ');
     }
-  
-    buildSignupForm() {
-      return Form(
-        key: _formkey,
-        child: Column(
-          children: <Widget>[
-            CustomTextField(
-              textCapitalization: TextCapitalization.words,
-              controller: _user,
-              onSaved: (value) {
-                user.name = value;
-              },
-              label: "Fullname",
-              hint: "Ex: Marquees Brownlee",
-              onValidate: (value) {
-                // ignore: missing_return
-                if (value.isEmpty) return "This field can't be empty";
-              },
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            CustomTextField(
-              controller: _phone,
-              onSaved: (value) {
-                user.contact = value;
-              },
-              onValidate: (value) {
-                if (value.length != 10)
-                  return 'Phone Number must be of 10 digits';
-                else if (value.isEmpty) return "This field can't be empty";
-                else return "error";
-              },
-              label: 'Contact',
-              hint: 'Ex:9880124587',
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  border:
-                      Border(bottom: BorderSide(color: Colors.grey, width: 1))),
-              child: DropdownButtonFormField(
-                value: selectedValue,
-                hint: Text(
-                  'Blood Group',
-                  style: TextStyle(color: Colors.white),
-                ),
-                items: _bloodgroups,
-                onChanged: ((String newvalue) {
-                  setState(() {
-                    selectedValue = newvalue;
-                    print(selectedValue);
-                    user.blood = selectedValue;
-                  });
-                }),
-              ),
-            ),
-            SizedBox(height: 20),
-            Container(
-              alignment: Alignment.topLeft,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  border:
-                      Border(bottom: BorderSide(color: Colors.grey, width: 1))),
-              height: 55,
-              child: FlatButton(
-                child: Text(locationName,
-                    style: TextStyle(
-                      color: Colors.white,
-                    )),
-                onPressed: () async {
-                  var loc = await Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Maps()));
-                  if (loc != null) {
-                    setState(() {
-                      locationName = "${loc.latitude},${loc.longitude}";
-                    });
-                    user.latitude = loc.latitude;
-                    user.longitude = loc.longitude;
-                  }
-                },
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                SizedBox(
-                  height: 90,
-                  child: ClipPolygon(
-                    sides: 6,
-                    rotate: 120,
-                    borderRadius: 9.0,
-                    child: Container(
-                      color: Colors.red,
-                      child: isLoading
-                          ? Center(
-                              child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.yellow)))
-                          : IconButton(
-                              icon: Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
+  }
+
+  void showMessage(String message, [MaterialColor color = Colors.red]) {
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+        backgroundColor: color,
+        content: new Text(
+          message,
+          style: TextStyle(
+            fontSize: 16,
+          ),
+        )));
+  }
+
+  callIt(BuildContext context) {
+    setState(() {
+      //checking weight and age
+      if (!_key1.currentState.validate()) {
+        _submitForm();
+      } else {
+        if (int.parse(weight.text) < 50 ||
+            int.parse(age.text) < 18 ||
+            int.parse(age.text) > 65 ||
+            m != 'None') {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  content:  Text(
+                                "Sorry,you are not eligible to continue",
+                                style: TextStyle(
+                                    fontSize: 20, color: Color(0xFFEE5623)),
                               ),
-                              onPressed: _update,
-                            ),
-  
-                    ),
-                  ),
-                ),
-              ],
-            ),
-  
-  
-  
-  
-        ]),
-      );
-    }
-  
-  
-    callIt() {
-      setState(() {
-        //checking weight and age
-                if (_key1.currentState.validate()) {
-          if (int.parse(weight.text) < 50 ||
-              int.parse(age.text) < 18 ||
-              int.parse(age.text) > 65) {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    content: Text("Sorry,You're not eligible to register",style: TextStyle(fontSize: 30,color: Colors.red)),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(40))),
-                    contentPadding: EdgeInsets.all(20),
-                  );
-                });
-                //checks if dropdowns are empty or not
-          }
-           else {
-             postData();
-          }
+                      actions: <Widget>[
+                         FlatButton(
+                                      onPressed: () async {
+                                        final SharedPreferences sp=await SharedPreferences.getInstance();
+                                        var bd=jsonEncode({"username":username});
+                                        var result=await http.post(g.baseUrl+"/delete_account.php",body:bd);
+                                         Navigator.pop(context);
+                                         Navigator.pop(context);
+                                         Navigator.pop(context);
+                                        ut.showtoast(jsonDecode(result.body),Colors.red);
+                                        sp.setString('name', '');
+                                        sp.setString('username', '');
+                                        sp.setString('blood_group', '');
+                                        sp.setString('password', '');
+                                        sp.setString('location', '');
+                                        sp.setString("gender", '');
+                                        sp.setString("district", '');
+                                        sp.setString("age", '');
+                                        sp.setString("weight", '');
+                                        sp.setString("taluk", '');
+                                        sp.setString("contacts", '');
+                                        sp.setString("alt_contact", '');
+                                        sp.setString("email", '');
+                                        sp.setString("last_don", '');
+                                        sp.setString("status", '');
+                                        sp.setString("for_time", '');
+                                        setState(() {
+                                          g.g_n = '';
+                                          g.g_bg = '';
+                                          g.g_l = '';
+                                         
+                                        });
+                                       
+                                      },
+                                      child: Text(
+                                        'OK',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Color(0xFFEE5623)),
+                                      )),
+
+                                       FlatButton(
+                                      onPressed: () 
+                                      => Navigator.pop(context),
+                                      child: Text(
+                                        'Recheck Fields',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Color(0xFFEE5623)),
+                                      ))
+                      ],
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(40))),
+                  contentPadding: EdgeInsets.all(20),
+                );
+              });
+
         }
-      });
-    }
-    //to set username and password
-    setPrefs()async{
-      SharedPreferences sp=await SharedPreferences.getInstance();
-      Future<bool> u=sp.setString("username",un.text);
-      print(u);
-      Future<bool> pa=sp.setString("password",p);
-      print(pa);
-  
-    }
-    postData() async {
-      String fullName = fn.text ;//+ " " + mn.text + " " + ln.text;
-      String g = gen.toLowerCase();
-      p=ut.encrypt(pass.text);
-      await setPrefs();
-       var bd = json.encode({
-        "name": fullName,
-        "gender": g,
-        "age": age.text,
-        "weight": weight.text,
-        "bloodgroup": sbg,
-        "district": d,
-        "localty": tl,
-        "contacts": cn.text,
-        "alt_contact": acn.text,
-        "email": mail.text,
-        "last_don": ld.text,
-        "status": st,
-        "for_time": forTime.text,
-        "uname": un.text,
-        "password": p
-      });
-      var res = await http.post(
-          baseurl+"/signup.php",
-          body: bd);
-      print(res.statusCode);
-     reg = jsonDecode(res.body);
-      print(res.body);
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: Text(reg,style: TextStyle(fontSize: 30,color: Colors.purpleAccent),),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(40))),
-              contentPadding: EdgeInsets.all(20),
-            );
-          });
-    }
-  
-    Widget callFor() {
-      return TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return "Please enter the time upto which status is active";
-          } else {
-            return null;
-          }
-        },
-        controller: forTime,
-        keyboardType: TextInputType.datetime,
-        style: TextStyle(fontSize: 20),
-        decoration: InputDecoration(
-          labelText: 'Status active till',labelStyle:
-                                  TextStyle(color: Colors.black, fontSize: 25,),
-          hintText: 'YYYY-MM-DD',
-        ),
-      );
-    }
+
+        // if every data is available post details
+        else {
+          postData(g.baseUrl, context);
+        }
+      }
+    });
   }
 
-// to clip the path
-class ClippingClass extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0.0, size.height - 40);
-    path.quadraticBezierTo(
-        size.width / 4, size.height, size.width / 2, size.height);
-    path.quadraticBezierTo(size.width - (size.width / 4), size.height,
-        size.width, size.height - 40);
-    path.lineTo(size.width, 0.0);
-    return path;
+  //to set username and password
+  setPrefs1() async {
+    final SharedPreferences sp = await SharedPreferences.getInstance();
+    Future<bool> u = sp.setString("username", un.text);
+    Future<bool> v = sp.setString("name", fn.text);
+    Future<bool> w = sp.setString("blood_group", sbg);
+    sp.setString("gender",gen.toLowerCase());
+    sp.setString("district", d);
+    sp.setString("age",age.text);
+    sp.setString("weight", weight.text);
+    sp.setString("taluk", tl);
+     sp.setString( "contacts", cn.text);
+      sp.setString("alt_contact", acn.text);
+       sp.setString("email", mail.text);
+       sp.setString("last_don", ld.text);
+       sp.setString("status", st);
+       sp.setString("for_time",forTime.text);
+    //print(u);
+    // print(pa);
   }
 
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-
-  showErrorDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-              content:
-                  Text('Enter the fields', style: TextStyle(color: Colors.red)),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('ok'),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-              title: Text('Error'));
+  postData(String s, BuildContext context) async {
+    String g = gen.toLowerCase();
+    final SharedPreferences sp = await SharedPreferences.getInstance();
+    String uname = sp.getString("username");
+    var bd = json.encode({
+      "name": fn.text,
+      "gender": g,
+      "age": age.text,
+      "weight": weight.text,
+      "bloodgroup": sbg,
+      "district": d,
+      "localty": tl,
+      "contacts": cn.text,
+      "alt_contact": acn.text,
+      "email": mail.text,
+      "last_don": ld.text,
+      "status": st,
+      "for_time": forTime.text,
+      "uname": uname,
+    });
+    var res = await http.post(s+"/edit_profile.php", body: bd);
+    print(res.statusCode);
+    reg = jsonDecode(res.body);
+    print(res.body);
+    if (reg != "Contact number Already Exists..!") {
+      Navigator.pop(context,(){
+        setState(() {
+          
         });
+      });
+      setPrefs1();
+    }
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text(
+              jsonDecode(res.body),
+              style: TextStyle(fontSize: 30, color: Colors.purpleAccent),
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(40))),
+            contentPadding: EdgeInsets.all(20),
+          );
+        });
+    reg = '';
   }
 
+  Widget callFor() {
+    return TextFormField(
+      validator: (value) {
+        if (value.isEmpty) {
+          return "Please enter the time upto which status is active";
+        } else {
+          return null;
+        }
+      },
+      controller: forTime,
+      keyboardType: TextInputType.datetime,
+      style: TextStyle(fontSize: 20),
+      decoration: InputDecoration(
+        labelText: 'Status active till',
+        labelStyle: TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+        ),
+        hintText: 'YYYY-MM-DD',
+      ),
+    );
+  }
 }
 
