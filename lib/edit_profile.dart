@@ -6,6 +6,8 @@ import 'package:strings/strings.dart';
 import 'dart:convert';
 import 'globals.dart' as g;
 import 'utils.dart' as ut;
+import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 /* creted by Sandra*/
 
@@ -24,9 +26,9 @@ class EditProfile extends StatefulWidget {
   final String for_time;
   final String username;
   final String district;
-  EditProfile(
-   { Key key,
-     @required this.name,
+  EditProfile({
+    Key key,
+    @required this.name,
     @required this.age,
     @required this.gender,
     @required this.weight,
@@ -39,8 +41,8 @@ class EditProfile extends StatefulWidget {
     @required this.last_don,
     @required this.status,
     @required this.for_time,
-    @required this.username,}
-  ) : super(key: key);
+    @required this.username,
+  }) : super(key: key);
   @override
   _EditProfileState createState() => _EditProfileState(
       name,
@@ -62,7 +64,7 @@ class EditProfile extends StatefulWidget {
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
 class _EditProfileState extends State<EditProfile> {
-  String k='';
+  String k = '';
   String name;
   String ag;
   String contacts;
@@ -115,26 +117,31 @@ class _EditProfileState extends State<EditProfile> {
     cn = new TextEditingController(text: this.contacts);
     acn = new TextEditingController(text: this.alt_contacts);
     mail = new TextEditingController(text: this.email);
-    ld = new TextEditingController(text: this.last_don);
-    forTime = new TextEditingController(text: this.for_time);
+    curr=this.last_don;
+    curr1=this.for_time;
     un = new TextEditingController(text: this.username);
     sbg = this.group;
     st = this.sta;
-     gen = capitalize(this.gend) ;
+    gen = capitalize(this.gend);
     d = this.district;
-    l=g.tlk[d];
+    l = g.tlk[d];
     tl = this.location;
+    if (st != status[0]) {
+      w = callFor();
+    } else {
+      w = SizedBox(height: 10);
+    }
   }
 
   //textediting controllers for all fields
+  final format = DateFormat("yyyy-MM-dd");
+  var curr,curr1;
   TextEditingController fn;
   TextEditingController age;
   TextEditingController weight;
   TextEditingController cn;
   TextEditingController acn;
   TextEditingController mail;
-  TextEditingController ld;
-  TextEditingController forTime;
   TextEditingController un;
 
 //required variables
@@ -178,14 +185,16 @@ class _EditProfileState extends State<EditProfile> {
     return MaterialApp(
       theme: ut.maintheme(),
       home: Scaffold(
-        appBar: AppBar(title: Text('Edit Profile'),leading: IconButton(
-                                icon: Icon(
-                                  Icons.arrow_back_ios,
-                                  color: Colors.white,
-                                  
-                                ),
-                                onPressed: () => Navigator.pop(context),
-                              ),),
+        appBar: AppBar(
+          title: Text('Edit Profile'),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
         key: _scaffoldKey,
         resizeToAvoidBottomInset: true,
         body: Container(
@@ -194,457 +203,446 @@ class _EditProfileState extends State<EditProfile> {
           child: Scrollbar(
             child: ListView(
               children: <Widget>[
-                
-                 Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: SingleChildScrollView(
-                      child: Form(
-                        autovalidate: true,
-                        key: _key1,
-                        child: Column(
-                          children: <Widget>[
-                            TextFormField(
-                              //first name
-                              validator: (value) =>
-                                  value.isEmpty ? 'Field required...' : null,
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      autovalidate: true,
+                      key: _key1,
+                      child: Column(
+                        children: <Widget>[
+                          TextFormField(
+                            //first name
+                            validator: (value) =>
+                                value.isEmpty ? 'Field required...' : null,
 
-                              controller: fn,
-                              style: TextStyle(fontSize: 20),
+                            controller: fn,
+                            style: TextStyle(fontSize: 20),
 
-                              decoration: InputDecoration(
-                                  prefixIcon: (Icon(Icons.mood,
-                                      color: Color(0xFFFB415B))),
-                                  border: OutlineInputBorder(
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.mood,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    borderSide:
+                                        BorderSide(color: Color(0xFFFB415B))),
+                                labelText: 'Name',
+                                labelStyle: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+
+                          //gender dropdown
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                                prefixIcon:
+                                    (Icon(Icons.wc, color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0))),
+                            isExpanded: true,
+                            validator: (value) =>
+                                value == null ? 'Field required...' : null,
+                            hint: Text('Choose gender',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                            items: gender.map((lisVal) {
+                              return DropdownMenuItem<String>(
+                                value: lisVal,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(lisVal,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20)),
+                                    Divider(),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String val) {
+                              setState(() {
+                                this.gen = val;
+                              });
+                            },
+                            value: this.gen,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //age field
+                          TextFormField(
+                            validator: (value) =>
+                                value.isEmpty ? 'Field required...' : null,
+                            controller: age,
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                              prefixIcon:
+                                  (Icon(Icons.cake, color: Color(0xFFFB415B))),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              labelText: 'Age',
+                              labelStyle:
+                                  TextStyle(color: Colors.black, fontSize: 20),
+                              hintText: 'Between 18 and 65',
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //weight field
+                          TextFormField(
+                            validator: (value) =>
+                                value.isEmpty ? 'Field required...' : null,
+                            controller: weight,
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.timelapse,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: 'Weight(in Kg)',
+                                labelStyle: TextStyle(
+                                    color: Colors.black, fontSize: 20),
+                                hintText: 'Should be 50 or above'),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //blood group dropdown
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.invert_colors,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0))),
+                            isExpanded: true,
+                            validator: (value) =>
+                                value == null ? 'Field required...' : null,
+                            hint: Text('Choose Blood group',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                            items: g.bloodgroup.map((lisVal) {
+                              return DropdownMenuItem<String>(
+                                value: lisVal,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(lisVal,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20)),
+                                    Divider()
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String val) {
+                              setState(() {
+                                this.sbg = val;
+                              });
+                            },
+                            value: this.sbg,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //district selector
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.home,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0))),
+                            isExpanded: true,
+                            validator: (value) =>
+                                value == null ? 'Field required...' : null,
+                            hint: Text('Choose District',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                            items: g.districts.map((lisVal) {
+                              return DropdownMenuItem<String>(
+                                value: lisVal,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(lisVal,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20)),
+                                    Divider()
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String val) {
+                              setState(() {
+                                this.d = val;
+                                l = g.tlk[d];
+                              });
+                              tl = null;
+                            },
+                            value: this.d,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //taluk selector
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.home,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0))),
+                            isExpanded: true,
+                            validator: (value) =>
+                                value == null ? 'Field required...' : null,
+                            hint: Text('Choose Taluk',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                            items: l.map((lisVal) {
+                              return DropdownMenuItem<String>(
+                                value: lisVal,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(lisVal,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20)),
+                                    Divider()
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String val) {
+                              setState(() {
+                                this.tl = val;
+                                print(tl);
+                              });
+                            },
+                            value: this.tl,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //contact number
+                          TextFormField(
+                            validator: (value) => value.isEmpty
+                                ? 'Field required...'
+                                : value.length != 10
+                                    ? 'Enter a valid number'
+                                    : null,
+                            controller: cn,
+                            keyboardType: TextInputType.phone,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.phone,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: 'Contact number',
+                                labelStyle: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //alternate contact number
+                          TextFormField(
+                            validator: (value) {
+                              if (value.isNotEmpty && value.length != 10) {
+                                return 'Please enter a valid contact number';
+                              } else {
+                                return null;
+                              }
+                            },
+                            controller: acn,
+                            keyboardType: TextInputType.phone,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.phone,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: 'Alternate Contact number',
+                                labelStyle: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //email
+                          TextFormField(
+                            controller: mail,
+                            keyboardType: TextInputType.emailAddress,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.mail,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: 'Email',
+                                labelStyle: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //last donated
+                          DateTimeField(
+                              onChanged: (val){
+                                var c="${val.year}-${val.month}-${val.day}";
+                                curr=c;
+                              },
+                                decoration: InputDecoration(
+                                    prefixIcon: (Icon(Icons.calendar_today,
+                                        color: Color(0xFFFB415B))),
+                                    border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20.0),
-                                      borderSide:
-                                          BorderSide(color: Color(0xFFFB415B))),
-                                  labelText: 'Name',
-                                  labelStyle: TextStyle(
-                                      color: Colors.black, fontSize: 20)),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-
-                            //gender dropdown
-                            DropdownButtonFormField<String>(
-                              
-                              decoration: InputDecoration(
-                                  prefixIcon: (Icon(Icons.wc,
-                                      color: Color(0xFFFB415B))),
-                                  border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0))),
-                              isExpanded: true,
-                              validator: (value) =>
-                                  value == null ? 'Field required...' : null,
-                              hint: Text('Choose gender',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20)),
-                              items: gender.map((lisVal) {
-                                return DropdownMenuItem<String>(
-                                  value: lisVal,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(lisVal,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20)),
-                                      Divider(),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String val) {
-                                setState(() {
-                                  this.gen = val;
-                                });
-                              },
-                              value: this.gen,
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            //age field
-                            TextFormField(
-                              validator: (value) =>
-                                  value.isEmpty ? 'Field required...' : null,
-                              controller: age,
-                              keyboardType: TextInputType.number,
-                              style: TextStyle(fontSize: 20),
-                              decoration: InputDecoration(
-                                prefixIcon: (Icon(Icons.cake,
-                                    color: Color(0xFFFB415B))),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                labelText: 'Age',
-                                labelStyle: TextStyle(
-                                    color: Colors.black, fontSize: 20),
-                                hintText: 'Between 18 and 65',
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            //weight field
-                            TextFormField(
-                              validator: (value) =>
-                                  value.isEmpty ? 'Field required...' : null,
-                              controller: weight,
-                              keyboardType: TextInputType.number,
-                              style: TextStyle(fontSize: 20),
-                              decoration: InputDecoration(
-                                  prefixIcon: (Icon(Icons.timelapse,
-                                      color: Color(0xFFFB415B))),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  labelText: 'Weight(in Kg)',
-                                  labelStyle: TextStyle(
-                                      color: Colors.black, fontSize: 20),
-                                  hintText: 'Should be 50 or above'),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            //blood group dropdown
-                            DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                  prefixIcon: (Icon(Icons.invert_colors,
-                                      color: Color(0xFFFB415B))),
-                                  border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0))),
-                              isExpanded: true,
-                              validator: (value) =>
-                                  value == null ? 'Field required...' : null,
-                              hint: Text('Choose Blood group',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20)),
-                              items: g.bloodgroup.map((lisVal) {
-                                return DropdownMenuItem<String>(
-                                  value: lisVal,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(lisVal,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20)),
-                                      Divider()
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String val) {
-                                setState(() {
-                                  this.sbg = val;
-                                });
-                              },
-                              value: this.sbg,
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            //district selector
-                            DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                  prefixIcon: (Icon(Icons.home,
-                                      color: Color(0xFFFB415B))),
-                                  border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0))),
-                              isExpanded: true,
-                              validator: (value) =>
-                                  value == null ? 'Field required...' : null,
-                              hint: Text('Choose District',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20)),
-                              items: g.districts.map((lisVal) {
-                                return DropdownMenuItem<String>(
-                                  value: lisVal,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(lisVal,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20)),
-                                      Divider()
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String val) {
-                                setState(() {
-                                  this.d = val;
-                                  l = g.tlk[d];
-                                });
-                                tl =null;
-                              },
-                              value: this.d,
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            //taluk selector
-                            DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                  prefixIcon: (Icon(Icons.home,
-                                      color: Color(0xFFFB415B))),
-                                  border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0))),
-                              isExpanded: true,
-                              validator: (value) =>
-                                  value == null ? 'Field required...' : null,
-                              hint: Text('Choose Taluk',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20)),
-                              items: l.map((lisVal) {
-                                return DropdownMenuItem<String>(
-                                  value: lisVal,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(lisVal,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20)),
-                                      Divider()
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String val) {
-                                setState(() {
-                                  this.tl = val;
-                                  print(tl);
-                                });
-                              },
-                              value: this.tl,
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            //contact number
-                            TextFormField(
-                              validator: (value) => value.isEmpty
-                                  ? 'Field required...'
-                                  : value.length != 10
-                                      ? 'Enter a valid number'
-                                      : null,
-                              controller: cn,
-                              keyboardType: TextInputType.phone,
-                              style: TextStyle(fontSize: 20),
-                              decoration: InputDecoration(
-                                  prefixIcon: (Icon(Icons.phone,
-                                      color: Color(0xFFFB415B))),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  labelText: 'Contact number',
-                                  labelStyle: TextStyle(
-                                      color: Colors.black, fontSize: 20)),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            //alternate contact number
-                            TextFormField(
-                              validator: (value) {
-                                if (value.isNotEmpty && value.length != 10) {
-                                  return 'Please enter a valid contact number';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              controller: acn,
-                              keyboardType: TextInputType.phone,
-                              style: TextStyle(fontSize: 20),
-                              decoration: InputDecoration(
-                                  prefixIcon: (Icon(Icons.phone,
-                                      color: Color(0xFFFB415B))),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  labelText: 'Alternate Contact number',
-                                  labelStyle: TextStyle(
-                                      color: Colors.black, fontSize: 20)),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            //email
-                            TextFormField(
-                              controller: mail,
-                              keyboardType: TextInputType.emailAddress,
-                              style: TextStyle(fontSize: 20),
-                              decoration: InputDecoration(
-                                  prefixIcon: (Icon(Icons.mail,
-                                      color: Color(0xFFFB415B))),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  labelText: 'Email',
-                                  labelStyle: TextStyle(
-                                      color: Colors.black, fontSize: 20)),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            //last donated
-                            TextFormField(
-                              controller: ld,
-                              keyboardType: TextInputType.datetime,
-                              style: TextStyle(fontSize: 20),
-                              decoration: InputDecoration(
-                                prefixIcon: (Icon(Icons.calendar_today,
-                                    color: Color(0xFFFB415B))),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                labelText: 'Last Donated on',
-                                labelStyle: TextStyle(
-                                    color: Colors.black, fontSize: 20),
-                                hintText: 'YYYY-MM-DD',
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            //status-available or unavailable
-                            DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                  prefixIcon: (Icon(Icons.event_available,
-                                      color: Color(0xFFFB415B))),
-                                  border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0))),
-                              isExpanded: true,
-                              validator: (value) =>
-                                  value == null ? 'Field required...' : null,
-                              hint: Text('Choose Status',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20)),
-                              items: status.map((lisVal) {
-                                return DropdownMenuItem<String>(
-                                  value: lisVal,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(lisVal,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20)),
-                                      Divider()
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String val) {
-                                setState(() {
-                                  this.st = val;
-                                  if (st != status[0]) {
-                                    w = callFor();
-                                  } else {
-                                    w = SizedBox(height: 10);
-                                  }
-                                });
-                              },
-                              value: this.st,
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            w, //if available for/unavailable for till when its valid
-
-                            DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                  prefixIcon: (Icon(Icons.local_hospital,
-                                      color: Color(0xFFFB415B))),
-                                  border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0))),
-                              isExpanded: true,
-                              validator: (value) =>
-                                  value == null ? 'Field required...' : null,
-                              hint: Text(
-                                  'Do you have any of the medical conditions given?',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20)),
-                              items: med.map((lisVal) {
-                                return DropdownMenuItem<String>(
-                                  value: lisVal,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(lisVal,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20)),
-                                      Divider(),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String val) {
-                                setState(() {
-                                  this.m = val;
-                                });
-                              },
-                              value: this.m,
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            //username
-
-
-                            //button
-                            InkWell(
-                              onTap: () {
-                                callIt(context);
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(30),
-                                height: 56.0,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(40.0),
-                                  gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xFFFB415B),
-                                        Color(0xFFEE5623)
-                                      ],
-                                      begin: Alignment.centerRight,
-                                      end: Alignment.centerLeft),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "UPDATE",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18.0,
                                     ),
+                                    labelText: 'Last donated on $curr',
+                                    //hintText: curr,
+                                    labelStyle: TextStyle(
+                                        color: Colors.black, fontSize: 20)),
+                                format: format,
+                                onShowPicker: (context, currentValue) {
+                                  
+                                  return showDatePicker(
+                                      context: context,
+                                      initialDate:
+                                         currentValue??DateTime.now(),
+                                      firstDate: DateTime(2019),
+                                      lastDate: DateTime(2200));
+                                }),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //status-available or unavailable
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.event_available,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0))),
+                            isExpanded: true,
+                            validator: (value) =>
+                                value == null ? 'Field required...' : null,
+                            hint: Text('Choose Status',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                            items: status.map((lisVal) {
+                              return DropdownMenuItem<String>(
+                                value: lisVal,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(lisVal,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20)),
+                                    Divider()
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String val) {
+                              setState(() {
+                                this.st = val;
+                                if (st != status[0]) {
+                                  w = callFor();
+                                  
+                                } else {
+                                  curr1='';
+                                  w = SizedBox(height: 10);
+                                }
+                              });
+                            },
+                            value: this.st,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          w, //if available for/unavailable for till when its valid
+  SizedBox(height:20),
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.local_hospital,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0))),
+                            isExpanded: true,
+                            validator: (value) =>
+                                value == null ? 'Field required...' : null,
+                            hint: Text(
+                                'Do you have any of the medical conditions given?',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                            items: med.map((lisVal) {
+                              return DropdownMenuItem<String>(
+                                value: lisVal,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(lisVal,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20)),
+                                    Divider(),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String val) {
+                              setState(() {
+                                this.m = val;
+                              });
+                            },
+                            value: this.m,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //username
+
+                          //button
+                          InkWell(
+                            onTap: () {
+                              callIt(context);
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(30),
+                              height: 56.0,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40.0),
+                                gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFFFB415B),
+                                      Color(0xFFEE5623)
+                                    ],
+                                    begin: Alignment.centerRight,
+                                    end: Alignment.centerLeft),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "UPDATE",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18.0,
                                   ),
                                 ),
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),
-                
+                ),
               ],
             ),
           ),
@@ -688,68 +686,63 @@ class _EditProfileState extends State<EditProfile> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  content:  Text(
-                                "Sorry,you are not eligible to continue",
-                                style: TextStyle(
-                                    fontSize: 20, color: Color(0xFFEE5623)),
-                              ),
-                      actions: <Widget>[
-                         FlatButton(
-                                      onPressed: () async {
-                                        final SharedPreferences sp=await SharedPreferences.getInstance();
-                                        var bd=jsonEncode({"username":username});
-                                        var result=await http.post(g.baseUrl+"/delete_account.php",body:bd);
-                                         Navigator.pop(context);
-                                         Navigator.pop(context);
-                                         Navigator.pop(context);
-                                        ut.showtoast(jsonDecode(result.body),Colors.red);
-                                        sp.setString('name', '');
-                                        sp.setString('username', '');
-                                        sp.setString('blood_group', '');
-                                        sp.setString('password', '');
-                                        sp.setString('location', '');
-                                        sp.setString("gender", '');
-                                        sp.setString("district", '');
-                                        sp.setString("age", '');
-                                        sp.setString("weight", '');
-                                        sp.setString("taluk", '');
-                                        sp.setString("contacts", '');
-                                        sp.setString("alt_contact", '');
-                                        sp.setString("email", '');
-                                        sp.setString("last_don", '');
-                                        sp.setString("status", '');
-                                        sp.setString("for_time", '');
-                                        setState(() {
-                                          g.g_n = '';
-                                          g.g_bg = '';
-                                          g.g_l = '';
-                                         
-                                        });
-                                       
-                                      },
-                                      child: Text(
-                                        'OK',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Color(0xFFEE5623)),
-                                      )),
-
-                                       FlatButton(
-                                      onPressed: () 
-                                      => Navigator.pop(context),
-                                      child: Text(
-                                        'Recheck Fields',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Color(0xFFEE5623)),
-                                      ))
-                      ],
+                  content: Text(
+                    "Sorry,you are not eligible to continue",
+                    style: TextStyle(fontSize: 20, color: Color(0xFFEE5623)),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                        onPressed: () async {
+                          final SharedPreferences sp =
+                              await SharedPreferences.getInstance();
+                          var bd = jsonEncode({"username": username});
+                          var result = await http.post(
+                              g.baseUrl + "/delete_account.php",
+                              body: bd);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          ut.showtoast(jsonDecode(result.body), Colors.red);
+                          sp.setString('name', '');
+                          sp.setString('username', '');
+                          sp.setString('blood_group', '');
+                          sp.setString('password', '');
+                          sp.setString('location', '');
+                          sp.setString("gender", '');
+                          sp.setString("district", '');
+                          sp.setString("age", '');
+                          sp.setString("weight", '');
+                          sp.setString("taluk", '');
+                          sp.setString("contacts", '');
+                          sp.setString("alt_contact", '');
+                          sp.setString("email", '');
+                          sp.setString("last_don", '');
+                          sp.setString("status", '');
+                          sp.setString("for_time", '');
+                          setState(() {
+                            g.g_n = '';
+                            g.g_bg = '';
+                            g.g_l = '';
+                          });
+                        },
+                        child: Text(
+                          'OK',
+                          style:
+                              TextStyle(fontSize: 15, color: Color(0xFFEE5623)),
+                        )),
+                    FlatButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          'Recheck Fields',
+                          style:
+                              TextStyle(fontSize: 15, color: Color(0xFFEE5623)),
+                        ))
+                  ],
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(40))),
                   contentPadding: EdgeInsets.all(20),
                 );
               });
-
         }
 
         // if every data is available post details
@@ -766,17 +759,17 @@ class _EditProfileState extends State<EditProfile> {
     Future<bool> u = sp.setString("username", un.text);
     Future<bool> v = sp.setString("name", fn.text);
     Future<bool> w = sp.setString("blood_group", sbg);
-    sp.setString("gender",gen.toLowerCase());
+    sp.setString("gender", gen.toLowerCase());
     sp.setString("district", d);
-    sp.setString("age",age.text);
+    sp.setString("age", age.text);
     sp.setString("weight", weight.text);
     sp.setString("taluk", tl);
-     sp.setString( "contacts", cn.text);
-      sp.setString("alt_contact", acn.text);
-       sp.setString("email", mail.text);
-       sp.setString("last_don", ld.text);
-       sp.setString("status", st);
-       sp.setString("for_time",forTime.text);
+    sp.setString("contacts", cn.text);
+    sp.setString("alt_contact", acn.text);
+    sp.setString("email", mail.text);
+    sp.setString("last_don",curr==null?'':curr);
+    sp.setString("status", st);
+    sp.setString("for_time", curr1==null?'':curr1);
     //print(u);
     // print(pa);
   }
@@ -796,20 +789,18 @@ class _EditProfileState extends State<EditProfile> {
       "contacts": cn.text,
       "alt_contact": acn.text,
       "email": mail.text,
-      "last_don": ld.text,
+      "last_don": curr==null?'':curr,
       "status": st,
-      "for_time": forTime.text,
+      "for_time": curr1==null?'':curr1,
       "uname": uname,
     });
-    var res = await http.post(s+"/edit_profile.php", body: bd);
+    var res = await http.post(s + "/edit_profile.php", body: bd);
     print(res.statusCode);
     reg = jsonDecode(res.body);
     print(res.body);
     if (reg != "Contact number Already Exists..!") {
-      Navigator.pop(context,(){
-        setState(() {
-          
-        });
+      Navigator.pop(context, () {
+        setState(() {});
       });
       setPrefs1();
     }
@@ -830,26 +821,28 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget callFor() {
-    return TextFormField(
-      validator: (value) {
-        if (value.isEmpty) {
-          return "Please enter the time upto which status is active";
-        } else {
-          return null;
-        }
-      },
-      controller: forTime,
-      keyboardType: TextInputType.datetime,
-      style: TextStyle(fontSize: 20),
-      decoration: InputDecoration(
-        labelText: 'Status active till',
-        labelStyle: TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-        ),
-        hintText: 'YYYY-MM-DD',
-      ),
-    );
+    
+    return DateTimeField(
+      onChanged: (val){
+        var c="${val.year}-${val.month}-${val.day}";
+                                curr1=c;
+                              },
+        validator: (value) =>
+            value!=null?(value.isBefore(DateTime.now()) ? 'Choose a valid date' : null):null,
+        decoration: InputDecoration(
+            prefixIcon: (Icon(Icons.date_range, color: Color(0xFFFB415B))),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            labelText: 'Stauts active upto $curr1',
+            labelStyle: TextStyle(color: Colors.black, fontSize: 20)),
+        format: format,
+        onShowPicker: (context, currentValue) {
+          return showDatePicker(
+              context: context,
+              initialDate: currentValue??DateTime.now(),
+              firstDate: DateTime(2019),
+              lastDate: DateTime(2200));
+        });
   }
 }
-
