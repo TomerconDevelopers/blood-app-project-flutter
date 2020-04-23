@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'globals.dart' as g;
 import 'utils.dart' as ut;
+import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 /* creted by Sandra*/
 
@@ -16,6 +18,8 @@ class SignUp extends StatefulWidget {
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
 class _SignUpState extends State<SignUp> {
+  final format = DateFormat("yyyy-MM-dd");
+  var curr,curr1;
   //textediting controllers for all fields
   TextEditingController fn = new TextEditingController();
   TextEditingController age = new TextEditingController();
@@ -23,8 +27,6 @@ class _SignUpState extends State<SignUp> {
   TextEditingController cn = new TextEditingController();
   TextEditingController acn = new TextEditingController();
   TextEditingController mail = new TextEditingController();
-  TextEditingController ld = new TextEditingController();
-  TextEditingController forTime = new TextEditingController();
   TextEditingController ft = new TextEditingController();
   TextEditingController un = new TextEditingController();
   TextEditingController pass = new TextEditingController();
@@ -64,6 +66,7 @@ class _SignUpState extends State<SignUp> {
   //list of districts
 
   List l = [];
+  Future<DateTime> selectDate;
   //mapping districts to their taluks
 
   @override
@@ -440,23 +443,47 @@ class _SignUpState extends State<SignUp> {
                             SizedBox(
                               height: 20,
                             ),
+                            DateTimeField(
+                              onChanged: (val){
+                                var c="${val.year}-${val.month}-${val.day}";
+                                curr=c;
+                              },
+                                decoration: InputDecoration(
+                                    prefixIcon: (Icon(Icons.calendar_today,
+                                        color: Color(0xFFFB415B))),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    labelText: 'Last donated on',
+                                    labelStyle: TextStyle(
+                                        color: Colors.black, fontSize: 20)),
+                                format: format,
+                                onShowPicker: (context, currentValue) {
+                                  
+                                  return showDatePicker(
+                                      context: context,
+                                      initialDate:
+                                          currentValue ?? DateTime.now(),
+                                      firstDate: DateTime(2019),
+                                      lastDate: DateTime(2200));
+                                }),
                             //last donated
-                            TextFormField(
-                              controller: ld,
-                              keyboardType: TextInputType.datetime,
-                              style: TextStyle(fontSize: 20),
-                              decoration: InputDecoration(
-                                prefixIcon: (Icon(Icons.calendar_today,
-                                    color: Color(0xFFFB415B))),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                labelText: 'Last Donated on',
-                                labelStyle: TextStyle(
-                                    color: Colors.black, fontSize: 20),
-                                hintText: 'YYYY-MM-DD',
-                              ),
-                            ),
+                            // TextFormField(
+                            //   controller: ld,
+                            //   keyboardType: TextInputType.datetime,
+                            //   style: TextStyle(fontSize: 20),
+                            //   decoration: InputDecoration(
+                            //     prefixIcon: (Icon(Icons.calendar_today,
+                            //         color: Color(0xFFFB415B))),
+                            //     border: OutlineInputBorder(
+                            //       borderRadius: BorderRadius.circular(20.0),
+                            //     ),
+                            //     labelText: 'Last Donated on',
+                            //     labelStyle: TextStyle(
+                            //         color: Colors.black, fontSize: 20),
+                            //     hintText: 'YYYY-MM-DD',
+                            //   ),
+                            // ),
                             SizedBox(
                               height: 20,
                             ),
@@ -496,7 +523,7 @@ class _SignUpState extends State<SignUp> {
                                   if (st != status[0]) {
                                     w = callFor();
                                   } else {
-                                    w = SizedBox(height: 10);
+                                    w = SizedBox(width: 1);
                                   }
                                 });
                               },
@@ -506,7 +533,9 @@ class _SignUpState extends State<SignUp> {
                               height: 20,
                             ),
                             w, //if available for/unavailable for till when its valid
-
+                            SizedBox(
+                              height: 20,
+                            ),
                             DropdownButtonFormField<String>(
                               decoration: InputDecoration(
                                   prefixIcon: (Icon(Icons.local_hospital,
@@ -723,7 +752,7 @@ class _SignUpState extends State<SignUp> {
             int.parse(age.text) < 18 ||
             int.parse(age.text) > 65 ||
             m != 'None') {
-              Navigator.pop(context);
+          Navigator.pop(context);
           showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -739,7 +768,7 @@ class _SignUpState extends State<SignUp> {
 
         // if every data is available post details
         else {
-          postData(g.baseUrl,context);
+          postData(g.baseUrl, context);
         }
       }
     });
@@ -751,23 +780,24 @@ class _SignUpState extends State<SignUp> {
     Future<bool> u = sp.setString("username", un.text);
     Future<bool> v = sp.setString("name", fn.text);
     Future<bool> w = sp.setString("blood_group", sbg);
-    sp.setString("gender",gen.toLowerCase());
+    sp.setString("gender", gen.toLowerCase());
     sp.setString("district", d);
-    sp.setString("age",age.text);
+    sp.setString("age", age.text);
     sp.setString("weight", weight.text);
     sp.setString("taluk", tl);
-     sp.setString( "contacts", cn.text);
-      sp.setString("alt_contact", acn.text);
-       sp.setString("email", mail.text);
-       sp.setString("last_don", ld.text);
-       sp.setString("status", st);
-       sp.setString("for_time",forTime.text);
+    sp.setString("contacts", cn.text);
+    sp.setString("alt_contact", acn.text);
+    sp.setString("email", mail.text);
+    sp.setString("last_don", curr==null?'':curr);
+    sp.setString("status", st);
+    sp.setString("for_time", curr1==null?'':curr1);
+    sp.setString("password",ut.encrypt(pass.text));
     //print(u);
-    Future<bool> pa = sp.setString("password",ut.encrypt(pass.text));
+    Future<bool> pa = sp.setString("password", ut.encrypt(pass.text));
     // print(pa);
   }
 
-  postData(String s,BuildContext context) async {
+  postData(String s, BuildContext context) async {
     String g = gen.toLowerCase();
     p = ut.encrypt(pass.text);
     var bd = json.encode({
@@ -781,59 +811,62 @@ class _SignUpState extends State<SignUp> {
       "contacts": cn.text,
       "alt_contact": acn.text,
       "email": mail.text,
-      "last_don": ld.text,
+      "last_don": curr==null?'':curr,
       "status": st,
-      "for_time": forTime.text,
+      "for_time": curr1==null?'':curr1,
       "uname": un.text,
       "password": p
     });
-    var res = await http.post(
-        s+"/signup.php", 
-        body: bd);
+    var res = await http.post(s + "/signup.php", body: bd);
     print(res.statusCode);
     reg = jsonDecode(res.body);
-    print(res.body); 
-    if(reg!="Contact number Already Exists..!" && reg!="Username Already Exists..!"){
+    print(res.body);
+    if (reg != "Contact number Already Exists..!" &&
+        reg != "Username Already Exists..!") {
+          setPrefs1();
       Navigator.pop(context);
-      setPrefs1();
-    } 
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(         
-              content: Text(
-                jsonDecode(res.body),
-                style: TextStyle(fontSize: 20, color:  Color(0xFFEE5623)),
-              ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              contentPadding: EdgeInsets.all(20),
-            );
-          });
-     reg='';
+      
+    }
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text(
+              jsonDecode(res.body),
+              style: TextStyle(fontSize: 20, color: Color(0xFFEE5623)),
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            contentPadding: EdgeInsets.all(20),
+          );
+        });
+    reg = '';
   }
 
   Widget callFor() {
-    return TextFormField(
-      validator: (value) {
-        if (value.isEmpty) {
-          return "Please enter the time upto which status is active";
-        } else {
-          return null;
-        }
-      },
-      controller: forTime,
-      keyboardType: TextInputType.datetime,
-      style: TextStyle(fontSize: 20),
-      decoration: InputDecoration(
-        labelText: 'Status active till',
-        labelStyle: TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-        ),
-        hintText: 'YYYY-MM-DD',
-      ),
-    );
+    return DateTimeField(
+      onChanged: (val){
+        var c="${val.year}-${val.month}-${val.day}";
+                                curr1=c;
+                              },
+        validator: (value) =>
+            value!=null?(value.isBefore(DateTime.now()) ? 'Choose a valid date' : null):null,
+        decoration: InputDecoration(
+            prefixIcon: (Icon(Icons.date_range, color: Color(0xFFFB415B))),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            labelText: 'Stauts active upto',
+            labelStyle: TextStyle(color: Colors.black, fontSize: 20)),
+        format: format,
+        onShowPicker: (context, currentValue) {
+            curr1=currentValue;
+          return showDatePicker(
+              context: context,
+              initialDate: currentValue ?? DateTime.now(),
+              firstDate: DateTime(2019),
+              lastDate: DateTime(2200));
+        });
   }
 }
 
