@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'bloodrequest.dart';
 import 'globals.dart' as g;
@@ -23,10 +24,12 @@ Request newRequest = new Request();
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
 class _BloodRequestState extends State<BloodRequest> {
+   List status = ["Emergency", "Not Emergency"];
+   var stat;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   String sbg,d,tl,re="";
   final format = DateFormat("yyyy-MM-dd");
-  var curr;
+  var curr;String reg = "";
 TextEditingController fn = new TextEditingController();
   TextEditingController age = new TextEditingController();
   TextEditingController weight = new TextEditingController();
@@ -318,6 +321,37 @@ TextEditingController fn = new TextEditingController();
                                     ),
                                   ),
                           new SizedBox(height:20),
+                          g.g_l.isNotEmpty? DropdownButtonFormField<String>(
+                             decoration: InputDecoration(
+                                      prefixIcon: (Icon(Icons.label_important,color:Color(0xFFFB415B))),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20.0)
+                                      )
+                                    ),
+                      isExpanded: true,
+                      validator: (value) =>
+                          value == null ? 'Field required...' : null,
+                      hint: Text('Emergency/Not Emergency',
+                          style: TextStyle(color: Colors.grey, fontSize: 20)),
+                      items: status.map((lisVal) {
+                        return DropdownMenuItem<String>(
+                          value: lisVal,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(lisVal, style: TextStyle(fontSize: 20)),
+                              Divider()
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String val) {
+                        setState(() {
+                          this.stat= val;
+                        });
+                      },
+                      value: this.stat,
+                    ):SizedBox(width:1),
                                   //button
                                   InkWell(
                                     
@@ -365,7 +399,7 @@ TextEditingController fn = new TextEditingController();
   } else {
     form.save(); 
 
-    postData1(context,g.baseUrl);//This invokes each onSaved event
+    g.g_l.isEmpty?postData1(context,g.baseUrl):postData3(context,g.baseUrl);//This invokes each onSaved event
   }
 }
 
@@ -374,7 +408,42 @@ void showMessage(String message, [MaterialColor color = Colors.red]) {
       .showSnackBar(new SnackBar(backgroundColor: color, content: new Text(message,style: TextStyle(fontSize: 16,),)));
 }
 
-
+postData3(BuildContext context,String s) async {
+    final SharedPreferences sp=await SharedPreferences.getInstance();
+    var uname=sp.getString("username");
+    var bd = json.encode({
+      "name": fn.text,
+      "age": age.text,
+      "bloodgroup":sbg,
+      "district": d,
+      "localty": tl,
+      "contacts": cn.text,
+      "alt_contacts": acn.text,
+      "date": curr==null?'':curr,
+      "status":stat,
+      "units": u.text,
+      "hosp": h.text,
+      "verified":"Verified",
+      "id": uname,
+    });
+    var res = await http.post(
+        s+"/coordinator_request.php",
+        body: bd);
+    print(res.statusCode);
+    reg = jsonDecode(res.body);
+    print(reg);
+     if(reg!="Try Again"){
+       setState(() {
+         Navigator.pop(context,(){
+           setState(() {
+             
+           });
+         });
+         ut.showtoast(reg,Colors.green);
+       });
+     }
+    reg = '';
+  }
 postData1(BuildContext context,String s)async{
   var bd=json.encode({
     "name":fn.text,
