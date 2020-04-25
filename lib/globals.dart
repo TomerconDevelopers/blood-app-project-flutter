@@ -112,6 +112,25 @@ Map<String, List<String>> tlk = {
     "Kannur",
     "Kasargod"
   ];
+void submitForm(GlobalKey<FormState> key1,GlobalKey<ScaffoldState> scaffoldKey,String message) {
+    final FormState form = key1.currentState;
+    if (!key1.currentState.validate()) {
+      showMessage(scaffoldKey,message);
+    } else {
+      form.save(); //This invokes each onSaved event
+    }
+  }
+
+  void showMessage(GlobalKey<ScaffoldState> scaffoldKey,String message, [MaterialColor color = Colors.red]) {
+    scaffoldKey.currentState.showSnackBar(new SnackBar(
+        backgroundColor: color,
+        content: new Text(
+          message,
+          style: TextStyle(
+            fontSize: 16,
+          ),
+        )));
+  }
 class UserLocationTracker {
 
   void getCurrentUserLocation() async {
