@@ -12,7 +12,7 @@ String bg_image = "assets/images/bg.png";//background image for all pages
 String cu_id;
 String cu_name;
 String cu_type;
-String bg='', n='';
+String g_bg='', g_n='',g_l='';
 //=======================================================================
 List bloodgroup = ['A+', 'A-', 'O+', 'O-', 'B+', 'B-', 'AB+', 'AB-'];
 Map<String, List<String>> tlk = {
@@ -112,6 +112,25 @@ Map<String, List<String>> tlk = {
     "Kannur",
     "Kasargod"
   ];
+  void submitForm(GlobalKey<FormState> key1,GlobalKey<ScaffoldState> scaffoldKey,String message) {
+    final FormState form = key1.currentState;
+    if (!key1.currentState.validate()) {
+      showMessage(scaffoldKey,message);
+    } else {
+      form.save(); //This invokes each onSaved event
+    }
+  }
+
+  void showMessage(GlobalKey<ScaffoldState> scaffoldKey,String message, [MaterialColor color = Colors.red]) {
+    scaffoldKey.currentState.showSnackBar(new SnackBar(
+        backgroundColor: color,
+        content: new Text(
+          message,
+          style: TextStyle(
+            fontSize: 16,
+          ),
+        )));
+  }
 class UserLocationTracker {
 
   void getCurrentUserLocation() async {

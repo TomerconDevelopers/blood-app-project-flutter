@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Details extends StatelessWidget {
   final String name;
@@ -8,6 +9,9 @@ class Details extends StatelessWidget {
   final String units;
   final String location;
   final String group;
+  final String altNumber;
+  final String date;
+  final String district;
 
   Details({
     @required this.name,
@@ -17,6 +21,9 @@ class Details extends StatelessWidget {
     @required this.group,
     @required this.age,
     @required this.number,
+    @required this.altNumber,
+    @required this.date,
+    @required this.district,
   });
 
   @override
@@ -27,53 +34,55 @@ class Details extends StatelessWidget {
       children: <Widget>[
         ListTile(
           title:Text("Patient's Name:",style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-          subtitle:Text("_name_",style: TextStyle(fontSize: 18.0),),
+          subtitle:Text(name,style: TextStyle(fontSize: 18.0),),
         ),
         ListTile(
           title:Text("Bloodgroup",style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-          subtitle:Text("_Blood_group_",style: TextStyle(fontSize: 18.0),),
+          subtitle:Text(group,style: TextStyle(fontSize: 18.0),),
         ),
         ListTile(
           title:Text("Age",style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-          subtitle:Text("_age_",style: TextStyle(fontSize: 18.0),),
+          subtitle:Text(age,style: TextStyle(fontSize: 18.0),),
         ),
         ListTile(
           title:Text("Date:",style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-          subtitle:Text("_date_",style: TextStyle(fontSize: 18.0),),
+          subtitle:Text(date,style: TextStyle(fontSize: 18.0),),
         ),
         ListTile(
           title:Text("Units:",style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-          subtitle:Text("_units_",style: TextStyle(fontSize: 18.0),),
+          subtitle:Text(units,style: TextStyle(fontSize: 18.0),),
         ),
         ListTile(
           title:Text("Phone number:",style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-          subtitle:Text("_phone_number_",style: TextStyle(fontSize: 18.0),),
+          subtitle:Text(number,style: TextStyle(fontSize: 18.0),),
         ),
         ListTile(
           title:Text("Alternate number:",style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-          subtitle:Text("_alternate_number_",style: TextStyle(fontSize: 18.0),),
+          subtitle:Text(altNumber,style: TextStyle(fontSize: 18.0),),
         ),
         ListTile(
           title:Text("Hospital:",style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-          subtitle:Text("_Hospital_",style: TextStyle(fontSize: 18.0),),
+          subtitle:Text(hospital,style: TextStyle(fontSize: 18.0),),
         ),
         ListTile(
           title:Text("Location(Taluk):",style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-          subtitle:Text("_location_",style: TextStyle(fontSize: 18.0),),
+          subtitle:Text(location,style: TextStyle(fontSize: 18.0),),
         ),
         ListTile(
           title:Text("District",style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-          subtitle:Text("_District_",style: TextStyle(fontSize: 18.0),),
+          subtitle:Text(district,style: TextStyle(fontSize: 18.0),),
         ),
-        ListTile(
-          title:Text("Patient address",style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),),
-          subtitle:Text("_Patient_address_",style: TextStyle(fontSize: 18.0),),
-        ),
-        RaisedButton.icon(
-             onPressed: (){},
-          icon: Icon(Icons.call,color: Colors.white,),
-             label: Text("Contact",style: TextStyle(color: Colors.white),),
-             color: Colors.deepOrange.shade300,
+        
+        Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: RaisedButton.icon(
+               onPressed: (){
+                 launch("tel://"+number);
+               },
+            icon: Icon(Icons.call,color: Colors.white,),
+               label: Text("Contact",style: TextStyle(color: Colors.white),),
+               color: Colors.deepOrange.shade300,
+          ),
         ),
       ],
     );
