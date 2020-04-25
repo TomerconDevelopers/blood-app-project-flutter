@@ -368,32 +368,14 @@ class _EditCoordinatorProfileState extends State<EditCoordinatorProfile> {
     );
   }
 
-  void _submitForm() {
-    final FormState form = _key1.currentState;
-    if (!_key1.currentState.validate()) {
-      showMessage('Form is not valid!  Please review and correct.');
-    } else {
-      form.save(); //This invokes each onSaved event
-     
-    }
-  }
 
-  void showMessage(String message, [MaterialColor color = Colors.red]) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-        backgroundColor: color,
-        content: new Text(
-          message,
-          style: TextStyle(
-            fontSize: 16,
-          ),
-        )));
-  }
 
   callIt(BuildContext context) {
     setState(() {
       //checking weight and age
       if (!_key1.currentState.validate()) {
-        _submitForm();
+        g.submitForm(_key1, _scaffoldKey,
+            'Form is not valid!  Please review and correct.');
       } else {
         
         // if every data is available post details
