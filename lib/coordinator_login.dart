@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:revive/coord_pass_reset.dart';
 import 'package:revive/home.dart';
 import 'utils.dart' as ut;
 import 'dart:convert';
@@ -68,10 +69,14 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Text(
-                          "Forgotten Password?",
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                        GestureDetector(
+                          onTap: ()=>Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => PasswordReset())),
+                                                  child: Text(
+                            "Forgotten Password?",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
                           ),
                         ),
                       ],
@@ -124,12 +129,13 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
   Widget buildButtonContainer() {
     return InkWell(
       onTap: () async {
-        var bd = json.encode({"uname": em.text, "pass": pass.text});
-        res = await http.post(g.baseUrl + "/coordinator_login.php",
+        var bd = json.encode({"uname": em.text, "pass":pass.text});
+        print(ut.encrypt(pass.text));
+        res = await http.post(g.baseUrl+"/coordinator_login.php",
             body: bd);
         print(res.statusCode);
-        print(res.body);
         var reg=jsonDecode(res.body);
+        print(reg);
         if (reg != "Invalid Username/Password") {
           var r = json.decode(res.body);
           print(r['name']);
@@ -159,12 +165,12 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
                 ));
           });
         } else {
-          print("invalid");
+         
           setState(() {
             showDialog(
                 context: context,
                 child: AlertDialog(
-                  content: Text("Invalid Username/Password",
+                  content: Text(reg,
                       style: TextStyle(fontSize: 20, color: Color(0xFFEE5623))),
                   actions: <Widget>[
                     InkWell(
