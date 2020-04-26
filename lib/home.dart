@@ -7,6 +7,8 @@ import 'package:revive/blood_banks.dart';
 import 'package:revive/coordinator_login.dart';
 import 'package:revive/coordinator_profile.dart';
 import 'package:revive/coordinator_requests_list.dart';
+import 'package:revive/coordinators%20list.dart';
+import 'package:revive/donor%20search%20page.dart';
 import 'package:revive/faq.dart';
 import 'package:revive/newsfeed.dart';
 import 'package:revive/profile.dart';
@@ -130,8 +132,8 @@ class HomeScreenState extends State<HomeScreen> {
               leading: Icon(Icons.search),
               title: Text('Search donor'),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => DonorSearch()));
               },
             ),
             ListTile(
@@ -148,8 +150,8 @@ class HomeScreenState extends State<HomeScreen> {
               leading: Icon(Icons.group),
               title: Text('List of coordinators'),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                 Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => CoordinatorsList()));
               },
             ),
             g.g_bg.isNotEmpty
