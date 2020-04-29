@@ -22,6 +22,8 @@ import 'globals.dart' as g;
 import 'login_activity.dart';
 import 'utils.dart' as ut;
 import 'package:http/http.dart' as http;
+import 'pushnotifications.dart';
+import 'mobileverification.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -34,6 +36,7 @@ class HomeScreenState extends State<HomeScreen> {
   asyncFunc(BuildContext) async {
     await setPrefs();
     await coordinatorsetPrefs();
+
   }
 
   @override
@@ -45,6 +48,7 @@ class HomeScreenState extends State<HomeScreen> {
   void start(BuildContext) {
     asyncFunc(BuildContext);
   }
+   
 
   @override
   void dispose() {
@@ -481,7 +485,7 @@ class HomeScreenState extends State<HomeScreen> {
   signup() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SignUp()),
+      MaterialPageRoute(builder: (context) => MobileVerfication()),
     ).then((var value) {
       setPrefs();
       //CODE HERE to execute if you back to this page from signup

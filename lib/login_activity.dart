@@ -6,6 +6,7 @@ import 'utils.dart' as ut;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as g;
+import 'mobileverification.dart';
 /*
 UI created by Alan (31/03/2020)
  */
@@ -94,9 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SignUp())).then((var value){
-                                      Navigator.pop(context);
-                                    }),
+                                    builder: (context) => MobileVerfication())),
                             child: Text("SIGN UP",
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,

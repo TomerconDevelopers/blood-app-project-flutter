@@ -43,8 +43,8 @@ dependencies:
   datetime_picker_formfield: ^1.0.0
   share: ^0.6.4
   koukicons: ^2.0.2
-
-
+  firebase_messaging: ^6.0.13
+  firebase_auth: ^0.16.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:revive/home.dart';
@@ -6,18 +7,24 @@ import 'dart:convert';
 import 'globals.dart' as g;
 import 'utils.dart' as ut;
 import 'package:intl/intl.dart';
+import 'pushnotifications.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 /* creted by Sandra*/
 
 class SignUp extends StatefulWidget {
+  String contact_number;
+   SignUp({this.contact_number});
   @override
-  _SignUpState createState() => _SignUpState();
+  _SignUpState createState() => _SignUpState(contact_number: contact_number);
 }
 
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
 class _SignUpState extends State<SignUp> {
+  String contact_number;
+  _SignUpState({this.contact_number});
+  var token;
   final format = DateFormat("yyyy-MM-dd");
   var curr,curr1;
   //textediting controllers for all fields
@@ -31,6 +38,25 @@ class _SignUpState extends State<SignUp> {
   TextEditingController un = new TextEditingController();
   TextEditingController pass = new TextEditingController();
   TextEditingController repass = new TextEditingController();
+
+
+asyncFunc(BuildContext) async {
+    
+
+  pushnotification();
+ setState(() {
+   token=g.fcm_token;
+ }); 
+  }
+  
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => start(context));
+  }
+  void start(BuildContext){
+    asyncFunc(BuildContext);
+  }
 
 //required variables
   var t, r;
@@ -378,28 +404,6 @@ class _SignUpState extends State<SignUp> {
                               height: 20,
                             ),
                             //contact number
-                            TextFormField(
-                              validator: (value) => value.isEmpty
-                                  ? 'Field required...'
-                                  : value.length != 10
-                                      ? 'Enter a valid number'
-                                      : null,
-                              controller: cn,
-                              keyboardType: TextInputType.phone,
-                              style: TextStyle(fontSize: 20),
-                              decoration: InputDecoration(
-                                  prefixIcon: (Icon(Icons.phone,
-                                      color: Color(0xFFFB415B))),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  labelText: 'Contact number',
-                                  labelStyle: TextStyle(
-                                      color: Colors.black, fontSize: 20)),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
                             //alternate contact number
                             TextFormField(
                               validator: (value) {
@@ -755,6 +759,11 @@ class _SignUpState extends State<SignUp> {
       }
     });
   }
+   pushnotification()async{
+    PushNotificationsManager obj = new PushNotificationsManager();
+  
+    obj.init();
+  }
 
   //to set username and password
   setPrefs1() async {
@@ -779,7 +788,9 @@ class _SignUpState extends State<SignUp> {
     // print(pa);
   }
 
-  postData(String s, BuildContext context) async {
+  postData(String s, BuildContext context) async { 
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+    _firebaseMessaging.subscribeToTopic(d);
     String g = gen.toLowerCase();
     p = ut.encrypt(pass.text);
     var bd = json.encode({
@@ -790,14 +801,15 @@ class _SignUpState extends State<SignUp> {
       "bloodgroup": sbg,
       "district": d,
       "localty": tl,
-      "contacts": cn.text,
+      "contacts": contact_number,
       "alt_contact": acn.text,
       "email": mail.text,
       "last_don": curr==null?'':curr,
       "status": st,
       "for_time": curr1==null?'':curr1,
       "uname": un.text,
-      "password": p
+      "password": p,
+      "fcm_token":token.toString()
     });
     var res = await http.post(s + "/signup.php", body: bd);
     print(res.statusCode);
