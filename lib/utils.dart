@@ -183,4 +183,50 @@ fontWeight: FontWeight.w700, fontSize: 20));
 Text caption()=>
     Text("Where donor meets recepients",
       style: TextStyle(fontStyle: FontStyle.italic,color: Colors.white),);
-
+Widget iconbutton(String txt, Widget icon)=>
+    Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+      Container(
+      padding: EdgeInsets.all(0),
+      //height: 80,
+      //width: 100,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        gradient: LinearGradient(
+            colors: [Colors.orange, Colors.red]),
+      ),
+      child: icon,
+      ),
+        if(txt.isNotEmpty)Text(
+            txt,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.grey[800],
+                fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+Widget banner()=>Padding(
+  padding: EdgeInsets.symmetric(vertical: 20),
+  child: Text(
+    "Welcome to WK Blood Book ",
+    style: TextStyle(
+      fontSize: 25,
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+      //fontFamily: 'Peter'
+    ),
+  ),
+);
+Widget mainbutton(String txt)=>
+    Container(
+      padding: EdgeInsets.all(10),
+      decoration: buttonstyle(),
+      width: 250,
+      child: Text(
+        txt,
+        style: bt(),
+        textAlign: TextAlign.center,
+      ),
+    );

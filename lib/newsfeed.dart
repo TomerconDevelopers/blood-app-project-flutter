@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import './details.dart';
@@ -412,15 +411,20 @@ class RequestCard extends StatelessWidget {
 }
 
 class NewsFeed extends StatefulWidget {
-  NewsFeed({Key key, this.title}) : super(key: key);
+  NewsFeed({Key key, this.emergency,this.group}) : super(key: key);
 
-  final String title;
+  final bool emergency;String group;
 
   @override
-  _NewsFeedState createState() => _NewsFeedState();
+  _NewsFeedState createState() => _NewsFeedState(emergency,group);
 }
 
 class _NewsFeedState extends State<NewsFeed> {
+  bool emergency;//TO FILTER EMERGENCY ONLY
+  String group;// TO FILTER BLOOD GROUP
+  _NewsFeedState(bool a,String b){
+    emergency = a;group = b;
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -432,7 +436,15 @@ class _NewsFeedState extends State<NewsFeed> {
                 onPressed: () {
                   Navigator.pop(context);
                 }),
-            title: Text("Newsfeed"),
+            title: Row(children: <Widget>[
+              Text("Newsfeed"),
+              SizedBox(width: 10,),
+              ut.roundedtext("$group", Colors.white, Colors.red),
+              SizedBox(width: 10,),
+                if(emergency)ut.roundedtext("emergency", Colors.white,
+                    Colors.red)
+            ],),
+
             actions: <Widget>[
               // action button
               IconButton(

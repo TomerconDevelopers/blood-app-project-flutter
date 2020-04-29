@@ -42,6 +42,7 @@ dependencies:
   url_launcher: ^5.0.2
   datetime_picker_formfield: ^1.0.0
   share: ^0.6.4
+  koukicons: ^2.0.2
 
 
 dev_dependencies:
@@ -70,6 +71,7 @@ flutter:
     - assets/images/image5.jpg
     - assets/images/image6.jpeg
     - assets/images/profile.jpg
+    - assets/fonts/Peterbuilt.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -90,6 +92,9 @@ flutter:
     - family: Ubuntu
       fonts:
         - asset: assets/fonts/Ubuntu-Regular.tff
+    - family: Peter
+      fonts:
+        - asset: assets/fonts/Peterbuilt.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

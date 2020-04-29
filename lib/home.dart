@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:koukicons/assistant.dart';
 import 'package:revive/about.dart';
 import 'package:revive/blood_banks.dart';
+import 'package:revive/choose_group.dart';
 import 'package:revive/coordinator_login.dart';
 import 'package:revive/coordinator_profile.dart';
 import 'package:revive/coordinator_requests_list.dart';
@@ -19,7 +21,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as g;
 import 'login_activity.dart';
 import 'utils.dart' as ut;
-import 'package:mongo_dart/mongo_dart.dart' as mon;
 import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
@@ -379,164 +380,94 @@ class HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     Container(
                       margin: EdgeInsets.only(bottom: 20),
-                      height: 400,
+                      height: 250,
                       child: ut.image_carousel(),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "WELCOME " + g.g_n.toUpperCase(),
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Color(0xFFEE5623),
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //Emergency requirements button
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => NewsFeed()));
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: ut.buttonstyle(),
-                        width: 250,
-                        child: Text(
-                          "Emergency requirements",
-                          style: ut.bt(),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BloodRequest()));
+                    ut.banner(),
+                    if(g.g_l.isEmpty)SizedBox(height: 20,),
 
-                        //Request donor redirection code
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: ut.buttonstyle(),
-                        width: 250,
-                        child: Text(
-                          "Request blood",
-                          style: ut.bt(),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
+
+                    if(g.g_l.isNotEmpty)InkWell(
+                      onTap: () {bloodrequest();},
+                      child: ut.mainbutton("Request blood")
                     ),
                     //Login and signup button
-                    Expanded(
-                      child: Align(
-                        alignment: FractionalOffset.bottomCenter,
-                        child: Row(
+                    Row(
                           mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
-                            g.g_n.isEmpty
-                                ? Container(
-                                    padding:
-                                        EdgeInsets.only(top: 30, bottom: 30),
-                                    height: 80,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      gradient: LinearGradient(
-                                          colors: [Colors.orange, Colors.red]),
-                                    ),
-                                    child: InkWell(
-                                        onTap: () {
-                                          login();
-                                        },
-                                        child: Column(
-                                          children: <Widget>[
-                                            Text(
-                                              "User Login",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        )),
-                                  )
-                                : SizedBox(width: 1),
-                            g.g_n.isEmpty
-                                ? Container(
-                                    padding:
-                                        EdgeInsets.only(top: 30, bottom: 30),
-                                    height: 80,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      gradient: LinearGradient(
-                                          colors: [Colors.orange, Colors.red]),
-                                    ),
-                                    child: InkWell(
+                            Expanded(child:Container(
+                              padding: EdgeInsets.only(left: 20),
+
+                              child:Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+
+                              InkWell(child:Row(children: <Widget>[
+                                ut.roundicon(Icons.person, Colors.white,
+                                    Colors.orange, 30, 5),
+                                Text("User Login",
+                                  style: TextStyle(fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                  fontSize: 20),),
+                                ut.
+                                roundicon(Icons.keyboard_arrow_right,
+                                    Colors.white, Colors.black,
+                                    25, 0)
+                              ],),onTap: (){login();},),
+                                Divider(color: Colors.black,),
+                                InkWell(child:Row(children: <Widget>[
+                                  Text("New user? ",
+                                      style: TextStyle(fontWeight: FontWeight.w400,
+                                      color: Colors.grey[600],
+                                      fontSize: 18)),
+                                  Text("Signup here",
+                                      style: TextStyle(fontWeight: FontWeight.w400,
+                                          color: Colors.blue,
+                                          fontSize: 18)),
+                                  ut.
+                                  roundicon(Icons.keyboard_arrow_right,
+                                      Colors.white, Colors.blue,
+                                      25, 0)
+                                ],),onTap: (){signup();},),
+                            ],),)),
+
+                            /*g.g_n.isEmpty
+                                ? InkWell(
                                         onTap: () {
                                           signup();
                                         },
-                                        child: Column(
-                                          children: <Widget>[
-                                            Expanded(
-                                                child: Text(
-                                              "Sign Up",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                          ],
-                                        )),
-                                  )
-                                : SizedBox(width: 1),
-                            g.g_n.isEmpty
-                                ? Container(
-                                    padding: EdgeInsets.only(top: 30, left: 8),
-                                    height: 80,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      gradient: LinearGradient(
-                                          colors: [Colors.orange, Colors.red]),
-                                    ),
-                                    child: InkWell(
-                                      onTap: () {
-                                        coordinatorLogin();
-                                      },
-                                      child: Column(
-                                        children: <Widget>[
-                                          Expanded(
-                                            child: Text(
-                                              "Coordinator Login",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : SizedBox(width: 1),
+                                        child: ut.iconbutton("User signup",
+                                            Icons.person,Colors.white))
+
+                                : SizedBox(width: 1),*/
+
+                            SizedBox(width: 10,)
                           ],
-                        ),
-                      ),
                     ),
-                    SizedBox(height: 20)
+                    SizedBox(height: 30,),
+                    InkWell(
+                        onTap: () {
+                          newsfeed(true);
+                        },
+                        child: ut.mainbutton("Emergency Reuest feed")
+                    ),
+                    Expanded(child: Container(),),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        g.g_n.isEmpty
+                            ? InkWell(
+                            onTap: () {
+                              coordinatorLogin();
+                            },
+                            child: ut.iconbutton("Coordinator login",
+                                KoukiconsAssistant(height: 25,))
+                        )
+                            : SizedBox(width: 1),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -584,7 +515,18 @@ class HomeScreenState extends State<HomeScreen> {
       //CODE HERE to execute if you back to this page from signup
     });
   }
-
+  newsfeed(bool emergency){
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ChooseGroup(emergency: emergency,)));
+  }
+  bloodrequest(){
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => BloodRequest()));
+  }
   setPrefs() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     setState(() {
