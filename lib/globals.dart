@@ -1,8 +1,7 @@
-// File for holding global variables
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+String mongo_url="mongodb://developers:123456@vps001.qubehost.com:27017/Bloodproject?authSource=Bloodproject&authMechanism=SCRAM-SHA-1";
 String app_name = "revive";
 String app_version = "0.01-a";
 String baseUrl = "http://vps001.qubehost.com/bloodapp/"; //Need to update after setup server
@@ -112,7 +111,7 @@ Map<String, List<String>> tlk = {
     "Kannur",
     "Kasargod"
   ];
-  void submitForm(GlobalKey<FormState> key1,GlobalKey<ScaffoldState> scaffoldKey,String message) {
+void submitForm(GlobalKey<FormState> key1,GlobalKey<ScaffoldState> scaffoldKey,String message) {
     final FormState form = key1.currentState;
     if (!key1.currentState.validate()) {
       showMessage(scaffoldKey,message);
@@ -138,3 +137,4 @@ class UserLocationTracker {
     print(position);
   }
 } //import this class for current user location. 
+var fcm_token;

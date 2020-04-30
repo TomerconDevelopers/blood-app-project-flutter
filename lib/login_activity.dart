@@ -3,10 +3,12 @@ import 'package:http/http.dart' as http;
 import 'package:revive/home.dart';
 import 'package:revive/password_reset.dart';
 import 'package:revive/signup.dart';
+import 'package:revive/username_reset.dart';
 import 'utils.dart' as ut;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as g;
+import 'mobileverification.dart';
 /*
 UI created by Alan (31/03/2020)
  */
@@ -68,10 +70,27 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      GestureDetector(onTap: ()=>Navigator.push(
+                     GestureDetector(onTap: ()=>Navigator.push(
                     context, MaterialPageRoute(builder: (context) => PasswordReset1())),
                                               child: Text(
-                          "Forgotten Password?",
+                          "Forgotten Pssword?",
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      GestureDetector(onTap: ()=>Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => UsernameReset1())),
+                                              child: Text(
+                          "Forgotten Username?",
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
                           ),
@@ -98,9 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SignUp())).then((var value){
-                                      Navigator.pop(context);
-                                    }),
+                                    builder: (context) => MobileVerfication())),
                             child: Text("SIGN UP",
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,

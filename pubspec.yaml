@@ -20,6 +20,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # https://pub.dev/packages/android_alarm_manager
+  # android_alarm_manager: ^0.4.5
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -39,6 +42,12 @@ dependencies:
   url_launcher: ^5.0.2
   mongo_dart: ^0.4.0
   datetime_picker_formfield: ^1.0.0
+  share: ^0.6.4
+  flutter_local_notifications: ^1.4.2
+  koukicons: ^2.0.2
+  firebase_messaging: ^6.0.13
+  firebase_auth: ^0.16.0
+  image_picker: ^0.6.5+1
 
 
 dev_dependencies:

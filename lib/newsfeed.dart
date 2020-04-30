@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import './details.dart';
@@ -10,9 +9,9 @@ import 'globals.dart' as g;
 
 List lis = [];
 int index = 0;
+
 Future<List> getData1() async {
-  final res = await http.get(
-     g.baseUrl+"/newsfeed.php");
+  final res = await http.get(g.baseUrl + "/newsfeed.php");
   print(res.statusCode);
   return jsonDecode(res.body);
 }
@@ -23,7 +22,7 @@ class EmergencyGroupBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 20.0),
-      height: 250.0,
+      height: MediaQuery.of(context).size.height,
       child: Column(
         children: <Widget>[
           Padding(
@@ -58,7 +57,7 @@ class EmergencyGroupBox extends StatelessWidget {
           FutureBuilder(
               future: getData1(),
               builder: (context, ss) {
-                 lis = ss.data;
+                lis = ss.data;
                 if (ss.hasError) {
                   return CircularProgressIndicator();
                 } else {
@@ -70,7 +69,7 @@ class EmergencyGroupBox extends StatelessWidget {
                           itemBuilder: (context, index) {
                             Widget w = lis[index]['status'] == 'Emergency'
                                 ? EmergencyCard(
-                                  i1:index,
+                                    i1: index,
                                     group1: lis[index]['bloodgroup'],
                                     name1: lis[index]['name'],
                                     location1: lis[index]['taluk'],
@@ -92,6 +91,7 @@ class EmergencyGroupBox extends StatelessWidget {
 //Other requirements newsfeed
 class GroupBox extends StatelessWidget {
   final String group;
+
   GroupBox({@required this.group});
 
   @override
@@ -100,11 +100,11 @@ class GroupBox extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20.0),
-        height: 250.0,
+        height: MediaQuery.of(context).size.height,
         child: FutureBuilder(
             future: getData1(),
             builder: (context, ss) {
-               lis = ss.data;
+              lis = ss.data;
               if (ss.hasError) {
                 return CircularProgressIndicator();
               } else {
@@ -113,7 +113,7 @@ class GroupBox extends StatelessWidget {
                     itemBuilder: (context, index) {
                       Widget w = lis[index]['bloodgroup'] == this.group
                           ? RequestCard(
-                            i:index,
+                              i: index,
                               name: lis[index]['name'],
                               location: lis[index]['taluk'],
                               units: lis[index]['bloodqty'],
@@ -143,8 +143,7 @@ class EmergencyCard extends StatelessWidget {
       @required this.location1,
       @required this.units1,
       @required this.group1,
-      @required this.i1
-      });
+      @required this.i1});
 
   @override
   Widget build(BuildContext context) {
@@ -152,18 +151,19 @@ class EmergencyCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Details(name: lis[i1]['name'],
-                                        age: lis[i1]['age'],
-                                        date: lis[i1]['date'],
-                                        district: lis[i1]['district'],
-                                        location: lis[i1]['taluk'],
-                                        hospital: lis[i1]['hospital'],
-                                        group: lis[i1]['bloodgroup'],
-                                        number: lis[i1]
-                                            ['bystander_contacts'],
-                                        altNumber: lis[i1]
-                                            ['bystander_alt_contacts'],
-                                        units: lis[i1]['bloodqty'],)),
+          MaterialPageRoute(
+              builder: (context) => Details(
+                    name: lis[i1]['name'],
+                    age: lis[i1]['age'],
+                    date: lis[i1]['date'],
+                    district: lis[i1]['district'],
+                    location: lis[i1]['taluk'],
+                    hospital: lis[i1]['hospital'],
+                    group: lis[i1]['bloodgroup'],
+                    number: lis[i1]['bystander_contacts'],
+                    altNumber: lis[i1]['bystander_alt_contacts'],
+                    units: lis[i1]['bloodqty'],
+                  )),
         );
       },
       child: new Container(
@@ -302,18 +302,19 @@ class RequestCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Details(name: lis[i]['name'],
-                                        age: lis[i]['age'],
-                                        date: lis[i]['date'],
-                                        district: lis[i]['district'],
-                                        location: lis[i]['taluk'],
-                                        hospital: lis[i]['hospital'],
-                                        group: lis[i]['bloodgroup'],
-                                        number: lis[i]
-                                            ['bystander_contacts'],
-                                        altNumber: lis[i]
-                                            ['bystander_alt_contacts'],
-                                        units: lis[i]['bloodqty'],)),
+          MaterialPageRoute(
+              builder: (context) => Details(
+                    name: lis[i]['name'],
+                    age: lis[i]['age'],
+                    date: lis[i]['date'],
+                    district: lis[i]['district'],
+                    location: lis[i]['taluk'],
+                    hospital: lis[i]['hospital'],
+                    group: lis[i]['bloodgroup'],
+                    number: lis[i]['bystander_contacts'],
+                    altNumber: lis[i]['bystander_alt_contacts'],
+                    units: lis[i]['bloodqty'],
+                  )),
         );
       },
       child: new Container(
@@ -412,15 +413,23 @@ class RequestCard extends StatelessWidget {
 }
 
 class NewsFeed extends StatefulWidget {
-  NewsFeed({Key key, this.title}) : super(key: key);
+  NewsFeed({Key key, this.emergency, this.group}) : super(key: key);
 
-  final String title;
+  final bool emergency;
+  String group;
 
   @override
-  _NewsFeedState createState() => _NewsFeedState();
+  _NewsFeedState createState() => _NewsFeedState(emergency, group);
 }
 
 class _NewsFeedState extends State<NewsFeed> {
+  bool emergency; //TO FILTER EMERGENCY ONLY
+  String group; // TO FILTER BLOOD GROUP
+  _NewsFeedState(bool a, String b) {
+    emergency = a;
+    group = b;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -432,25 +441,35 @@ class _NewsFeedState extends State<NewsFeed> {
                 onPressed: () {
                   Navigator.pop(context);
                 }),
-            title: Text("Newsfeed"),
-            actions: <Widget>[
-              // action button
-              IconButton(
-                  icon: Icon(Icons.update),
-                  color: Colors.white,
-                  onPressed: () {
-                    return showAlertDialog(context);
-                  }),
-            ],
+            title: Row(
+              children: <Widget>[
+                Text("Newsfeed"),
+                SizedBox(
+                  width: 10,
+                ),
+                if(emergency==false)ut.roundedtext("$group", Colors.white, Colors.red),
+                SizedBox(
+                  width: 10,
+                ),
+              Expanded(child: Center(
+                child: GestureDetector(child:ut.roundedtext("Emergency", Colors.white, Colors.red),onTap: (){
+                  setState(() {
+                    emergency=true;
+                  });
+                },),
+              )),
+
+              ],
+            ),
+
           ),
           body: ListView(
             scrollDirection: Axis.vertical,
             children: <Widget>[
-              EmergencyGroupBox(),
-              Column(
+              emergency==true?EmergencyGroupBox():Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Container(
                         padding: EdgeInsets.all(10),
                         width: MediaQuery.of(context).size.width,
@@ -466,7 +485,7 @@ class _NewsFeedState extends State<NewsFeed> {
                                     color: Colors.white, size: 20),
                                 SizedBox(width: 10),
                                 Text(
-                                  'A+',
+                                  group,
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -480,266 +499,7 @@ class _NewsFeedState extends State<NewsFeed> {
                         )),
                   ),
                   GroupBox(
-                    group: 'A+',
-                  ),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                        padding: EdgeInsets.all(10),
-                        width: MediaQuery.of(context).size.width,
-                        height: 70,
-                        color: Colors.redAccent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Icon(Icons.invert_colors,
-                                    color: Colors.white, size: 20),
-                                SizedBox(width: 10),
-                                Text(
-                                  'A-',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Icon(Icons.filter_list,
-                                color: Colors.white, size: 20)
-                          ],
-                        )),
-                  ),
-                  GroupBox(
-                    group: 'A-',
-                  ),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                        padding: EdgeInsets.all(10),
-                        width: MediaQuery.of(context).size.width,
-                        height: 70,
-                        color: Colors.redAccent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Icon(Icons.invert_colors,
-                                    color: Colors.white, size: 20),
-                                SizedBox(width: 10),
-                                Text(
-                                  'B+',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Icon(Icons.filter_list,
-                                color: Colors.white, size: 20)
-                          ],
-                        )),
-                  ),
-                  GroupBox(
-                    group: 'B+',
-                  ),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                        padding: EdgeInsets.all(10),
-                        width: MediaQuery.of(context).size.width,
-                        height: 70,
-                        color: Colors.redAccent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Icon(Icons.invert_colors,
-                                    color: Colors.white, size: 20),
-                                SizedBox(width: 10),
-                                Text(
-                                  'B-',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Icon(Icons.filter_list,
-                                color: Colors.white, size: 20)
-                          ],
-                        )),
-                  ),
-                  GroupBox(
-                    group: 'B-',
-                  ),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                        padding: EdgeInsets.all(10),
-                        width: MediaQuery.of(context).size.width,
-                        height: 70,
-                        color: Colors.redAccent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Icon(Icons.invert_colors,
-                                    color: Colors.white, size: 20),
-                                SizedBox(width: 10),
-                                Text(
-                                  'AB+',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Icon(Icons.filter_list,
-                                color: Colors.white, size: 20)
-                          ],
-                        )),
-                  ),
-                  GroupBox(
-                    group: 'AB+',
-                  ),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                        padding: EdgeInsets.all(10),
-                        width: MediaQuery.of(context).size.width,
-                        height: 70,
-                        color: Colors.redAccent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Icon(Icons.invert_colors,
-                                    color: Colors.white, size: 20),
-                                SizedBox(width: 10),
-                                Text(
-                                  'AB-',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Icon(Icons.filter_list,
-                                color: Colors.white, size: 20)
-                          ],
-                        )),
-                  ),
-                  GroupBox(
-                    group: 'AB-',
-                  ),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                        padding: EdgeInsets.all(10),
-                        width: MediaQuery.of(context).size.width,
-                        height: 70,
-                        color: Colors.redAccent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Icon(Icons.invert_colors,
-                                    color: Colors.white, size: 20),
-                                SizedBox(width: 10),
-                                Text(
-                                  'O+',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Icon(Icons.filter_list,
-                                color: Colors.white, size: 20)
-                          ],
-                        )),
-                  ),
-                  GroupBox(
-                    group: 'O+',
-                  ),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                        padding: EdgeInsets.all(10),
-                        width: MediaQuery.of(context).size.width,
-                        height: 70,
-                        color: Colors.redAccent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Icon(Icons.invert_colors,
-                                    color: Colors.white, size: 20),
-                                SizedBox(width: 10),
-                                Text(
-                                  'O-',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Icon(Icons.filter_list,
-                                color: Colors.white, size: 20)
-                          ],
-                        )),
-                  ),
-                  GroupBox(
-                    group: 'O-',
+                    group: group,
                   ),
                 ],
               ),
@@ -809,34 +569,7 @@ showAlertDialog(BuildContext context) {
   );
 
   // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: Text("Availability status"),
-    content: CircularPercentIndicator(
-      radius: 120.0,
-      lineWidth: 13.0,
-      animation: true,
-      percent: 0.7,
-      center: new Text(
-        "70.0%",
-        style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-      ),
-      footer: new Text(
-        "Days left to be Available",
-        style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
-      ),
-      circularStrokeCap: CircularStrokeCap.round,
-      progressColor: Colors.red,
-    ),
-    actions: [
-      okButton,
-    ],
-  );
 
   // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
+
 }
