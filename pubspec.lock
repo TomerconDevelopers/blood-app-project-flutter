@@ -188,7 +188,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-<<<<<<< HEAD
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -203,8 +202,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-=======
->>>>>>> f7f74101276f39b314ba6f75891176b57451a67e
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
