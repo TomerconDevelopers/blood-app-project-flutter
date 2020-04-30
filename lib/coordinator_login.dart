@@ -151,6 +151,7 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
           sp.setString("location", r['localty']);
           sp.setString("experience", r['experience']);
           sp.setString("profession", r['profession']);
+          sp.setString("photo_upload", r['photo_upload']);
           setState(() {
             Navigator.pop(context, () {
               setState(() {});

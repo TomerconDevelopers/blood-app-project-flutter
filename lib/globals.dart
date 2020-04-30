@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+String mongo_url="mongodb://developers:123456@vps001.qubehost.com:27017/Bloodproject?authSource=Bloodproject&authMechanism=SCRAM-SHA-1";
 String app_name = "revive";
 String app_version = "0.01-a";
 String baseUrl = "http://vps001.qubehost.com/bloodapp/"; //Need to update after setup server

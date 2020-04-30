@@ -190,7 +190,9 @@ class MobileVerficationState extends State<MobileVerfication> {
                                            
                                            padding: EdgeInsets.symmetric(vertical:15),
                                           onPressed: (){
+                                            if(otpverified){
                                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> SignUp(contact_number: phonenumber,)));
+                                            }
                                           },
                                     shape: RoundedRectangleBorder(
                                       borderRadius:BorderRadius.circular(10)

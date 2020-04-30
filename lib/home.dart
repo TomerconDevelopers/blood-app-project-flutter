@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:koukicons/assistant.dart';
@@ -10,6 +10,7 @@ import 'package:revive/coordinator_login.dart';
 import 'package:revive/coordinator_profile.dart';
 import 'package:revive/coordinator_requests_list.dart';
 import 'package:revive/coordinators%20list.dart';
+import 'package:revive/deleteimage.dart';
 import 'package:revive/donor%20search%20page.dart';
 import 'package:revive/faq.dart';
 import 'package:revive/newsfeed.dart';
@@ -18,12 +19,14 @@ import 'package:revive/request.dart';
 import 'package:revive/signup.dart';
 import 'package:revive/terms.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'addimage.dart';
 import 'globals.dart' as g;
 import 'login_activity.dart';
 import 'utils.dart' as ut;
 import 'package:http/http.dart' as http;
 import 'pushnotifications.dart';
 import 'mobileverification.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mon;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -32,11 +35,14 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   SharedPreferences prefs;
-
+  bool imageloading = true;
+  List images=[];
+  List imagewidgets=[];
+  String photoupload;
   asyncFunc(BuildContext) async {
     await setPrefs();
     await coordinatorsetPrefs();
-
+    await initmon();
   }
 
   @override
@@ -48,13 +54,49 @@ class HomeScreenState extends State<HomeScreen> {
   void start(BuildContext) {
     asyncFunc(BuildContext);
   }
+     mon.Db db;
+  initmon() async {
+    db = new mon.Db(g.mongo_url);
+    await db.open().then((val){print("$val");});
+    loadimages();
+  }
+  void addtolist(Map a){
+    setState(() {
+      imagewidgets.add(a['image']);
+      var b = Image.memory(base64Decode(a['image']),fit: BoxFit.fill,);
+      images.add(b);
+    });
+    
+  }
+  loadimages() async{
    
+   var gallery = db.collection("gallery");
+   await gallery.find().forEach(addtolist).then((onValue){print(onValue);
+    setState(() {
+      imageloading = false;
+    });
+    });   
+  }
 
   @override
   void dispose() {
     super.dispose();
   }
 
+Widget image_carouselhome() => Container(
+  height: 200,
+  child:  new Carousel(
+    boxFit : BoxFit.fitWidth,
+    images: images,
+    autoplay: true,
+    overlayShadowColors: Colors.white,
+    animationCurve: Curves.fastOutSlowIn,
+    animationDuration: Duration(milliseconds: 1000),
+    dotSize: 4.0,
+    dotBgColor: Colors.transparent,
+    indicatorBgPadding: 10.0,
+  ),
+);
   @override
   Widget build(BuildContext context) {
     //Image slider
@@ -99,6 +141,19 @@ class HomeScreenState extends State<HomeScreen> {
                           : SizedBox(
                               height: 1,
                             ),
+                            photoupload == "1" ?
+                             IconButton(icon: Icon(Icons.add_a_photo), onPressed: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> Addimage()));
+                            }): SizedBox(
+                              height: 1,
+                            ),
+                            photoupload == "1" ? 
+                            IconButton(icon: Icon(Icons.delete), onPressed:() 
+                            
+                            { Navigator.push(context, MaterialPageRoute(builder: (context) => DeleteImage(images:imagewidgets) ));})
+                            : SizedBox(
+                              height: 1,
+                            )
                 ],
               ),
             ),
@@ -228,10 +283,12 @@ class HomeScreenState extends State<HomeScreen> {
                                       sp.setString("last_don", '');
                                       sp.setString("status", '');
                                       sp.setString("for_time", '');
+                                      sp.setString("photo_upload", "");
                                       setState(() {
                                         g.g_n = '';
                                         g.g_bg = '';
                                         g.g_l = '';
+                                        photoupload='';
                                       });
                                       Navigator.pop(context);
                                     },
@@ -384,8 +441,11 @@ class HomeScreenState extends State<HomeScreen> {
                   children: <Widget>[
                     Container(
                       margin: EdgeInsets.only(bottom: 20),
-                      height: 250,
-                      child: ut.image_carousel(),
+                      height:250,
+                      child: imageloading? Padding(
+                        padding: const EdgeInsets.all(110.0),
+                        child: CircularProgressIndicator(),
+                      ) : images.length == 0? ut.empty_server("No images to show") : image_carouselhome(),
                     ),
                     ut.banner(),
                     if(g.g_l.isEmpty)SizedBox(height: 20,),
@@ -548,6 +608,7 @@ class HomeScreenState extends State<HomeScreen> {
     setState(() {
       g.g_n = sp.get("name");
       g.g_l = sp.get("location");
+      photoupload = sp.get("photo_upload");
       if (g.g_n == null || g.g_l == null) {
         g.g_n = '';
         g.g_l = '';

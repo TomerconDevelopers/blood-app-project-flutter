@@ -45,6 +45,8 @@ dependencies:
   koukicons: ^2.0.2
   firebase_messaging: ^6.0.13
   firebase_auth: ^0.16.0
+  image_picker: ^0.6.5+1
+  mongo_dart: ^0.4.0       
 dev_dependencies:
   flutter_test:
     sdk: flutter
