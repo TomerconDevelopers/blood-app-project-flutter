@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                      GestureDetector(onTap: ()=>Navigator.push(
                     context, MaterialPageRoute(builder: (context) => PasswordReset1())),
                                               child: Text(
-                          "Forgotten Pssword?",
+                          "Forgotten Password?",
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
                           ),
