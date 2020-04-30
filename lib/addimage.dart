@@ -23,6 +23,7 @@ class AddimageState extends State<Addimage> {
     await initmon();
   }
 
+    
   mon.Db db;
   initmon() async {
     db = new mon.Db(mongo_url);
@@ -47,6 +48,8 @@ class AddimageState extends State<Addimage> {
             leading:BackButton(onPressed:(){
               Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> HomeScreen()) );}),
 
+             
+        
             title: Text('Add Image'),
           ),
           body: Container(

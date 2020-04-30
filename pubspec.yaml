@@ -48,8 +48,7 @@ dependencies:
   firebase_messaging: ^6.0.13
   firebase_auth: ^0.16.0
   image_picker: ^0.6.5+1
-
-
+   
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -76,6 +75,7 @@ flutter:
     - assets/images/image5.jpg
     - assets/images/image6.jpeg
     - assets/images/profile.jpg
+    - assets/fonts/Peterbuilt.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -96,6 +96,9 @@ flutter:
     - family: Ubuntu
       fonts:
         - asset: assets/fonts/Ubuntu-Regular.tff
+    - family: Peter
+      fonts:
+        - asset: assets/fonts/Peterbuilt.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
