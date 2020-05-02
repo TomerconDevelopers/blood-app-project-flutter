@@ -6,7 +6,8 @@ import 'package:strings/strings.dart';
 import 'dart:convert';
 import 'globals.dart' as g;
 import 'utils.dart' as ut;
-
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 /* creted by Sandra*/
 
 class EditCoordinatorProfile extends StatefulWidget {
@@ -86,9 +87,9 @@ class _EditCoordinatorProfileState extends State<EditCoordinatorProfile> {
     vd = new TextEditingController(text: this.vdr);
     mail = new TextEditingController(text: this.email);
     coexp = new TextEditingController(text: this.exp);
-    d=this.district;
-    tl=this.location;
-    l=g.tlk[d];
+    d = this.district;
+    tl = this.location;
+    l = g.tlk[d];
   }
 
   //textediting controllers for all fields
@@ -104,8 +105,7 @@ class _EditCoordinatorProfileState extends State<EditCoordinatorProfile> {
   Widget w = SizedBox(height: 10);
   String reg = "", d, tl, p;
   final GlobalKey<FormState> _key1 = new GlobalKey<FormState>();
-
- 
+  bool coord = false;
 
   List l = [];
   //mapping districts to their taluks
@@ -127,248 +127,252 @@ class _EditCoordinatorProfileState extends State<EditCoordinatorProfile> {
         ),
         key: _scaffoldKey,
         resizeToAvoidBottomInset: true,
-        body: Container(
-          //upper beizer curved container
-          decoration: ut.bg(),
-          child: Scrollbar(
-            child: ListView(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: SingleChildScrollView(
-                    child: Form(
-                      autovalidate: true,
-                      key: _key1,
-                      child: Column(
-                        children: <Widget>[
-                          TextFormField(
-                            //first name
-                            validator: (value) =>
-                                value.isEmpty ? 'Field required...' : null,
+        body: ModalProgressHUD(
+          progressIndicator: SpinKitHourGlass(color:Colors.red,size:80,),
+          inAsyncCall: coord,
+          child: Container(
+            //upper beizer curved container
+            decoration: ut.bg(),
+            child: Scrollbar(
+              child: ListView(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: SingleChildScrollView(
+                      child: Form(
+                        autovalidate: true,
+                        key: _key1,
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
+                              //first name
+                              validator: (value) =>
+                                  value.isEmpty ? 'Field required...' : null,
 
-                            controller: fn,
-                            style: TextStyle(fontSize: 20),
+                              controller: fn,
+                              style: TextStyle(fontSize: 20),
 
-                            decoration: InputDecoration(
-                                prefixIcon: (Icon(Icons.mood,
-                                    color: Color(0xFFFB415B))),
-                                border: OutlineInputBorder(
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.mood,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderSide:
+                                          BorderSide(color: Color(0xFFFB415B))),
+                                  labelText: 'Name',
+                                  labelStyle: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                            ),
+
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //district selector
+                            DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.home,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0))),
+                              isExpanded: true,
+                              validator: (value) =>
+                                  value == null ? 'Field required...' : null,
+                              hint: Text('Choose District',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                              items: g.districts.map((lisVal) {
+                                return DropdownMenuItem<String>(
+                                  value: lisVal,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(lisVal,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20)),
+                                      Divider()
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String val) {
+                                setState(() {
+                                  this.d = val;
+                                  l = g.tlk[d];
+                                });
+                                tl = null;
+                              },
+                              value: this.d,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //taluk selector
+                            DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.home,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0))),
+                              isExpanded: true,
+                              validator: (value) =>
+                                  value == null ? 'Field required...' : null,
+                              hint: Text('Choose Taluk',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                              items: l.map((lisVal) {
+                                return DropdownMenuItem<String>(
+                                  value: lisVal,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(lisVal,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20)),
+                                      Divider()
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String val) {
+                                setState(() {
+                                  this.tl = val;
+                                  print(tl);
+                                });
+                              },
+                              value: this.tl,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //contact number
+                            TextFormField(
+                              validator: (value) => value.isEmpty
+                                  ? 'Field required...'
+                                  : value.length != 10
+                                      ? 'Enter a valid number'
+                                      : null,
+                              controller: cn,
+                              keyboardType: TextInputType.phone,
+                              style: TextStyle(fontSize: 20),
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.phone,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(20.0),
-                                    borderSide:
-                                        BorderSide(color: Color(0xFFFB415B))),
-                                labelText: 'Name',
-                                labelStyle: TextStyle(
-                                    color: Colors.black, fontSize: 20)),
-                          ),
-                          
-                          SizedBox(
-                            height: 20,
-                          ),
-                          //district selector
-                          DropdownButtonFormField<String>(
-                            decoration: InputDecoration(
-                                prefixIcon: (Icon(Icons.home,
-                                    color: Color(0xFFFB415B))),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20.0))),
-                            isExpanded: true,
-                            validator: (value) =>
-                                value == null ? 'Field required...' : null,
-                            hint: Text('Choose District',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 20)),
-                            items: g.districts.map((lisVal) {
-                              return DropdownMenuItem<String>(
-                                value: lisVal,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(lisVal,
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 20)),
-                                    Divider()
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (String val) {
-                              setState(() {
-                                this.d = val;
-                                l = g.tlk[d];
-                              });
-                              tl = null;
-                            },
-                            value: this.d,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          //taluk selector
-                          DropdownButtonFormField<String>(
-                            decoration: InputDecoration(
-                                prefixIcon: (Icon(Icons.home,
-                                    color: Color(0xFFFB415B))),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20.0))),
-                            isExpanded: true,
-                            validator: (value) =>
-                                value == null ? 'Field required...' : null,
-                            hint: Text('Choose Taluk',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 20)),
-                            items: l.map((lisVal) {
-                              return DropdownMenuItem<String>(
-                                value: lisVal,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(lisVal,
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 20)),
-                                    Divider()
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (String val) {
-                              setState(() {
-                                this.tl = val;
-                                print(tl);
-                              });
-                            },
-                            value: this.tl,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          //contact number
-                          TextFormField(
-                            validator: (value) => value.isEmpty
-                                ? 'Field required...'
-                                : value.length != 10
-                                    ? 'Enter a valid number'
-                                    : null,
-                            controller: cn,
-                            keyboardType: TextInputType.phone,
-                            style: TextStyle(fontSize: 20),
-                            decoration: InputDecoration(
-                                prefixIcon: (Icon(Icons.phone,
-                                    color: Color(0xFFFB415B))),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                labelText: 'Contact number',
-                                labelStyle: TextStyle(
-                                    color: Colors.black, fontSize: 20)),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          //alternate contact number
-                          TextFormField(
-                            validator: (value)=> value.isEmpty
-                                ? 'Field required...'
-                                    : null,
-                            controller:coexp,
-                            keyboardType: TextInputType.number,
-                            style: TextStyle(fontSize: 20),
-                            decoration: InputDecoration(
+                                  ),
+                                  labelText: 'Contact number',
+                                  labelStyle: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //alternate contact number
+                            TextFormField(
+                              validator: (value) =>
+                                  value.isEmpty ? 'Field required...' : null,
+                              controller: coexp,
+                              keyboardType: TextInputType.number,
+                              style: TextStyle(fontSize: 20),
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.calendar_today,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  labelText: 'Experience',
+                                  labelStyle: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //email
+                            TextFormField(
+                              controller: mail,
+                              keyboardType: TextInputType.emailAddress,
+                              style: TextStyle(fontSize: 20),
+                              decoration: InputDecoration(
+                                  prefixIcon: (Icon(Icons.mail,
+                                      color: Color(0xFFFB415B))),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  labelText: 'Email',
+                                  labelStyle: TextStyle(
+                                      color: Colors.black, fontSize: 20)),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            //last donated
+                            TextFormField(
+                              controller: pr,
+                              style: TextStyle(fontSize: 20),
+                              decoration: InputDecoration(
                                 prefixIcon: (Icon(Icons.calendar_today,
                                     color: Color(0xFFFB415B))),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                labelText: 'Experience',
+                                labelText: 'Profession',
                                 labelStyle: TextStyle(
-                                    color: Colors.black, fontSize: 20)),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          //email
-                          TextFormField(
-                            controller: mail,
-                            keyboardType: TextInputType.emailAddress,
-                            style: TextStyle(fontSize: 20),
-                            decoration: InputDecoration(
-                                prefixIcon: (Icon(Icons.mail,
-                                    color: Color(0xFFFB415B))),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                labelText: 'Email',
-                                labelStyle: TextStyle(
-                                    color: Colors.black, fontSize: 20)),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          //last donated
-                          TextFormField(
-                            controller: pr,
-                            style: TextStyle(fontSize: 20),
-                            decoration: InputDecoration(
-                              prefixIcon: (Icon(Icons.calendar_today,
-                                  color: Color(0xFFFB415B))),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0),
+                                    color: Colors.black, fontSize: 20),
                               ),
-                              labelText: 'Profession',
-                              labelStyle:
-                                  TextStyle(color: Colors.black, fontSize: 20),
-                              
                             ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          
+                            SizedBox(
+                              height: 20,
+                            ),
 
-                         
-                          //button
-                          InkWell(
-                            onTap: () {
-                              callIt(context);
-                            },
-                            child: Container(
-                              margin: EdgeInsets.all(30),
-                              height: 56.0,
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(40.0),
-                                gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xFFFB415B),
-                                      Color(0xFFEE5623)
-                                    ],
-                                    begin: Alignment.centerRight,
-                                    end: Alignment.centerLeft),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "UPDATE",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18.0,
+                            //button
+                            InkWell(
+                              onTap: () {
+                                callIt(context);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(30),
+                                height: 56.0,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(40.0),
+                                  gradient: LinearGradient(
+                                      colors: [
+                                        Color(0xFFFB415B),
+                                        Color(0xFFEE5623)
+                                      ],
+                                      begin: Alignment.centerRight,
+                                      end: Alignment.centerLeft),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "UPDATE",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18.0,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
-
-
 
   callIt(BuildContext context) {
     setState(() {
@@ -377,10 +381,9 @@ class _EditCoordinatorProfileState extends State<EditCoordinatorProfile> {
         g.submitForm(_key1, _scaffoldKey,
             'Form is not valid!  Please review and correct.');
       } else {
-        
         // if every data is available post details
-        
-          postData(g.baseUrl, context);
+
+        postData(g.baseUrl, context);
       }
     });
   }
@@ -389,7 +392,7 @@ class _EditCoordinatorProfileState extends State<EditCoordinatorProfile> {
   setPrefs1() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     sp.setString("name", fn.text);
-   
+
     sp.setString("district", d);
     sp.setString("email", mail.text);
     sp.setString("profession", pr.text);
@@ -400,8 +403,9 @@ class _EditCoordinatorProfileState extends State<EditCoordinatorProfile> {
   }
 
   postData(String s, BuildContext context) async {
-    
-
+    setState(() {
+      coord=true;
+    });
     var bd = json.encode({
       "name": fn.text,
       "district": d,
@@ -410,14 +414,16 @@ class _EditCoordinatorProfileState extends State<EditCoordinatorProfile> {
       "profession": pr.text,
       "email": mail.text,
       "experience": coexp.text,
-      "requests":vd.text,
+      "requests": vd.text,
       "uname": username,
     });
-    var res = await http.post(
-        g.baseUrl+"/edit_coordinator_profile.php",
-        body: bd);
+    var res =
+        await http.post(g.baseUrl + "/edit_coordinator_profile.php", body: bd);
     print(res.statusCode);
     reg = jsonDecode(res.body);
+    setState(() {
+      coord=false;
+    });
     print(res.body);
     if (reg != "Contact number Already Exists..!") {
       Navigator.pop(context, () {
@@ -431,7 +437,7 @@ class _EditCoordinatorProfileState extends State<EditCoordinatorProfile> {
           return AlertDialog(
             content: Text(
               jsonDecode(res.body),
-              style: TextStyle(fontSize: 20, color:Color(0xFFEE5623)),
+              style: TextStyle(fontSize: 20, color: Color(0xFFEE5623)),
             ),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -440,5 +446,4 @@ class _EditCoordinatorProfileState extends State<EditCoordinatorProfile> {
         });
     reg = '';
   }
-
 }

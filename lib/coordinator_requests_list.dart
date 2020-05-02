@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'globals.dart' as g;
 import 'package:flutter/material.dart';
 import 'package:revive/Coordinator%20Request.dart';
@@ -41,8 +43,8 @@ class _RequestListState extends State<RequestList> {
                 builder: (BuildContext context,
                     AsyncSnapshot<List<dynamic>> snapshot) {
                   lis = snapshot.data;
-                  if (snapshot.hasError) {
-                    return Center(child: CircularProgressIndicator());
+                  if (!snapshot.hasData) {
+                    return Center(child:SpinKitHourGlass(color:Colors.red,size:80,),);
                   } else {
                     return ListView.builder(
                         itemCount: lis?.length ?? 0,

@@ -7,10 +7,10 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as g;
 import 'pushnotifications.dart';
-/*
-UI created by Sandra 
- */
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+bool coord_log=false;
 class CoordinatorLoginPage extends StatefulWidget {
   @override
   _CoordinatorLoginPageState createState() => _CoordinatorLoginPageState();
@@ -50,64 +50,68 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
     return MaterialApp(
         theme: ut.maintheme(),
         home: Scaffold(
-            body: Container(
-              decoration: ut.bg(),
-              child: SingleChildScrollView(
+            body: ModalProgressHUD(
+              progressIndicator: SpinKitHourGlass(color:Colors.red,size:80,),
+              inAsyncCall: coord_log,
+                          child: Container(
+                decoration: ut.bg(),
+                child: SingleChildScrollView(
           child: Container(
-              padding: EdgeInsets.only(
-                  top: 100.0, right: 20.0, left: 20.0, bottom: 20.0),
-              
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  ut.logo(),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Text(
-                    "Coordinator Login",
-                    style: TextStyle(
-                        fontSize: 32.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[800]),
-                  ),
-                  SizedBox(
-                    height: 40.0,
-                  ),
-                  buildTextField("Username", em),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  buildTextField("Password", pass),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: ()=>Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => PasswordReset())),
-                                                  child: Text(
-                            "Forgotten Password?",
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
+                padding: EdgeInsets.only(
+                    top: 100.0, right: 20.0, left: 20.0, bottom: 20.0),
+                
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    ut.logo(),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Text(
+                      "Coordinator Login",
+                      style: TextStyle(
+                          fontSize: 32.0,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey[800]),
+                    ),
+                    SizedBox(
+                      height: 40.0,
+                    ),
+                    buildTextField("Username", em),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    buildTextField("Password", pass),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: ()=>Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => PasswordReset())),
+                                                    child: Text(
+                              "Forgotten Password?",
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 50.0),
-                  buildButtonContainer(),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                ],
-              ),
+                    SizedBox(height: 50.0),
+                    buildButtonContainer(),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                  ],
+                ),
           ),
         ),
+              ),
             )));
   }
 
@@ -146,6 +150,9 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
   Widget buildButtonContainer() {
     return InkWell(
       onTap: () async {
+        setState(() {
+          coord_log=true;
+        });
         var bd = json.encode({"uname": em.text, "pass":pass.text});
         print(ut.encrypt(pass.text));
         res = await http.post(g.baseUrl+"/coordinator_login.php",
@@ -153,11 +160,15 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
         print(res.statusCode);
         var reg=jsonDecode(res.body);
         print(reg);
+        setState(() {
+          coord_log=false;
+        });
         if (reg != "Invalid Username/Password") {
           var r = json.decode(res.body);
           print(r['name']);
           String capname = r['name'];
           final SharedPreferences sp = await SharedPreferences.getInstance();
+          
           sp.setString("name", r['name']);
           sp.setString("username", r['userid']);
           sp.setString("password", r['password']);
@@ -168,6 +179,8 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
           sp.setString("location", r['localty']);
           sp.setString("experience", r['experience']);
           sp.setString("profession", r['profession']);
+          g.g_n = sp.get("name");
+      g.g_l = sp.get("location");
           setState(() {
             Navigator.pop(context, () {
               setState(() {});

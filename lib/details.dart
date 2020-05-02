@@ -75,14 +75,24 @@ class Details extends StatelessWidget {
         
         Padding(
           padding: const EdgeInsets.all(30.0),
-          child: RaisedButton.icon(
-               onPressed: (){
-                 launch("tel://"+number);
-               },
-            icon: Icon(Icons.call,color: Colors.white,),
-               label: Text("Contact",style: TextStyle(color: Colors.white),),
-               color: Colors.deepOrange.shade300,
-          ),
+          child:RaisedButton.icon(
+                                    icon: Icon(Icons.phone,size: 25,color: Colors.white,),
+                                    onPressed: () {
+                                      launch("tel://"+number);
+                                    },
+                                    
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    color: Colors.red,
+                                    label: Text(
+                                      "Contact",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    )),
+          
         ),
       ],
     );

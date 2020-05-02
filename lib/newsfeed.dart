@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import './details.dart';
@@ -58,8 +58,8 @@ class EmergencyGroupBox extends StatelessWidget {
               future: getData1(),
               builder: (context, ss) {
                 lis = ss.data;
-                if (ss.hasError) {
-                  return CircularProgressIndicator();
+                if (!ss.hasData) {
+                  return SpinKitHourGlass(color:Colors.red,size:80,);
                 } else {
                   return Expanded(
                     child: SizedBox(
@@ -105,8 +105,8 @@ class GroupBox extends StatelessWidget {
             future: getData1(),
             builder: (context, ss) {
               lis = ss.data;
-              if (ss.hasError) {
-                return CircularProgressIndicator();
+              if (!ss.hasData) {
+                return SpinKitHourGlass(color:Colors.red,size:80,);
               } else {
                 return ListView.builder(
                     itemCount: lis?.length ?? 0,

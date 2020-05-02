@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:revive/coord_details.dart';
 import 'package:revive/coordinator_profile.dart';
 import 'utils.dart' as ut;
@@ -42,8 +43,8 @@ class _CoordinatorsListState extends State<CoordinatorsList> {
                 builder: (BuildContext context,
                     AsyncSnapshot<List<dynamic>> snapshot) {
                   lis = snapshot.data;
-                  if (snapshot.hasError) {
-                    return Center(child: CircularProgressIndicator());
+                  if (!snapshot.hasData) {
+                    return Center(child:SpinKitHourGlass(color:Colors.red,size:80,),);
                   } else {
                     return ListView.builder(
                         itemCount: lis?.length ?? 0,

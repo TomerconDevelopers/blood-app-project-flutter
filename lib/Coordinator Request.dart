@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'utils.dart' as ut;
 import 'globals.dart' as g;
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+bool coord_req=false;
 class BloodRequestDetails extends StatefulWidget {
   final String name;
   final String age;
@@ -308,11 +311,13 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
         appBar: AppBar(
           title: Text(name.toUpperCase()),
         ),
-        body: details);
+        body: ModalProgressHUD(child: details,inAsyncCall: coord_req,progressIndicator: SpinKitHourGlass(color:Colors.red,size:80,),));
   }
 
   postData3(BuildContext context,String s) async {
-    
+    setState(() {
+      coord_req=true;
+    });
     var bd = json.encode({
       "name": this.name,
       "age": this.age,
@@ -334,6 +339,9 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
         body: bd);
     print(res.statusCode);
     reg = jsonDecode(res.body);
+    setState(() {
+      coord_req=false;
+    });
     print(reg);
      if(reg!="Try Again"){
        setState(() {

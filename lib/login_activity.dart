@@ -9,6 +9,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as g;
 import 'mobileverification.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 /*
 UI created by Alan (31/03/2020)
  */
@@ -21,6 +23,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   http.Response res;
   bool _isHidden = true;
+  bool logged=false;
 
   void _toggleVisibility() {
     setState(() {
@@ -36,141 +39,85 @@ class _LoginPageState extends State<LoginPage> {
     return MaterialApp(
         theme: ut.maintheme(),
         home: Scaffold(
-            body: SingleChildScrollView(
+            body: ModalProgressHUD(
+              progressIndicator: SpinKitHourGlass(color:Colors.red,size:80,),
+              inAsyncCall: logged,
+                          child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.only(
-                top: 100.0, right: 20.0, left: 20.0, bottom: 20.0),
-            decoration: ut.bg(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                ut.logo(),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Text(
-                  "User Login",
-                  style: TextStyle(
-                      fontSize: 32.0,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey[800]),
-                ),
-                SizedBox(
-                  height: 40.0,
-                ),
-                buildTextField("Username", em),
-                SizedBox(
-                  height: 20.0,
-                ),
-                buildTextField("Password", pass),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                     GestureDetector(onTap: ()=>Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => PasswordReset1())),
-                                              child: Text(
-                          "Forgotten Password?",
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                      ),
-                    ],
+              padding: EdgeInsets.only(
+                  top: 100.0, right: 20.0, left: 20.0, bottom: 20.0),
+              decoration: ut.bg(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  ut.logo(),
+                  SizedBox(
+                    height: 20.0,
                   ),
-                ),
-                SizedBox(height: 20.0),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      GestureDetector(onTap: ()=>Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => UsernameReset1())),
-                                              child: Text(
-                          "Forgotten Username?",
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    "User Login",
+                    style: TextStyle(
+                        fontSize: 32.0,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey[800]),
                   ),
-                ),
-                SizedBox(height: 50.0),
-                buildButtonContainer(),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Container(
-                  child: Center(
+                  SizedBox(
+                    height: 40.0,
+                  ),
+                  buildTextField("Username", em),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  buildTextField("Password", pass),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Container(
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Text("Don't have an account?"),
-                        SizedBox(
-                          width: 10.0,
+                       GestureDetector(onTap: ()=>Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => PasswordReset1())),
+                                                child: Text(
+                            "Forgotten Password?",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
                         ),
-                        InkWell(
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MobileVerfication())),
-                            child: Text("SIGN UP",
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                )))
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        )));
-  }
-
-  Widget buildTextField(String hintText, TextEditingController t) {
-    return TextFormField(
-      controller: t,
-      validator: (val) => val.isEmpty ? 'Field required' : null,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(
-          color: Colors.black,
-          fontSize: 16.0,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(40.0),
-        ),
-        prefixIcon: hintText == "Username"
-            ? Icon(
-                Icons.email,
-                color: Colors.red[300],
-              )
-            : Icon(Icons.lock, color: Colors.red[300]),
-        suffixIcon: hintText == "Password"
-            ? IconButton(
-                onPressed: _toggleVisibility,
-                icon: _isHidden
-                    ? Icon(Icons.visibility_off)
-                    : Icon(Icons.visibility),
-              )
-            : null,
-      ),
-      obscureText: hintText == "Password" ? _isHidden : false,
-    );
-  }
-
-  Widget buildButtonContainer() {
-    return InkWell(
+                  SizedBox(height: 20.0),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        GestureDetector(onTap: ()=>Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => UsernameReset1())),
+                                                child: Text(
+                            "Forgotten Username?",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 50.0),
+                 InkWell(
       onTap: () async {
+        setState(() {
+          logged=true;
+        });
         var bd = json.encode({"uname": em.text, "pass":ut.encrypt(pass.text)});
         res = await http.post(g.baseUrl+"/UserLogin.php", body: bd);
         print(res.statusCode);
         print(res.body);
+        setState(() {
+          logged=false;
+        });
         if (res.body != "Invalid Username/Password") {
           var r = json.decode(res.body);
           print(r['name']);
@@ -192,7 +139,10 @@ class _LoginPageState extends State<LoginPage> {
           sp.setString("for_time", r['for_time']);
           sp.setString("blood_group", r['bloodgroup']);
           sp.setString("fcm_token",r['fcm_token']);
+           g.g_n = sp.get("name");
+      g.g_bg = sp.get("blood_group");
           setState(() {
+            logged=false;
             Navigator.pop(context, () {
               setState(() {});
             });
@@ -245,6 +195,70 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+    ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Container(
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text("Don't have an account?"),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          InkWell(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MobileVerfication())),
+                              child: Text("SIGN UP",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  )))
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          ),
+        ),
+            )));
+  }
+
+  Widget buildTextField(String hintText, TextEditingController t) {
+    return TextFormField(
+      controller: t,
+      validator: (val) => val.isEmpty ? 'Field required' : null,
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(
+          color: Colors.black,
+          fontSize: 16.0,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(40.0),
+        ),
+        prefixIcon: hintText == "Username"
+            ? Icon(
+                Icons.email,
+                color: Colors.red[300],
+              )
+            : Icon(Icons.lock, color: Colors.red[300]),
+        suffixIcon: hintText == "Password"
+            ? IconButton(
+                onPressed: _toggleVisibility,
+                icon: _isHidden
+                    ? Icon(Icons.visibility_off)
+                    : Icon(Icons.visibility),
+              )
+            : null,
+      ),
+      obscureText: hintText == "Password" ? _isHidden : false,
     );
   }
+
+  
 }

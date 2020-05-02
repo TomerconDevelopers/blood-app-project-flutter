@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'utils.dart' as ut;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -65,8 +66,8 @@ class _DonorListState extends State<DonorList> {
             builder:
                 (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
               lis = snapshot.data;
-              if (snapshot.hasError) {
-                return Center(child: CircularProgressIndicator());
+              if (!snapshot.hasData) {
+                return Center(child:SpinKitHourGlass(color:Colors.red,size:80,),);
               } else {
                 return ListView.builder(
                     itemCount: lis?.length ?? 0,
