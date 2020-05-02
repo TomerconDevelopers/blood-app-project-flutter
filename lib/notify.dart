@@ -14,7 +14,7 @@ class Notify extends StatelessWidget {
 
           Row(
             children: <Widget>[
-              
+              Text(payload),
             ],
 
           )

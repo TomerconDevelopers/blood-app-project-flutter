@@ -512,7 +512,7 @@ Widget image_carouselhome() => Container(
                           ],
                     ),
                     SizedBox(height: 20,),
-                    Row(
+                    g.g_l.isNotEmpty||g.g_bg.isNotEmpty?SizedBox(width:2):Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         g.g_n.isEmpty

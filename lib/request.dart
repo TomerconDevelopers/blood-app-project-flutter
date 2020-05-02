@@ -29,7 +29,8 @@ class _BloodRequestState extends State<BloodRequest> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   String sbg, d, tl, re = "";
   final format = DateFormat("yyyy-MM-dd");
-  DateTime req_date;
+  final timeFormat=DateFormat("hh:mm a");
+  DateTime req_date, req_time;
   var curr;
   String reg = "";
   TextEditingController fn = new TextEditingController();
@@ -154,6 +155,7 @@ class _BloodRequestState extends State<BloodRequest> {
 
                               var c = "${val.year}-${val.month}-${val.day}";
                               curr = c;
+                              print(req_date);
                             },
                             decoration: InputDecoration(
                                 prefixIcon: (Icon(Icons.calendar_today,
@@ -171,6 +173,36 @@ class _BloodRequestState extends State<BloodRequest> {
                                   initialDate: currentValue ?? DateTime.now(),
                                   firstDate: DateTime(2019),
                                   lastDate: DateTime(2200));
+                            }),
+                            SizedBox(height:20),
+                         DateTimeField(
+                            validator: (value) =>
+                                value == null ? 'Field required...' : null,
+                            onChanged: (val) async {
+                              req_time = val == null ? 0 : val;
+                              //print("req:$req_time");
+                                  //print(req_date.add(Duration(hours: req_time.hour,minutes: req_time.minute)));
+                                  print(req_date);
+                            },
+                            decoration: InputDecoration(
+                                prefixIcon: (Icon(Icons.access_time,
+                                    color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: 'When you need blood?',
+                                labelStyle: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                            format: timeFormat,
+                            onShowPicker: (context, currentValue)async {
+                             final time= await showTimePicker(
+                                  context: context,
+                                  initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+                                  );
+                                  // print(DateTimeField.convert(time));
+                                  // print(time);
+                                  
+                                  return DateTimeField.convert(time);
                             }),
                         SizedBox(
                           height: 20,
@@ -420,7 +452,8 @@ class _BloodRequestState extends State<BloodRequest> {
       showMessage('Form is not valid!  Please review and correct.');
     } else {
       form.save();
-      //getNotified();
+      if(req_date!=null && req_time!=null)req_date=req_date.add(Duration(hours: req_time.hour,minutes: req_time.minute));
+      getNotified();
       g.g_l.isEmpty
           ? postData1(context, g.baseUrl)
           : postData3(context, g.baseUrl); //This invokes each onSaved event
@@ -438,37 +471,32 @@ class _BloodRequestState extends State<BloodRequest> {
         )));
   }
 
-  // getNotified() async {
-  //   var scheduledNotificationDateTime = (req_date == null)
-  //       ? req_date
-  //       : (req_date.day == DateTime.now().day &&
-  //               req_date.month == DateTime.now().month &&
-  //               req_date.year == DateTime.now().year)
-  //           ? DateTime.now().add(Duration(minutes:3))
-  //           : req_date.add(Duration(hours: 12));
-  //   print(scheduledNotificationDateTime);
-  //   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-  //       'your other channel id',
-  //       'your other channel name',
-  //       'your other channel description',
-  //       importance: Importance.Max,
-  //       priority: Priority.High,
-  //       playSound: true);
-  //   var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-  //   NotificationDetails platformChannelSpecifics = NotificationDetails(
-  //       androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-  //   await flutterLocalNotificationsPlugin.schedule(
-  //       0,
-  //       'Hi '+fn.text,
-  //       'Blood Request',
-  //       scheduledNotificationDateTime,
-  //       platformChannelSpecifics,
-  //       payload:cn.text);
-  // }
+   getNotified() async {
+     var scheduledNotificationDateTime = req_date;
+     print(scheduledNotificationDateTime);
+     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+         'your other channel id',
+         'your other channel name',
+         'your other channel description',
+         importance: Importance.Max,
+         priority: Priority.High,
+         playSound: true);
+     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+     NotificationDetails platformChannelSpecifics = NotificationDetails(
+         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+     await flutterLocalNotificationsPlugin.schedule(
+         0,
+         'Hi '+fn.text,
+         'Blood Request',
+         scheduledNotificationDateTime,
+         platformChannelSpecifics,
+         payload:cn.text);
+   }
 
   postData3(BuildContext context, String s) async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     var uname = sp.getString("username");
+    String token=sp.getString("fcm_token");
     var bd = json.encode({
       "name": fn.text,
       "age": age.text,
@@ -477,12 +505,13 @@ class _BloodRequestState extends State<BloodRequest> {
       "localty": tl,
       "contacts": cn.text,
       "alt_contacts": acn.text,
-      "date": curr == null ? '' : curr,
+      "date": req_date.toString(),
       "status": stat,
       "units": u.text,
       "hosp": h.text,
       "verified": "Verified",
       "id": uname,
+      "fcm_token":token,
     });
     var res = await http.post( s+"/coordinator_request.php", body: bd);
     print(res.statusCode);
@@ -500,17 +529,20 @@ class _BloodRequestState extends State<BloodRequest> {
   }
 
   postData1(BuildContext context, String s) async {
+    final SharedPreferences sp=await SharedPreferences.getInstance();
+    String token=sp.getString("fcm_token");
     var bd = json.encode({
       "name": fn.text,
       "age": age.text,
       "bloodgroup": sbg,
-      "date": curr == null ? '' : curr,
+      "date": req_date.toString(),
       "district": d,
       "taluk": tl,
       "qty": u.text,
       "contacts": cn.text,
       "alt_contacts": acn.text,
       "hospital": h.text,
+      "fcm_token":token,
     });
     http.Response res = await http.post(s+"/request.php", body: bd);
     print(res.statusCode);

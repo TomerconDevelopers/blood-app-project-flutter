@@ -191,6 +191,7 @@ class _LoginPageState extends State<LoginPage> {
           sp.setString("status", r['status']);
           sp.setString("for_time", r['for_time']);
           sp.setString("blood_group", r['bloodgroup']);
+          sp.setString("fcm_token",r['fcm_token']);
           setState(() {
             Navigator.pop(context, () {
               setState(() {});

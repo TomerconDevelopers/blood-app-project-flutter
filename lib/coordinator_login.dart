@@ -6,6 +6,7 @@ import 'utils.dart' as ut;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as g;
+import 'pushnotifications.dart';
 /*
 UI created by Sandra 
  */
@@ -16,6 +17,22 @@ class CoordinatorLoginPage extends StatefulWidget {
 }
 
 class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
+  var token;
+  asyncFunc(BuildContext) async {
+  pushnotification();
+ setState(() {
+   token=g.fcm_token;
+ }); 
+  }
+  
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => start(context));
+  }
+  void start(BuildContext){
+    asyncFunc(BuildContext);
+  }
   http.Response res;
   bool _isHidden = true;
 
@@ -206,5 +223,10 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
         ),
       ),
     );
+  }
+  pushnotification()async{
+    PushNotificationsManager obj = new PushNotificationsManager();
+  
+    obj.init();
   }
 }

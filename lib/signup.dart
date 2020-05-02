@@ -790,7 +790,15 @@ asyncFunc(BuildContext) async {
 
   postData(String s, BuildContext context) async { 
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-    _firebaseMessaging.subscribeToTopic(d);
+    if(sbg.substring(sbg.length-1,sbg.length) == "+"){
+      var a = d + sbg.substring(0,sbg.length-1)+"positive"; 
+      _firebaseMessaging.subscribeToTopic(a);
+    }
+    else{
+    var a = d + sbg.substring(0,sbg.length-1)+"negative"; 
+      _firebaseMessaging.subscribeToTopic(a);
+    }
+  
     String g = gen.toLowerCase();
     p = ut.encrypt(pass.text);
     var bd = json.encode({
