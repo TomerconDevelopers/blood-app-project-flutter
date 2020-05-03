@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'utils.dart' as ut;
 import 'globals.dart' as g;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -18,6 +19,7 @@ class BloodRequestDetails extends StatefulWidget {
   final String units;
   final String taluk;
   final String group;
+  final String requested_time;
 
   BloodRequestDetails({
     @required this.name,
@@ -30,6 +32,7 @@ class BloodRequestDetails extends StatefulWidget {
     @required this.number,
     @required this.altNumber,
     @required this.units,
+    @required this.requested_time,
   });
 
   @override
@@ -43,15 +46,27 @@ class BloodRequestDetails extends StatefulWidget {
       this.altNumber,
       this.district,
       this.taluk,
-      this.hospital);
+      this.hospital,this.requested_time);
 }
 
 class _BloodRequestDetailsState extends State<BloodRequestDetails> {
+  setpref()async{
+    final SharedPreferences sp=await SharedPreferences.getInstance();
+    na=sp.getString('name');
+  }
+  @override
+  void initState(){
+    setpref();
+    id = new TextEditingController(text: this.na);
+    // TODO: implement initState
+    super.initState();
+  }
+  var na;
   final GlobalKey<FormState> _formKey1 = new GlobalKey<FormState>();
   List status = ["Emergency", "Not Emergency"];
   List verify = ["Verified", "Rejected"];
   var stat, ve;
-  TextEditingController id = TextEditingController();
+  TextEditingController id;
   String name;
   String age;
   String date;
@@ -61,9 +76,9 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
   String hospital;
   String units;
   String taluk;
-  String group;
+  String group,requested_time;
   _BloodRequestDetailsState(String n, String a, String da, String grp,
-      String un, String nu, String altNu, String di, String tlk, String hos) {
+      String un, String nu, String altNu, String di, String tlk, String hos,String rt) {
     this.name = n;
     this.age = a;
     this.date = da;
@@ -74,6 +89,7 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
     this.hospital = hos;
     this.units = un;
     this.group = grp;
+    this.requested_time=rt;
   }
   String reg = "";
   @override
@@ -180,6 +196,16 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
             style: TextStyle(fontSize: 20.0),
           ),
         ),
+         ListTile(
+          title: Text(
+            "Requested Date and Time:",
+            style: TextStyle(color: Color(0xFFEE5623), fontSize: 15.0),
+          ),
+          subtitle: Text(
+            requested_time,
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ),
         SingleChildScrollView(
           child: Form(
               autovalidate: true,
@@ -252,7 +278,7 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
                   ),
                   ListTile(
                     title: Text(
-                      "Coordinator id:",
+                      "Coordinator name:",
                       style:
                           TextStyle(color: Color(0xFFEE5623), fontSize: 15.0),
                     ),

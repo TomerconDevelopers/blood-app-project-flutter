@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './details.dart';
 import 'utils.dart' as ut;
 import 'package:http/http.dart' as http;
@@ -10,7 +11,12 @@ import 'globals.dart' as g;
 List lis = [];
 int index = 0;
 
+var dis,dis1,dis2;
 Future<List> getData1() async {
+  final SharedPreferences sp=await SharedPreferences.getInstance();
+  dis=g.g_bg.isNotEmpty?sp.getString('district'):null;
+  dis1=g.g_l.isNotEmpty?sp.getString('district0'):null;
+  dis2=g.g_l.isNotEmpty?sp.getString('district1'):null;
   final res = await http.get(g.baseUrl + "/newsfeed.php");
   print(res.statusCode);
   return jsonDecode(res.body);
@@ -67,16 +73,43 @@ class EmergencyGroupBox extends StatelessWidget {
                       child: ListView.builder(
                           itemCount: lis?.length ?? 0,
                           itemBuilder: (context, index) {
-                            Widget w = lis[index]['status'] == 'Emergency'
-                                ? EmergencyCard(
+                            Widget w=SizedBox(width:1);
+                           
+                            if( lis[index]['status'] == 'Emergency' ){
+                          if(g.g_bg.isNotEmpty){
+                              if(lis[index]['district'] ==dis){
+                                    w=EmergencyCard(
                                     i1: index,
                                     group1: lis[index]['bloodgroup'],
                                     name1: lis[index]['name'],
                                     location1: lis[index]['taluk'],
                                     units1: lis[index]['bloodqty'],
-                                    hospital1: lis[index]['hospital'])
-                                : SizedBox(width: 1);
-                            return w;
+                                    hospital1: lis[index]['hospital']);
+                              }
+                          }
+                          else if(g.g_l.isNotEmpty  && dis1!=null && dis2!=null){
+                              if(lis[index]['district'] ==dis1 || lis[index]['district'] ==dis2){
+                                    w=EmergencyCard(
+                                    i1: index,
+                                    group1: lis[index]['bloodgroup'],
+                                    name1: lis[index]['name'],
+                                    location1: lis[index]['taluk'],
+                                    units1: lis[index]['bloodqty'],
+                                    hospital1: lis[index]['hospital']);
+                              }
+                          }
+                          else{
+                            w=EmergencyCard(
+                                    i1: index,
+                                    group1: lis[index]['bloodgroup'],
+                                    name1: lis[index]['name'],
+                                    location1: lis[index]['taluk'],
+                                    units1: lis[index]['bloodqty'],
+                                    hospital1: lis[index]['hospital']);
+                          }
+                      }
+
+                             return w;
                           }),
                     ),
                   );
@@ -111,14 +144,46 @@ class GroupBox extends StatelessWidget {
                 return ListView.builder(
                     itemCount: lis?.length ?? 0,
                     itemBuilder: (context, index) {
-                      Widget w = lis[index]['bloodgroup'] == this.group
-                          ? RequestCard(
+                      Widget w=SizedBox(width:1);
+                      // Widget w = lis[index]['bloodgroup'] == this.group 
+                      //     ? RequestCard(
+                      //         i: index,
+                      //         name: lis[index]['name'],
+                      //         location: lis[index]['taluk'],
+                      //         units: lis[index]['bloodqty'],
+                      //         hospital: lis[index]['hospital'])
+                      //     : SizedBox(width: 1);
+                      if( lis[index]['bloodgroup'] == this.group ){
+                          if(g.g_bg.isNotEmpty && dis!=null){
+                              if(lis[index]['district'] ==dis){
+                                    w=RequestCard(
                               i: index,
                               name: lis[index]['name'],
                               location: lis[index]['taluk'],
                               units: lis[index]['bloodqty'],
-                              hospital: lis[index]['hospital'])
-                          : SizedBox(width: 1);
+                              hospital: lis[index]['hospital']);
+                              }
+                          }
+                         else if(g.g_l.isNotEmpty && dis1!=null && dis2!=null){
+                              if(lis[index]['district'] ==dis1 || lis[index]['district'] ==dis2){
+                                    w=RequestCard(
+                              i: index,
+                              name: lis[index]['name'],
+                              location: lis[index]['taluk'],
+                              units: lis[index]['bloodqty'],
+                              hospital: lis[index]['hospital']);
+                              }
+                          }
+                          else{
+                            w=RequestCard(
+                              i: index,
+                              name: lis[index]['name'],
+                              location: lis[index]['taluk'],
+                              units: lis[index]['bloodqty'],
+                              hospital: lis[index]['hospital']);
+                          }
+                      }
+
                       return w;
                     });
               }

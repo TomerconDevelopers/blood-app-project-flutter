@@ -75,6 +75,8 @@ class _CoordinatorsListState extends State<CoordinatorsList> {
                                             profession: lis[index]
                                                 ['profession'],
                                            id:lis[index]['userid'],
+                                           dis0:lis[index]['district0'],
+                                           dis1:lis[index]['district1']
                                           )),
                                 ).then((var value) {
                                     

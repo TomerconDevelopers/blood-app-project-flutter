@@ -521,6 +521,7 @@ class _BloodRequestState extends State<BloodRequest> {
       "verified": "Verified",
       "id": uname,
       "fcm_token":token,
+      //"requested_time":DateTime.now().toString()
     });
     var res = await http.post( s+"/coordinator_request.php", body: bd);
     print(res.statusCode);
@@ -558,6 +559,7 @@ class _BloodRequestState extends State<BloodRequest> {
       "alt_contacts": acn.text,
       "hospital": h.text,
       "fcm_token":token,
+     // "requested_time":DateTime.now().toString()
     });
     http.Response res = await http.post(s+"/request.php", body: bd);
     print(res.statusCode);

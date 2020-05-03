@@ -9,7 +9,7 @@ class CoordinatorDetails extends StatefulWidget {
       district,
       ve_re,
       experience,
-      profession,id;
+      profession,id,dis0,dis1;
   CoordinatorDetails(
       {Key key,
       this.name,
@@ -19,11 +19,11 @@ class CoordinatorDetails extends StatefulWidget {
       this.district,
       this.ve_re,
       this.experience,
-      this.profession,this.id})
+      this.profession,this.id,this.dis0,this.dis1})
       : super(key: key);
 
   @override
-  _CoordinatorDetailsState createState() => _CoordinatorDetailsState(this.name,this.phone,this.mail,this.taluk,this.district,this.ve_re,this.experience,this.profession,this.id);
+  _CoordinatorDetailsState createState() => _CoordinatorDetailsState(this.name,this.phone,this.mail,this.taluk,this.district,this.ve_re,this.experience,this.profession,this.id,this.dis0,this.dis1);
 }
 
 class _CoordinatorDetailsState extends State<CoordinatorDetails> {
@@ -34,8 +34,8 @@ String name,
       district,
       ve_re,
       experience,
-      profession,id;
-_CoordinatorDetailsState(String n,String p,String m,String tal,String dis,String ver,String exper,String pro,String id){
+      profession,id,dis0,dis1;
+_CoordinatorDetailsState(String n,String p,String m,String tal,String dis,String ver,String exper,String pro,String id,String d0,String d1){
   this.name=n;
   this.phone=p;
   this.mail=m;
@@ -45,6 +45,8 @@ _CoordinatorDetailsState(String n,String p,String m,String tal,String dis,String
   this.experience=exper;
   this.profession=pro;
   this.id=id;
+  this.dis0=d0;
+  this.dis1=d1;
 }
   Map f = {};
   @override
@@ -224,6 +226,16 @@ _CoordinatorDetailsState(String n,String p,String m,String tal,String dis,String
                 ),
                 subtitle: Text(
                   district,
+                  style: TextStyle(fontSize: 18.0),
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "In charge of Districts",
+                  style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
+                ),
+                subtitle: Text(
+                  dis0+","+dis1,
                   style: TextStyle(fontSize: 18.0),
                 ),
               ),

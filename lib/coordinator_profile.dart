@@ -31,7 +31,7 @@ class _CoordinatorProfileState extends State<CoordinatorProfile> {
       re = '',
       ex = '',
       e = '',
-      un = '';
+      un = '',dis0='',dis1='';
   //function to post userid and password and accepts full details
   postValues() async {
     final SharedPreferences spp = await SharedPreferences.getInstance();
@@ -49,6 +49,8 @@ class _CoordinatorProfileState extends State<CoordinatorProfile> {
       re = spp.getString('verified_requests');
       ex = spp.getString('experience');
       pr = spp.getString('profession');
+      dis0=spp.getString('district0');
+      dis1=spp.getString('district1');
       un = uname;
     });
   }
@@ -247,6 +249,16 @@ class _CoordinatorProfileState extends State<CoordinatorProfile> {
                 ),
                 subtitle: Text(
                   d,
+                  style: TextStyle(fontSize: 18.0),
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "In charge of Districts",
+                  style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
+                ),
+                subtitle: Text(
+                  dis0+","+dis1,
                   style: TextStyle(fontSize: 18.0),
                 ),
               ),

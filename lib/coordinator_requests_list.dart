@@ -17,10 +17,11 @@ class _RequestListState extends State<RequestList> {
   List lis = [];
   Future<List> getData() async {
     final SharedPreferences spp=await SharedPreferences.getInstance();
-    String location=spp.getString('location');
+    String dis0=spp.getString('district0');
+    String dis1=spp.getString('district1');
     final res = await http.post(
        g.baseUrl+"/request_list.php",
-        body: jsonEncode({"loc": location}));
+        body: jsonEncode({"dis0": dis0,"dis1":dis1}));
     print(res.statusCode);
     return jsonDecode(res.body);
   }
@@ -74,6 +75,7 @@ class _RequestListState extends State<RequestList> {
                                         altNumber: lis[index]
                                             ['bystander_alt_contacts'],
                                         units: lis[index]['bloodqty'],
+                                        requested_time:lis[index]['requested_time']
                                       )),
                             ).then((var value) {
                                 
