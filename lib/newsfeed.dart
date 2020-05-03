@@ -384,7 +384,7 @@ class RequestCard extends StatelessWidget {
       },
       child: new Container(
         padding: EdgeInsets.all(5.0),
-        height: 120,
+       // height: 120,
         width: 180.0,
         child: Card(
           elevation: 3.0,
@@ -399,7 +399,7 @@ class RequestCard extends StatelessWidget {
                     children: <Widget>[
                       Icon(
                         Icons.face,
-                        size: 25,
+                        size: 40,
                         color: Colors.deepOrange.shade300,
                       ),
                       Padding(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'globals.dart';
 import 'package:encrypt/encrypt.dart' as en;
-
+import 'color_loader_3.dart';
 void showtoast(String text, Color col) {
   Fluttertoast.showToast(
       msg: text,
@@ -230,3 +230,43 @@ Widget mainbutton(String txt)=>
         textAlign: TextAlign.center,
       ),
     );
+
+  Widget loader(){
+    //double height = MediaQuery.of(context).size.height-100;
+    return 
+        Align(
+          alignment: Alignment.center,
+          child: 
+          
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+            decoration: bg(),
+            child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              logo(),
+              /*Text("Loading...",
+            style: TextStyle(fontSize: 20,color: Colors.black,fontWeight: FontWeight.w300)),*/
+              //new CircularProgressIndicator(),
+              ColorLoader3(radius: 15,dotRadius: 6, )
+            ],
+          ),)   
+    );
+
+  }
+     BoxDecoration rounded2(var col,bool bord,double r){
+    return BoxDecoration(
+      color: col,
+        borderRadius: BorderRadius.circular(r),
+        border: Border.all(
+            color: (bord)?Colors.grey:Colors.transparent, style: BorderStyle.solid,
+             width: 0.80),
+      );
+  }
+   mycard(var col,var radius,var shadow_depth) => 
+        BoxDecoration(  
+            color: col,
+            borderRadius: BorderRadius.circular(radius),
+            boxShadow: [bs(shadow_depth)]);

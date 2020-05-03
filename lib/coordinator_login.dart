@@ -181,6 +181,7 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
           sp.setString("profession", r['profession']);
           sp.setString("district0", r['district0']);
           sp.setString("district1", r['district1']);
+          sp.setString("photo_upload", r["photo_upload"]);
           g.g_n = sp.get("name");
       g.g_l = sp.get("location");
           setState(() {
