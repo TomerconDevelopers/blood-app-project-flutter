@@ -175,17 +175,7 @@ _CoordinatorDetailsState(String n,String p,String m,String tal,String dis,String
               ),
 
               //Other details
-              ListTile(
-                title: Text(
-                  "Coordinator ID",
-                  style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
-                ),
-                subtitle: Text(
-                  id,
-                  style: TextStyle(fontSize: 18.0),
-                ),
-              ),
-              Divider(),
+              
               ListTile(
                 title: Text(
                   "Phone",
