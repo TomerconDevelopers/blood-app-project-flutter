@@ -358,7 +358,8 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
       "hosp": this.hospital,
       "verified": ve,
       "id": id.text,
-      "fcm_token":""
+      "fcm_token":"",
+      "req_time":requested_time
     });
     var res = await http.post(
         s+"/coordinator_request.php",
