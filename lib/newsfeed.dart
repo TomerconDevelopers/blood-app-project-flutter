@@ -34,9 +34,9 @@ class EmergencyGroupBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(0.0),
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 20.0),
+        margin: EdgeInsets.symmetric(vertical: 10.0),
         height: MediaQuery.of(context).size.height,
         child: FutureBuilder(
             future: getData1(),
@@ -49,7 +49,7 @@ class EmergencyGroupBox extends StatelessWidget {
                 );
               } else {
                 return ListView.builder(
-                    itemCount: lis?.length ?? 0,
+                   itemCount: lis?.length ?? 0,
                     itemBuilder: (context, index) {
                       Widget w = SizedBox(width: 1);
 
@@ -94,9 +94,9 @@ class GroupBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(5.0),
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10.0),
+        margin: EdgeInsets.symmetric(vertical: 0.0),
         height: MediaQuery.of(context).size.height,
         child: FutureBuilder(
             future: getData1(),
@@ -220,8 +220,12 @@ class RequestCard extends StatelessWidget {
               style: TextStyle(color: Colors.grey, fontSize: 19),
             ),
             SizedBox(height: 10),
-            ut.roundedtext('Required units :' + lis[i]['bloodqty'],
+           Row(children: <Widget>[
+               ut.roundedtext('Required units :' + lis[i]['bloodqty'],
                 Colors.red, Colors.white),
+                SizedBox(width: 2,),
+                ut.roundedtext(lis[i]['bloodgroup'], Colors.red, Colors.white)
+           ],) ,
 
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -334,16 +338,15 @@ class _NewsFeedState extends State<NewsFeed> {
               ],
             ),
           ),
-          body: ListView(
-            scrollDirection: Axis.vertical,
-            children: <Widget>[
-              emergency == true
-                  ? EmergencyGroupBox()
-                  : GroupBox(
-                      group: sbg,
-                    ),
-              Padding(padding: EdgeInsets.all(10))
-            ],
+          body: Container(
+            color: Colors.orange[50],
+            child: 
+                emergency == true
+                    ? EmergencyGroupBox()
+                    : GroupBox(
+                        group: sbg,
+                      ),
+                
           )),
     );
   }

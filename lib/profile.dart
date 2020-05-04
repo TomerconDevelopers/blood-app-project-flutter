@@ -114,347 +114,175 @@ class _ProfileState extends State<Profile> {
             onPressed: () => Navigator.pop(context),
           ),
         ),
-        body: Stack(
-          children: <Widget>[
-            Container(
-                child: Image.asset('assets/images/bg.png'),
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height),
-            Positioned(
-                top: 100,
-                bottom: 20,
-                left: 20,
-                right: 20,
-                child: SizedBox(
-                  child: ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                          Colors.white.withOpacity(0.2), BlendMode.dstATop),
-                      child: Image.asset('assets/images/logo.png')),
-                  height: 50,
-                  width: 50,
-                )),
-            Scrollbar(
-              child: ListView(
-                children: <Widget>[
-                  Container(
-                    height: 50,
-                    width: 50,
-                    margin: EdgeInsets.only(top: 10),
-                    padding: EdgeInsets.all(70),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.pink, width: 10)),
+        body:  ListView(
+            children: <Widget>[
+              //background settings for profile pic
+              Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/images/blood_doodle.jpg"),
+                    fit: BoxFit.cover,
+                    colorFilter: new ColorFilter.mode(
+                        Colors.black.withOpacity(0.2), BlendMode.dstATop),
                   ),
-                  Center(
-                    child: Container(
-                      margin: EdgeInsets.only(
-                          left: 30, top: 0, right: 30, bottom: 40),
-                      padding: EdgeInsets.all(20),
-                      height: 700,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.pink, width: 5)),
-                      child: ListView(
-                        children: <Widget>[
-                          CircleAvatar(
-                              child: Center(
-                                  child: Text(n,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 70))),
-                              radius: 40,
-                              backgroundColor: Colors.pink),
-                          SizedBox(
-                            height: 20,
+                  color: Colors.deepOrange.shade300,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        //profile picture
+                        CircleAvatar(
+                          minRadius: 60,
+                          backgroundColor: Colors.deepOrange.shade300,
+                          child: CircleAvatar(
+                            backgroundImage:
+                                new AssetImage("assets/images/profile.jpg"),
+                            minRadius: 50,
                           ),
-                          Center(
-                              child: Text(
-                            f.toUpperCase(),
-                            style: Theme.of(context).textTheme.title,
-                          )),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text('Age',
-                                  style: Theme.of(context).textTheme.title),
-                              //Text(':',style: Theme.of(context).textTheme.title),
-                              Text(a, style: Theme.of(context).textTheme.title)
-                            ],
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text('Gender',
-                                  style: Theme.of(context).textTheme.title),
-                              Text(g, style: Theme.of(context).textTheme.title)
-                            ],
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text('Weight',
-                                  style: Theme.of(context).textTheme.title),
-                              Text(w, style: Theme.of(context).textTheme.title)
-                            ],
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text('Blood Group',
-                                  style: Theme.of(context).textTheme.title),
-                              Text(b, style: Theme.of(context).textTheme.title)
-                            ],
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text('District',
-                                    style: Theme.of(context).textTheme.title),
-                              ),
-                              Expanded(
-                                  child: Text(d,
-                                      style: Theme.of(context).textTheme.title))
-                            ],
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text('Localty',
-                                    style: Theme.of(context).textTheme.title),
-                              ),
-                              Expanded(
-                                  child: Text(l,
-                                      style: Theme.of(context).textTheme.title))
-                            ],
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text('Contact number',
-                                    style: Theme.of(context).textTheme.title),
-                              ),
-                              Expanded(
-                                  child: Text(c,
-                                      style: Theme.of(context).textTheme.title))
-                            ],
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text('Alternate Contact number',
-                                    style: Theme.of(context).textTheme.title),
-                              ),
-                              Expanded(
-                                  child: Text(ac,
-                                      style: Theme.of(context).textTheme.title))
-                            ],
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text('Email',
-                                  style: Theme.of(context).textTheme.title),
-                              Text(e, style: Theme.of(context).textTheme.title)
-                            ],
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text('Last Donation Date',
-                                    style: Theme.of(context).textTheme.title),
-                              ),
-                              Expanded(
-                                  child: Text(ld,
-                                      style: Theme.of(context).textTheme.title))
-                            ],
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text('Status',
-                                    style: Theme.of(context).textTheme.title),
-                              ),
-                              Expanded(
-                                  child: Text(s,
-                                      style: Theme.of(context).textTheme.title))
-                            ],
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text('Status active period',
-                                    style: Theme.of(context).textTheme.title),
-                              ),
-                              Expanded(
-                                  child: Text(at,
-                                      style: Theme.of(context).textTheme.title))
-                            ],
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text('Username',
-                                    style: Theme.of(context).textTheme.title),
-                              ),
-                              Expanded(
-                                  child: Text(un,
-                                      style: Theme.of(context).textTheme.title))
-                            ],
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Center(
-                            child: Container(
-                                width: 100.0,
-                                height: 40,
-                                child: RaisedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => EditProfile(
-                                              name: f,
-                                              age: a,
-                                              gender: g,
-                                              weight: w,
-                                              group: b,
-                                              district: d,
-                                              location: l,
-                                              contacts: c,
-                                              alt_contacts: ac,
-                                              email: e,
-                                              last_don: ld,
-                                              status: s,
-                                              for_time: at,
-                                              username: un)),
-                                    ).then((var value) {
-                                      setState(() {
-                                        postValues();
-                                      });
-                                    });
-                                  },
-                                  child: Text('Edit',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold)),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      side: BorderSide(color: Colors.pink)),
-                                  color: Colors.pink,
-                                )),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    //Name and profession details
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      f.toUpperCase(),
+                      style: TextStyle(
+                          fontSize: 22.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "",
+                      style: TextStyle(fontSize: 14.0, color: Colors.white),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+
+
+              //Other details
+              ListTile(
+                title: Text(
+                  "User Name",
+                  style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
+                ),
+                subtitle: Text(
+                  uname,
+                  style: TextStyle(fontSize: 18.0),
+                ),
+              ),
+              Divider(),
+              ListTile(
+                title: Text(
+                  "Phone",
+                  style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
+                ),
+                subtitle: Text(
+                  c,
+                  style: TextStyle(fontSize: 18.0),
+                ),
+              ),
+              Divider(),
+              ListTile(
+                title: Text(
+                  "Email",
+                  style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
+                ),
+                subtitle: Text(
+                  e,
+                  style: TextStyle(fontSize: 18.0),
+                ),
+              ),
+              Divider(),
+              ListTile(
+                title: Text(
+                  "Taluk",
+                  style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
+                ),
+                subtitle: Text(
+                  l,
+                  style: TextStyle(fontSize: 18.0),
+                ),
+              ),
+              Divider(),
+              ListTile(
+                title: Text(
+                  "District",
+                  style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
+                ),
+                subtitle: Text(
+                  d,
+                  style: TextStyle(fontSize: 18.0),
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "Age",
+                  style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
+                ),
+                subtitle: Text(
+                  a,
+                  style: TextStyle(fontSize: 18.0),
+                ),
+              ),
+              Divider(),
+              ListTile(
+                title: Text(
+                  "Last Donated",
+                  style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
+                ),
+                subtitle: Text(
+                  ld,
+                  style: TextStyle(fontSize: 18.0),
+                ),
+              ),
+              Divider(),
+              
+              ListTile(
+                title: Text(
+                  "Weight",
+                  style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
+                ),
+                subtitle: Text(
+                  w,
+                  style: TextStyle(fontSize: 18.0),
+                ),
+              ),
+              Divider(),
+              
+              ListTile(
+                title: Text(
+                  "Status",
+                  style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
+                ),
+                subtitle: Text(
+                  s,
+                  style: TextStyle(fontSize: 18.0),
+                ),
+              ),
+              Divider(),
+             s == "Available anytime"?Text(''):
+              
+              ListTile(
+                title: Text(
+                  "Available time",
+                  style: TextStyle(color: Colors.deepOrange, fontSize: 12.0),
+                ),
+                subtitle: Text(
+                  at,
+                  style: TextStyle(fontSize: 18.0),
+                ),
+              ),
+              Divider(),
+            ],
+          ),
       ),
     );
   }

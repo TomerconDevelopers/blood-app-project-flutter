@@ -101,44 +101,13 @@ File _image;
             );
           });
 }
-    /*
-      showDialog(
-     context: context,
-     builder: (BuildContext context) {
-        return new AlertDialog(
-          title: Text("PayLoad"),
-            content: Text("Payload : $payload"),
-           actions: <Widget>[
-             FlatButton(onPressed: ()async{
-                var bd=jsonEncode({"contacts":payload});
-                var res=await http.post(g.baseUrl+"/del_emergency.php",body:bd);
-                var reg=jsonDecode(res.body);
-                if(res.statusCode==200){
-                  ut.showtoast(reg, Colors.green);
-               }
-
-            }, child:Text('Yes')),
-             FlatButton(onPressed: ()async{
-               var bd=jsonEncode({"contacts":payload});
-                var res=await http.post(g.baseUrl+"/check_stat_emergency.php",body:bd);
-               var reg=jsonDecode(res.body);
-               if(res.statusCode==200){
-                 ut.showtoast(reg, Colors.green);
-              }
-
-           }, child:Text('No')),
-            ],
-          );
-     
-        
-      } ); */
+    
 
     
     bool myInterceptor(bool stopDefaultButtonEvent) {
     if(addformbool||deleteform||dialog_active){
       setState(() {
-        isloading=true;
-        loadimages();
+        
         addformbool=false;deleteform=false;dialog_active=false;
       });
     }
@@ -901,7 +870,6 @@ Widget image_carouselhome() => Container(
  String base64Image = base64Encode(_image.readAsBytesSync());
      
       
-      await initmon();
       var gallery = db.collection("gallery");
 
       await gallery.insert({ "image": base64Image}).then((
@@ -910,10 +878,13 @@ Widget image_carouselhome() => Container(
        // images.clear();
 
         setState(() {
-        
+          images.clear();
+          imagewidgets.clear();
           addformbool=false;
         
         });
+        
+        loadimages();
       });
     }
 
@@ -965,8 +936,8 @@ Widget image_carouselhome() => Container(
         imagewidgets.clear();
         images.clear();
         deleteform=false;
-        loadimages();
       });
+        loadimages();
     });
   }
 }
