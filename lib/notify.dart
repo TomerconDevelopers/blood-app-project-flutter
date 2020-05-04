@@ -8,18 +8,8 @@ class Notify extends StatelessWidget {
   Notify({Key key,this.payload});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-
-          Row(
-            children: <Widget>[
-              Text(payload),
-            ],
-
-          )
-        ],
-      ),
+    return Scaffold(
+      
     );
   }
 }

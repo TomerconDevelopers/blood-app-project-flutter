@@ -1,6 +1,7 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'globals.dart';
 import 'package:encrypt/encrypt.dart' as en;
 import 'color_loader_3.dart';
@@ -181,8 +182,8 @@ btext(String txt)=>Text(txt,
 style: TextStyle(color:Colors.red[400],
 fontWeight: FontWeight.w700, fontSize: 20));
 Text caption()=>
-    Text("Where donor meets recepients",
-      style: TextStyle(fontStyle: FontStyle.italic,color: Colors.white),);
+    Text("You are somebody's life saver",
+      style: TextStyle(fontStyle: FontStyle.italic,color: Colors.white,fontWeight: FontWeight.bold),);
 Widget iconbutton(String txt, Widget icon)=>
     Column(
       mainAxisSize: MainAxisSize.min,
@@ -211,11 +212,10 @@ Widget banner()=>Padding(
   padding: EdgeInsets.symmetric(vertical: 20),
   child: Text(
     "Welcome to WK Blood Book ",
-    style: TextStyle(
-      fontSize: 25,
-      color: Colors.black,
-      fontWeight: FontWeight.bold,
-      //fontFamily: 'Peter'
+    style:GoogleFonts.fugazOne(
+      fontSize:25,
+      color:Colors.black,
+      fontWeight:FontWeight.bold
     ),
   ),
 );

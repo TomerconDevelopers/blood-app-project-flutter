@@ -3,6 +3,7 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:koukicons/assistant.dart';
 import 'package:koukicons/camera2.dart';
@@ -26,30 +27,113 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'addimage.dart';
 import 'globals.dart' as g;
 import 'login_activity.dart';
+import 'notify.dart';
 import 'utils.dart' as ut;
 import 'package:http/http.dart' as http;
 import 'pushnotifications.dart';
 import 'mobileverification.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mon;
 import 'dart:io';
+import 'package:google_fonts/google_fonts.dart';
 class HomeScreen extends StatefulWidget {
   @override
   HomeScreenState createState() => new HomeScreenState();
 }
 
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin=new FlutterLocalNotificationsPlugin();
 class HomeScreenState extends State<HomeScreen> {
   SharedPreferences prefs;
    bool addformbool=false,deleteform=false,dialog_active=false;
   bool imageloading = true,isloading=false;
+  String popupval;
 File _image;
   List images=[];
   List imagewidgets=[];
   String photoupload;
+   
+   static const menuitems = <String>['add_a_photo','delete'];
   asyncFunc(BuildContext) async {
     await setPrefs();
     await coordinatorsetPrefs();
     await initmon();
+
+        var initializationSettingsAndroid =
+    new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,onSelectNotification: (String payload) async {
+      await notify(payload); //Navigator.push(context, MaterialPageRoute(builder: (context)=>Notify(payload: payload,)));
+
+    });
   }
+    
+    void notify(payload) async{
+      
+      showDialog(context: context,
+          builder: (BuildContext context){
+            return AlertDialog(
+              title : new Text("Did you get the blood"),
+              actions: <Widget>[
+                FlatButton(onPressed: ()async{
+                   Navigator.pop(context);
+                var bd=jsonEncode({"contacts":payload});
+                var res=await http.post(g.baseUrl+"/del_emergency.php",body:bd);
+                var reg=jsonDecode(res.body);
+                if(res.statusCode==200){
+                  ut.showtoast(reg, Colors.green);
+                 
+               }
+
+            }, child:Text('Yes')),
+             FlatButton(onPressed: ()async{
+                  Navigator.pop(context);
+               var bd=jsonEncode({"contacts":payload});
+                var res=await http.post(g.baseUrl+"/check_stat_emergency.php",body:bd);
+               var reg=jsonDecode(res.body);
+               if(res.statusCode==200){
+                 ut.showtoast(reg, Colors.green);
+              
+              }
+
+           }, child:Text('No')),
+              ],
+            );
+          });
+}
+    /*
+      showDialog(
+     context: context,
+     builder: (BuildContext context) {
+        return new AlertDialog(
+          title: Text("PayLoad"),
+            content: Text("Payload : $payload"),
+           actions: <Widget>[
+             FlatButton(onPressed: ()async{
+                var bd=jsonEncode({"contacts":payload});
+                var res=await http.post(g.baseUrl+"/del_emergency.php",body:bd);
+                var reg=jsonDecode(res.body);
+                if(res.statusCode==200){
+                  ut.showtoast(reg, Colors.green);
+               }
+
+            }, child:Text('Yes')),
+             FlatButton(onPressed: ()async{
+               var bd=jsonEncode({"contacts":payload});
+                var res=await http.post(g.baseUrl+"/check_stat_emergency.php",body:bd);
+               var reg=jsonDecode(res.body);
+               if(res.statusCode==200){
+                 ut.showtoast(reg, Colors.green);
+              }
+
+           }, child:Text('No')),
+            ],
+          );
+     
+        
+      } ); */
+
+    
     bool myInterceptor(bool stopDefaultButtonEvent) {
     if(addformbool||deleteform||dialog_active){
       setState(() {
@@ -64,6 +148,7 @@ File _image;
 
     return true;
   }
+
 
   @override
   void initState() {
@@ -129,18 +214,17 @@ Widget image_carouselhome() => Container(
       theme: ut.maintheme(),
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Revive'),
+          title: Text('WK Blood Book',style: GoogleFonts.fugazOne(letterSpacing: 1.5),),
           centerTitle: true,
           actions: <Widget>[
             InkWell(
               child: Row(
                 children: <Widget>[
                   Icon(Icons.notifications),
-                  SizedBox(
-                    width: 15,
-                  ),
+                 
                   g.g_l.isNotEmpty
                       ? IconButton(
+
                           icon: Icon(
                             Icons.account_circle,
                             size: 25,
@@ -165,24 +249,47 @@ Widget image_carouselhome() => Container(
                               height: 1,
                             ),
                             photoupload == "1" ?
-                             IconButton(icon: Icon(Icons.add_a_photo), onPressed: (){
-                           setState(() {
+                            PopupMenuButton(
+                              //enabled: ,
+                              onSelected:(value){
+                                if(value == 'add'){
+                            setState(() {
                              addformbool = true;
                              deleteform = false;
                            });
-                            }): SizedBox(
-                              height: 1,
-                            ),
-                            photoupload == "1" ? 
-                            IconButton(icon: Icon(Icons.delete), onPressed:() 
+                                }
+                           if(value == 'delete'){
+                                setState(() {
+                                deleteform = true;
+                                addformbool = false;
+                              });
+                           }
+                                
+                               
+                              } ,
+                              itemBuilder: (BuildContext context) =>
+                              [ PopupMenuItem(
+                                value: "add",
+                                child:  Icon(Icons.add_a_photo,color: Colors.red,)
+                           
+                            ) ,
+                            PopupMenuItem(
+                              value: "delete",
+                              
+                                  child:  Icon(Icons.delete,color: Colors.red,)
+                              
+                              ),
                             
-                            { setState(() {
-                              deleteform = true;
-                              addformbool = false;
-                            });})
+                            ]
+                             )
                             : SizedBox(
                               height: 1,
-                            )
+                            ),
+                           /* photoupload == "1" ? 
+                            
+                            : SizedBox(
+                              height: 1, 
+                            ) */
                 ],
               ),
             ),
@@ -198,13 +305,10 @@ Widget image_carouselhome() => Container(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Revive',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500),
-                      ),
+                      Text('WK Blood Book',
+                      style: GoogleFonts.fugazOne(
+                        color:Colors.white,letterSpacing: 1.5,fontSize: 30,fontWeight: FontWeight.bold),),
+                   
                       ut.caption()
                     ]),
               ),

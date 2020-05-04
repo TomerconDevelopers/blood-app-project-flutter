@@ -19,7 +19,6 @@ void main() {
 }
 
 SharedPreferences prefs;
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin=new FlutterLocalNotificationsPlugin();
 asyncFunc(BuildContext) async {
   // Async func to handle Futures easier; or use Future.then
   prefs = await SharedPreferences.getInstance();
@@ -51,43 +50,7 @@ class SplashScreenState extends State<Splash> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => start(context));
-    var initializationSettingsAndroid =
-    new AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettingsIOS = new IOSInitializationSettings();
-    var initializationSettings = new InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,onSelectNotification: (String payload) async {
-      await Navigator.push(context, MaterialPageRoute(builder: (context)=>Notify(payload: payload,)));
-//      await showDialog(
-//        context: context,
-//        builder: (BuildContext context) {
-//          return new AlertDialog(
-//            title: Text("PayLoad"),
-//            content: Text("Payload : $payload"),
-//            actions: <Widget>[
-//              FlatButton(onPressed: ()async{
-//                var bd=jsonEncode({"contacts":payload});
-//                var res=await http.post(g.baseUrl+"/del_emergency.php",body:bd);
-//                var reg=jsonDecode(res.body);
-//                if(res.statusCode==200){
-//                  ut.showtoast(reg, Colors.green);
-//                }
-//
-//              }, child:Text('Yes')),
-//              FlatButton(onPressed: ()async{
-//                var bd=jsonEncode({"contacts":payload});
-//                var res=await http.post(g.baseUrl+"/check_stat_emergency.php",body:bd);
-//                var reg=jsonDecode(res.body);
-//                if(res.statusCode==200){
-//                  ut.showtoast(reg, Colors.green);
-//                }
-//
-//              }, child:Text('No')),
-//            ],
-//          );
-//        },
-//      );
-    });
+
   }
   void start(BuildContext) {
     asyncFunc(BuildContext);
