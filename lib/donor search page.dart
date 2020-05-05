@@ -102,6 +102,7 @@ class _DonorSearchState extends State<DonorSearch> {
                       }).toList(),
                       onChanged: (String val) {
                         setState(() {
+                          FocusScope.of(context).requestFocus(new FocusNode());
                           this.d = val;
                           l = g.tlk[d];
                         });
@@ -139,6 +140,7 @@ class _DonorSearchState extends State<DonorSearch> {
                       }).toList(),
                       onChanged: (String val) {
                         setState(() {
+                          FocusScope.of(context).requestFocus(new FocusNode());
                           this.tl = val;
                           print(tl);
                         });

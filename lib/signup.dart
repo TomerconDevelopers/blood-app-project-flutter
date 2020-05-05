@@ -49,6 +49,7 @@ asyncFunc(BuildContext) async {
   pushnotification();
  setState(() {
    token=g.fcm_token;
+   print(token);
  }); 
   }
   
@@ -235,6 +236,7 @@ asyncFunc(BuildContext) async {
                                 }).toList(),
                                 onChanged: (String val) {
                                   setState(() {
+                                    FocusScope.of(context).requestFocus(new FocusNode());
                                     this.gen = val;
                                   });
                                 },
@@ -318,6 +320,7 @@ asyncFunc(BuildContext) async {
                                 }).toList(),
                                 onChanged: (String val) {
                                   setState(() {
+                                    FocusScope.of(context).requestFocus(new FocusNode());
                                     this.sbg = val;
                                   });
                                 },
@@ -358,6 +361,7 @@ asyncFunc(BuildContext) async {
                                 }).toList(),
                                 onChanged: (String val) {
                                   setState(() {
+                                    FocusScope.of(context).requestFocus(new FocusNode());
                                     this.d = val;
                                     l = g.tlk[d];
                                   });
@@ -400,6 +404,7 @@ asyncFunc(BuildContext) async {
                                 }).toList(),
                                 onChanged: (String val) {
                                   setState(() {
+                                    FocusScope.of(context).requestFocus(new FocusNode());
                                     this.tl = val;
                                     print(tl);
                                   });
@@ -529,6 +534,7 @@ asyncFunc(BuildContext) async {
                                 }).toList(),
                                 onChanged: (String val) {
                                   setState(() {
+                                    FocusScope.of(context).requestFocus(new FocusNode());
                                     this.st = val;
                                     if (st != status[0]) {
                                       w = callFor();
@@ -578,6 +584,7 @@ asyncFunc(BuildContext) async {
                                 }).toList(),
                                 onChanged: (String val) {
                                   setState(() {
+                                    FocusScope.of(context).requestFocus(new FocusNode());
                                     this.m = val;
                                   });
                                 },
@@ -832,6 +839,7 @@ asyncFunc(BuildContext) async {
       "uname": un.text,
       "password": p,
       "fcm_token":token.toString()
+      
     });
     var res = await http.post(s + "/signup.php", body: bd);
     print(res.statusCode);
