@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:revive/coord_pass_reset.dart';
 import 'package:revive/home.dart';
+import 'package:revive/passwordrestverify.dart';
 import 'utils.dart' as ut;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -91,7 +92,7 @@ class _CoordinatorLoginPageState extends State<CoordinatorLoginPage> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: ()=>Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => PasswordReset())),
+                      context, MaterialPageRoute(builder: (context) => Passwordresetverify(type: "coordinators",))),
                                                     child: Text(
                               "Forgotten Password?",
                               style: TextStyle(

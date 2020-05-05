@@ -8,13 +8,17 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PasswordReset1 extends StatefulWidget {
+  String username;
+  PasswordReset1({this.username});
   @override
-  _PasswordReset1State createState() => _PasswordReset1State();
+  _PasswordReset1State createState() => _PasswordReset1State(username: username);
 }
 
 final GlobalKey<ScaffoldState> _scaffoldKey1 = new GlobalKey<ScaffoldState>();
 
 class _PasswordReset1State extends State<PasswordReset1> {
+  String username;
+  _PasswordReset1State({this.username});
   final GlobalKey<FormState> _formKey1 = new GlobalKey<FormState>();
   bool passchange=false;
   TextEditingController un = new TextEditingController();
@@ -48,29 +52,7 @@ inAsyncCall: passchange,
                         height: 20,
                       ),
                       //username
-                      TextFormField(
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter a username';
-                          } else {
-                            return null;
-                          }
-                        },
-                        controller: un,
-                        style: TextStyle(fontSize: 20),
-                        decoration: InputDecoration(
-                            prefixIcon:
-                                (Icon(Icons.person, color: Color(0xFFFB415B))),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            labelText: 'Username',
-                            labelStyle:
-                                TextStyle(color: Colors.black, fontSize: 20)),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      
                       //password
                       TextFormField(
                         validator: (value) {
@@ -175,8 +157,9 @@ inAsyncCall: passchange,
       passchange=true;
     });
     final SharedPreferences sp = await SharedPreferences.getInstance();
+    
     var bd = jsonEncode({
-      "username": un.text,
+      "username": username,
       "password": ut.encrypt(pass.text),
     });
     var res = await http.post(s+"/user_pass_reset.php", body: bd);

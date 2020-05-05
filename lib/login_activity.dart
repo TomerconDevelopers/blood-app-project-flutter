@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:revive/home.dart';
 import 'package:revive/password_reset.dart';
+import 'package:revive/passwordrestverify.dart';
 import 'package:revive/signup.dart';
 import 'package:revive/username_reset.dart';
 import 'utils.dart' as ut;
@@ -44,6 +45,7 @@ class _LoginPageState extends State<LoginPage> {
               inAsyncCall: logged,
                           child: SingleChildScrollView(
           child: Container(
+            height: MediaQuery.of(context).size.height,
               padding: EdgeInsets.only(
                   top: 100.0, right: 20.0, left: 20.0, bottom: 20.0),
               decoration: ut.bg(),
@@ -77,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                        GestureDetector(onTap: ()=>Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => PasswordReset1())),
+                      context, MaterialPageRoute(builder: (context) => Passwordresetverify(type: "users",))),
                                                 child: Text(
                             "Forgotten Password?",
                             style: TextStyle(
@@ -88,23 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20.0),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        GestureDetector(onTap: ()=>Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => UsernameReset1())),
-                                                child: Text(
-                            "Forgotten Username?",
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                 
                   SizedBox(height: 50.0),
                  InkWell(
       onTap: () async {
