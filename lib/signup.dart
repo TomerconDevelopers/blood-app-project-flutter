@@ -803,6 +803,7 @@ asyncFunc(BuildContext) async {
       signedup=true;
     });
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+   
     //token = _firebaseMessaging.getToken();
     if(sbg.substring(sbg.length-1,sbg.length) == "+"){
       var a = d + sbg.substring(0,sbg.length-1)+"positive"; 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -51,6 +52,7 @@ File _image;
   List imagewidgets=[];
   String photoupload;
    
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
    static const menuitems = <String>['add_a_photo','delete'];
   asyncFunc(BuildContext) async {
     await setPrefs();
@@ -81,6 +83,8 @@ File _image;
                 var res=await http.post(g.baseUrl+"/del_emergency.php",body:bd);
                 var reg=jsonDecode(res.body);
                 if(res.statusCode==200){
+                  
+                 _firebaseMessaging.unsubscribeFromTopic(payload);
                   ut.showtoast(reg, Colors.green);
                  
                }
@@ -92,6 +96,7 @@ File _image;
                 var res=await http.post(g.baseUrl+"/check_stat_emergency.php",body:bd);
                var reg=jsonDecode(res.body);
                if(res.statusCode==200){
+                 _firebaseMessaging.unsubscribeFromTopic(payload);
                  ut.showtoast(reg, Colors.green);
               
               }
@@ -184,7 +189,7 @@ Widget image_carouselhome() => Container(
       home: Scaffold(
         appBar: AppBar(
           title: Text('WK Blood Book',style: GoogleFonts.fugazOne(letterSpacing: 1.5),),
-          centerTitle: true,
+          //centerTitle: true,
           actions: <Widget>[
             InkWell(
               child: Row(

@@ -288,16 +288,16 @@ class _NewsFeedState extends State<NewsFeed> {
                   Navigator.pop(context);
                 }),
             title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text("Newsfeed"),
-                SizedBox(
-                  width: 10,
-                ),
+               Expanded(child: SizedBox()),
                 emergency == false
                     ? DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          hint: ut.roundedtext(
-                              'Choose', Colors.white, Colors.red),
+                          isDense: true,
+                          //hint: ut.roundedtext(
+                         //     'Choose', Colors.white, Colors.red),
                           isExpanded: false,
                           items: g.bloodgroup.map((lisVal) {
                             return DropdownMenuItem<String>(
@@ -321,10 +321,9 @@ class _NewsFeedState extends State<NewsFeed> {
 
                 //ut.roundedtext("$group", Colors.white, Colors.red),
                 SizedBox(
-                  width: 10,
+                  width: 2,
                 ),
-                Expanded(
-                    child: Center(
+                 Center(
                   child: GestureDetector(
                     child:
                         ut.roundedtext("Emergency", Colors.white, Colors.red),
@@ -334,7 +333,7 @@ class _NewsFeedState extends State<NewsFeed> {
                       });
                     },
                   ),
-                )),
+                ),
               ],
             ),
           ),

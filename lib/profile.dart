@@ -159,7 +159,7 @@ class _ProfileState extends State<Profile> {
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "",
+                      b,
                       style: TextStyle(fontSize: 14.0, color: Colors.white),
                     )
                   ],

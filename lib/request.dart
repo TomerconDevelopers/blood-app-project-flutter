@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -545,6 +547,7 @@ class _BloodRequestState extends State<BloodRequest> {
     setState(() {
       unchange=true;
     });
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
     final SharedPreferences sp=await SharedPreferences.getInstance();
     String token=sp.getString("fcm_token");
     var bd = json.encode({
@@ -570,6 +573,8 @@ class _BloodRequestState extends State<BloodRequest> {
     });
     print(re);
     if (re != "Contact number Already Exists..!" && re != "Try Again") {
+    
+    _firebaseMessaging.subscribeToTopic(cn.text);
       Navigator.pop(context);
     }
     showDialog(

@@ -21,8 +21,8 @@ class IntroState extends State<Intro> {
     
     slides.add(
       new Slide(
-        title: "Welcome to revive",
-        description: "tagline.",
+        title: "Welcome to WK Blood Book",
+        description: "You are somebody's life saver",
         //pathImage: "images/intro3.png",// To shibiliya: Place logo path here then remove below line
         centerWidget: Icon(Icons.chat,size: 140,color: Colors.white,),
         widthImage:imgsize,
