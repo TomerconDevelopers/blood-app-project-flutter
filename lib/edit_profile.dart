@@ -269,6 +269,7 @@ class _EditProfileState extends State<EditProfile> {
                               }).toList(),
                               onChanged: (String val) {
                                 setState(() {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   this.gen = val;
                                 });
                               },
@@ -349,6 +350,7 @@ class _EditProfileState extends State<EditProfile> {
                               }).toList(),
                               onChanged: (String val) {
                                 setState(() {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   this.sbg = val;
                                 });
                               },
@@ -386,6 +388,7 @@ class _EditProfileState extends State<EditProfile> {
                               }).toList(),
                               onChanged: (String val) {
                                 setState(() {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   this.d = val;
                                   l = g.tlk[d];
                                 });
@@ -425,6 +428,7 @@ class _EditProfileState extends State<EditProfile> {
                               }).toList(),
                               onChanged: (String val) {
                                 setState(() {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   this.tl = val;
                                   print(tl);
                                 });
@@ -558,6 +562,7 @@ class _EditProfileState extends State<EditProfile> {
                               }).toList(),
                               onChanged: (String val) {
                                 setState(() {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   this.st = val;
                                   if (st != status[0]) {
                                     w = callFor();
@@ -603,7 +608,9 @@ class _EditProfileState extends State<EditProfile> {
                                 );
                               }).toList(),
                               onChanged: (String val) {
+
                                 setState(() {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   this.m = val;
                                 });
                               },

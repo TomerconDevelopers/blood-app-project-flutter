@@ -125,6 +125,7 @@ class _BloodRequestState extends State<BloodRequest> {
                               }).toList(),
                               onChanged: (String val) {
                                 setState(() {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   this.sbg = val;
                                 });
                               },
@@ -311,6 +312,7 @@ class _BloodRequestState extends State<BloodRequest> {
                               }).toList(),
                               onChanged: (String val) {
                                 setState(() {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   this.d = val;
                                   l = g.tlk[d];
                                 });
@@ -350,6 +352,7 @@ class _BloodRequestState extends State<BloodRequest> {
                               }).toList(),
                               onChanged: (String val) {
                                 setState(() {
+                                  FocusScope.of(context).requestFocus(new FocusNode());
                                   this.tl = val;
                                   print(tl);
                                 });
@@ -408,6 +411,7 @@ class _BloodRequestState extends State<BloodRequest> {
                                     }).toList(),
                                     onChanged: (String val) {
                                       setState(() {
+                                        FocusScope.of(context).requestFocus(new FocusNode());
                                         this.stat = val;
                                       });
                                     },
