@@ -37,6 +37,8 @@ class _BloodRequestState extends State<BloodRequest> {
   var curr;
   String reg = "";
   bool unchange=false;
+  TextEditingController patient = new TextEditingController();
+  TextEditingController caseof = new TextEditingController();
   TextEditingController fn = new TextEditingController();
   TextEditingController age = new TextEditingController();
   TextEditingController weight = new TextEditingController();
@@ -150,6 +152,48 @@ class _BloodRequestState extends State<BloodRequest> {
                                 labelStyle:
                                     TextStyle(color: Colors.black, fontSize: 20),
                                 hintText: 'Enter age',
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            new TextFormField(
+                              validator: (value) =>
+                                  value.isEmpty ? 'Field required...' : null,
+                              controller: patient,
+                          
+                              style: TextStyle(fontSize: 20),
+                              decoration: InputDecoration(
+                                prefixIcon:
+                                    (Icon(Icons.mood, color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: 'Patient Name',
+                                labelStyle:
+                                    TextStyle(color: Colors.black, fontSize: 20),
+                                hintText: 'Enter Patient name',
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            new TextFormField(
+                              validator: (value) =>
+                                  value.isEmpty ? 'Field required...' : null,
+                              controller: caseof,
+                              
+                              style: TextStyle(fontSize: 20),
+                              decoration: InputDecoration(
+                                prefixIcon:
+                                    (Icon(Icons.local_hospital, color: Color(0xFFFB415B))),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                labelText: 'Case',
+                                labelStyle:
+                                    TextStyle(color: Colors.black, fontSize: 20),
+                                hintText: 'Enter Case',
                               ),
                             ),
                             SizedBox(
@@ -511,7 +555,7 @@ class _BloodRequestState extends State<BloodRequest> {
     });
     final SharedPreferences sp = await SharedPreferences.getInstance();
     var uname = sp.getString("username");
-    String token=sp.getString("fcm_token");
+  //  String token=sp.getString("fcm_token");
     var bd = json.encode({
       "name": fn.text,
       "age": age.text,
@@ -526,7 +570,9 @@ class _BloodRequestState extends State<BloodRequest> {
       "hosp": h.text,
       "verified": "Verified",
       "id": uname,
-      "fcm_token":token,
+       "patient":patient.text,
+       "case":caseof.text,
+      
       //"requested_time":DateTime.now().toString()
     });
     var res = await http.post( s+"/coordinator_request.php", body: bd);
@@ -565,7 +611,8 @@ class _BloodRequestState extends State<BloodRequest> {
       "contacts": cn.text,
       "alt_contacts": acn.text,
       "hospital": h.text,
-      "fcm_token":token,
+       "patient":patient.text,
+       "case":caseof.text,
      // "requested_time":DateTime.now().toString()
     });
     http.Response res = await http.post(s+"/request.php", body: bd);
