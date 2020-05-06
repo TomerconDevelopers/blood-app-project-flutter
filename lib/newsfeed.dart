@@ -378,7 +378,7 @@ class _NewsFeedState extends State<NewsFeed> {
                         ut.roundedtext("Emergency", Colors.white, Colors.red),
                     onTap: () {
                       setState(() {
-                        emergency = true;
+                        emergency = !emergency;
                       });
                     },
                   ),
