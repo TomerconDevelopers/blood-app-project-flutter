@@ -174,11 +174,13 @@ class RequestCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(lis[i]['name'].toString().toUpperCase(),
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25)),
+                    Expanded(
+                                          child: Text(lis[i]['name'].toString().toUpperCase(),
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25)),
+                    ),
                     Text(
                         "Posted on :" +
                             lis[i]['requested_time'].substring(0, 10) +
