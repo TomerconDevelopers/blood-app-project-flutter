@@ -19,7 +19,7 @@ class BloodRequestDetails extends StatefulWidget {
   final String units;
   final String taluk;
   final String group;
-  final String requested_time;
+  final String requested_time,pat_name,pat_case;
 
   BloodRequestDetails({
     @required this.name,
@@ -33,6 +33,8 @@ class BloodRequestDetails extends StatefulWidget {
     @required this.altNumber,
     @required this.units,
     @required this.requested_time,
+    @required this.pat_name,
+    @required this.pat_case
   });
 
   @override
@@ -46,7 +48,7 @@ class BloodRequestDetails extends StatefulWidget {
       this.altNumber,
       this.district,
       this.taluk,
-      this.hospital,this.requested_time);
+      this.hospital,this.requested_time,this.pat_name,this.pat_case);
 }
 
 class _BloodRequestDetailsState extends State<BloodRequestDetails> {
@@ -75,10 +77,10 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
   String altNumber;
   String hospital;
   String units;
-  String taluk;
+  String taluk,pat_name,pat_case;
   String group,requested_time;
   _BloodRequestDetailsState(String n, String a, String da, String grp,
-      String un, String nu, String altNu, String di, String tlk, String hos,String rt) {
+      String un, String nu, String altNu, String di, String tlk, String hos,String rt,String pn,String pc) {
     this.name = n;
     this.age = a;
     this.date = da;
@@ -90,6 +92,8 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
     this.units = un;
     this.group = grp;
     this.requested_time=rt;
+    this.pat_name=pn;
+    this.pat_case=pc;
   }
   String reg = "";
   @override
@@ -102,7 +106,7 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
             style: TextStyle(color: Color(0xFFEE5623), fontSize: 15.0),
           ),
           subtitle: Text(
-            name.toUpperCase(),
+            pat_name.toUpperCase(),
             style: TextStyle(fontSize: 20.0),
           ),
         ),
@@ -126,6 +130,16 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
             style: TextStyle(fontSize: 20.0),
           ),
         ),
+         ListTile(
+          title: Text(
+            "Case",
+            style: TextStyle(color: Color(0xFFEE5623), fontSize: 15.0),
+          ),
+          subtitle: Text(
+            pat_case,
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ),
         ListTile(
           title: Text(
             "Date:",
@@ -143,6 +157,16 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
           ),
           subtitle: Text(
             units,
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ),
+         ListTile(
+          title: Text(
+            "Bystander name",
+            style: TextStyle(color: Color(0xFFEE5623), fontSize: 15.0),
+          ),
+          subtitle: Text(
+            name,
             style: TextStyle(fontSize: 20.0),
           ),
         ),
@@ -359,7 +383,9 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
       "verified": ve,
       "id": id.text,
       "fcm_token":"",
-      "req_time":requested_time
+      "req_time":requested_time,
+      "patient":pat_name,
+      "case":pat_case
     });
     var res = await http.post(
         s+"/coordinator_request.php",

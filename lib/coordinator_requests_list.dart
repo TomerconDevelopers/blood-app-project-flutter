@@ -75,7 +75,9 @@ class _RequestListState extends State<RequestList> {
                                         altNumber: lis[index]
                                             ['bystander_alt_contacts'],
                                         units: lis[index]['bloodqty'],
-                                        requested_time:lis[index]['requested_time']
+                                        requested_time:lis[index]['requested_time'],
+                                        pat_name:lis[index]['patient_name'],
+                                        pat_case:lis[index]['patient_case'],
                                       )),
                             ).then((var value) {
                                 

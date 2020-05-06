@@ -92,7 +92,7 @@ class _BloodRequestState extends State<BloodRequest> {
                                       borderRadius: BorderRadius.circular(20.0),
                                       borderSide:
                                           BorderSide(color: Color(0xFFFB415B))),
-                                  labelText: 'Name',
+                                  labelText: 'Bystander Name',
                                   labelStyle:
                                       TextStyle(color: Colors.black, fontSize: 20)),
                             ),
@@ -108,7 +108,7 @@ class _BloodRequestState extends State<BloodRequest> {
                               isExpanded: true,
                               validator: (value) =>
                                   value == null ? 'Field required...' : null,
-                              hint: Text('Choose Blood group',
+                              hint: Text('Choose Patient\'s Blood group',
                                   style:
                                       TextStyle(color: Colors.black, fontSize: 20)),
                               items: g.bloodgroup.map((lisVal) {
@@ -148,7 +148,7 @@ class _BloodRequestState extends State<BloodRequest> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                labelText: 'Age',
+                                labelText: 'Patient Age',
                                 labelStyle:
                                     TextStyle(color: Colors.black, fontSize: 20),
                                 hintText: 'Enter age',
@@ -570,8 +570,8 @@ class _BloodRequestState extends State<BloodRequest> {
       "hosp": h.text,
       "verified": "Verified",
       "id": uname,
-       "patient":patient.text,
-       "case":caseof.text,
+      "patient":patient.text,
+      "case":caseof.text,
       
       //"requested_time":DateTime.now().toString()
     });

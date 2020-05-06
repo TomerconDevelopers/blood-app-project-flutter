@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:koukicons/businessman.dart';
 import 'package:koukicons/calendar.dart';
 import 'package:koukicons/callback.dart';
+import 'package:koukicons/clocktime.dart';
 import 'package:koukicons/phone.dart';
 import 'package:koukicons/phoneDown.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -49,7 +50,7 @@ class EmergencyGroupBox extends StatelessWidget {
                 );
               } else {
                 return ListView.builder(
-                   itemCount: lis?.length ?? 0,
+                    itemCount: lis?.length ?? 0,
                     itemBuilder: (context, index) {
                       Widget w = SizedBox(width: 1);
 
@@ -155,7 +156,7 @@ class RequestCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Container(
       padding: EdgeInsets.all(5.0),
-     // height: 420,
+      // height: 420,
       width: MediaQuery.of(context).size.width,
       child: Card(
           child: Padding(
@@ -169,17 +170,21 @@ class RequestCard extends StatelessWidget {
                   child: KoukiconsBusinessman(),
                   radius: 30,
                 ),
-               SizedBox(width: 10),
+                SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(lis[i]['name'],
+                    Text(lis[i]['name'].toString().toUpperCase(),
                         style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 25)),
-                            Text("Posted on :"+lis[i]['requested_time'].substring(0,10)+","+lis[i]['requested_time'].substring(11,16),
-                            style:TextStyle(color:Colors.orange))
+                    Text(
+                        "Posted on :" +
+                            lis[i]['requested_time'].substring(0, 10) +
+                            "," +
+                            lis[i]['requested_time'].substring(11, 16),
+                        style: TextStyle(color: Colors.orange))
                   ],
                 ),
               ],
@@ -188,8 +193,7 @@ class RequestCard extends StatelessWidget {
             Row(
               children: <Widget>[
                 Text(
-                  'Approved by ' +
-                      lis[i]['coor_id'],
+                  'Approved by ' + lis[i]['coor_id'],
                   style: TextStyle(color: Colors.blue[900], fontSize: 16),
                 ),
               ],
@@ -197,19 +201,40 @@ class RequestCard extends StatelessWidget {
             SizedBox(height: 10),
             Divider(),
             SizedBox(height: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Patient name: " + lis[i]['patient_name'].toString().toUpperCase(),
+                  style: TextStyle(color: Colors.blue[900], fontSize: 20),
+                ),
+                SizedBox(height: 5,),
+                Text(
+                  "Patient case: " + lis[i]['patient_case'],
+                  style: TextStyle(color: Colors.blue[900], fontSize: 20),
+                )
+              ],
+            ),
+            SizedBox(height: 10,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Column(
                   children: <Widget>[
                     KoukiconsCalendar(),
-                    Text("Date : "+lis[i]['date'].substring(0, 10),style: TextStyle(fontWeight:FontWeight.bold),)
+                    Text(
+                      "Date : " + lis[i]['date'].substring(0, 10),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
                   ],
                 ),
                 Column(
                   children: <Widget>[
-                    KoukiconsAlarmClock(),
-                    Text("Time : "+lis[i]['date'].substring(11, 16),style: TextStyle(fontWeight:FontWeight.bold),)
+                    KoukiconsClocktime(),
+                    Text(
+                      "Time : " + lis[i]['date'].substring(11, 16),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
                   ],
                 ),
               ],
@@ -217,25 +242,52 @@ class RequestCard extends StatelessWidget {
             SizedBox(height: 15),
             Text(
               'Hospital : ' + lis[i]['hospital'] + ", " + lis[i]['taluk'],
-              style: TextStyle(color: Colors.grey, fontSize: 19),
+              style: TextStyle(color: Colors.black, fontSize: 19),
             ),
             SizedBox(height: 10),
-           Row(children: <Widget>[
-               ut.roundedtext('Required units :' + lis[i]['bloodqty'],
-                Colors.red, Colors.white),
-                SizedBox(width: 2,),
-                ut.roundedtext(lis[i]['bloodgroup'], Colors.red, Colors.white)
-           ],) ,
-
+            Row(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                  margin: EdgeInsets.all(0),
+                  decoration: ut.rounded(Colors.red, false, 40),
+                  child: Text(
+                    'Required units :' + lis[i]['bloodqty'],
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                  margin: EdgeInsets.all(0),
+                  decoration: ut.rounded(Colors.red, false, 40),
+                  child: Text(
+                    lis[i]['bloodgroup'],
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Icon(Icons.location_on,color: Colors.blue,),
+                Icon(
+                  Icons.location_on,
+                  color: Colors.blue,
+                ),
                 Text(
-              lis[i]['taluk'] + "," + lis[i]['district'],
-              style: TextStyle(color: Colors.blue[900], fontSize: 16),
-            ),
-            Expanded(child: SizedBox()),
+                  lis[i]['taluk'] + "," + lis[i]['district'],
+                  style: TextStyle(color: Colors.blue[900], fontSize: 16),
+                ),
+                Expanded(child: SizedBox()),
                 CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.grey[100],
@@ -291,22 +343,19 @@ class _NewsFeedState extends State<NewsFeed> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text("Newsfeed"),
-               Expanded(child: SizedBox()),
+                Expanded(child: SizedBox()),
                 emergency == false
                     ? DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isDense: true,
                           //hint: ut.roundedtext(
-                         //     'Choose', Colors.white, Colors.red),
+                          //     'Choose', Colors.white, Colors.red),
                           isExpanded: false,
                           items: g.bloodgroup.map((lisVal) {
                             return DropdownMenuItem<String>(
                               value: lisVal,
-                              child:
-                                  ut.roundedtext(
-                                      lisVal, Colors.white, Colors.red),
-                                 
-                               
+                              child: ut.roundedtext(
+                                  lisVal, Colors.white, Colors.red),
                             );
                           }).toList(),
                           onChanged: (String val) {
@@ -323,7 +372,7 @@ class _NewsFeedState extends State<NewsFeed> {
                 SizedBox(
                   width: 2,
                 ),
-                 Center(
+                Center(
                   child: GestureDetector(
                     child:
                         ut.roundedtext("Emergency", Colors.white, Colors.red),
@@ -339,13 +388,11 @@ class _NewsFeedState extends State<NewsFeed> {
           ),
           body: Container(
             color: Colors.orange[50],
-            child: 
-                emergency == true
-                    ? EmergencyGroupBox()
-                    : GroupBox(
-                        group: sbg,
-                      ),
-                
+            child: emergency == true
+                ? EmergencyGroupBox()
+                : GroupBox(
+                    group: sbg,
+                  ),
           )),
     );
   }
