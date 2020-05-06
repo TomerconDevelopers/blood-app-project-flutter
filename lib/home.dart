@@ -197,8 +197,8 @@ Widget image_carouselhome() => Container(
                   Icon(Icons.notifications),
                  
                   g.g_l.isNotEmpty
-                      ? IconButton(
-
+                      ? photoupload != "1"? IconButton(
+                          padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                           icon: Icon(
                             Icons.account_circle,
                             size: 25,
@@ -207,23 +207,9 @@ Widget image_carouselhome() => Container(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => CoordinatorProfile())),
-                        )
-                      : g.g_bg.isNotEmpty
-                          ? IconButton(
-                              icon: Icon(
-                                Icons.account_circle,
-                                size: 25,
-                              ),
-                              onPressed: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Profile())),
-                            )
-                          : SizedBox(
-                              height: 1,
-                            ),
-                            photoupload == "1" ?
-                            PopupMenuButton(
+                        ): PopupMenuButton(
+                              
+                          padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                               //enabled: ,
                               onSelected:(value){
                                 if(value == 'add'){
@@ -238,7 +224,12 @@ Widget image_carouselhome() => Container(
                                 addformbool = false;
                               });
                            }
-                                
+                                if(value == 'profile'){
+                                   Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CoordinatorProfile()));
+                                }
                                
                               } ,
                               itemBuilder: (BuildContext context) =>
@@ -253,10 +244,24 @@ Widget image_carouselhome() => Container(
                                   child:  Icon(Icons.delete,color: Colors.red,)
                               
                               ),
+                              PopupMenuItem(value: "profile",
+                              child:Icon(Icons.account_circle,color: Colors.red,))
                             
                             ]
                              )
-                            : SizedBox(
+                      : g.g_bg.isNotEmpty
+                          ?  IconButton(
+                              icon: Icon(
+                                Icons.account_circle,
+                                size: 25,
+                              ),
+                              onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Profile())),
+                            ) :
+                           
+                          SizedBox(
                               height: 1,
                             ),
                            /* photoupload == "1" ? 
