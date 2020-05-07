@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 import 'package:koukicons/businessman.dart';
@@ -17,8 +18,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:koukicons/alarmClock.dart';
 
 List lis = [];
+List categ=['Emergency','All'];
 int index = 0;
-String sbg;
+String sbg,ch;
 var dis, dis1, dis2;
 Future<List> getData1() async {
   final SharedPreferences sp = await SharedPreferences.getInstance();
@@ -174,13 +176,11 @@ class RequestCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                                          child: Text(lis[i]['name'].toString().toUpperCase(),
+                    Text(lis[i]['name'].toString().toUpperCase(),
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 25)),
-                    ),
                     Text(
                         "Posted on :" +
                             lis[i]['requested_time'].substring(0, 10) +
@@ -223,7 +223,7 @@ class RequestCard extends StatelessWidget {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    KoukiconsCalendar(),
+                    KoukiconsCalendar(height: 50,),
                     Text(
                       "Date : " + lis[i]['date'].substring(0, 10),
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -232,7 +232,7 @@ class RequestCard extends StatelessWidget {
                 ),
                 Column(
                   children: <Widget>[
-                    KoukiconsClocktime(),
+                    KoukiconsClocktime(height:50),
                     Text(
                       "Time : " + lis[i]['date'].substring(11, 16),
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -375,15 +375,27 @@ class _NewsFeedState extends State<NewsFeed> {
                   width: 2,
                 ),
                 Center(
-                  child: GestureDetector(
-                    child:
-                        ut.roundedtext("Emergency", Colors.white, Colors.red),
-                    onTap: () {
-                      setState(() {
-                        emergency = !emergency;
-                      });
-                    },
-                  ),
+                  child:DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          isDense: true,
+                          
+                          isExpanded: false,
+                          items: categ.map((lisVal) {
+                            return DropdownMenuItem<String>(
+                              value: lisVal,
+                              child: ut.roundedtext(
+                                  lisVal, Colors.white, Colors.red),
+                            );
+                          }).toList(),
+                          onChanged: (String val) {
+                            setState(() {
+                              ch = val;
+                              emergency=ch==categ[0]?true:false;
+                            });
+                          },
+                          value: ch,
+                        ),
+                      )
                 ),
               ],
             ),

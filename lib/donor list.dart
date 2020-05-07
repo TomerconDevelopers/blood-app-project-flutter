@@ -100,8 +100,7 @@ class _DonorListState extends State<DonorList> {
                                     radius: 30,
                                   ),
                                   SizedBox(width: 10),
-                                  Expanded(
-                                                                      child: Text(
+                                  Text(
                                         lis[index]['name']
                                             .toString()
                                             .toUpperCase(),
@@ -109,7 +108,6 @@ class _DonorListState extends State<DonorList> {
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
                                             fontSize: 25)),
-                                  ),
                                 ],
                               ),
                               SizedBox(height: 10),

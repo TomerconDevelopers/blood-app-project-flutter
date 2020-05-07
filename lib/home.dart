@@ -75,7 +75,7 @@ File _image;
       showDialog(context: context,
           builder: (BuildContext context){
             return AlertDialog(
-              title : new Text("Did you get the blood"),
+              title : new Text("Did you received blood?"),
               actions: <Widget>[
                 FlatButton(onPressed: ()async{
                    Navigator.pop(context);
@@ -194,7 +194,7 @@ Widget image_carouselhome() => Container(
             InkWell(
               child: Row(
                 children: <Widget>[
-                  Icon(Icons.notifications),
+                 
                  
                   g.g_l.isNotEmpty
                       ? photoupload != "1"? IconButton(
@@ -310,7 +310,7 @@ Widget image_carouselhome() => Container(
             ),
             ListTile(
               leading: Icon(Icons.list),
-              title: Text('List of blood banks'),
+              title: Text('Blood banks'),
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => BloodBanks()));
@@ -320,7 +320,7 @@ Widget image_carouselhome() => Container(
             ),
             ListTile(
               leading: Icon(Icons.group),
-              title: Text('List of coordinators'),
+              title: Text('Our Coordinators'),
               onTap: () {
                  Navigator.push(context,
                           MaterialPageRoute(builder: (context) => CoordinatorsList()));
