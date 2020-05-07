@@ -12,7 +12,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_otp/flutter_otp.dart' as ot;
 class Passwordresetverify extends StatefulWidget {
 String type;
   Passwordresetverify({this.type});
