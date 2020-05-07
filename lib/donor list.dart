@@ -6,6 +6,11 @@ import 'dart:convert';
 import 'globals.dart' as g;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
+import 'package:koukicons/report.dart';
+import 'package:koukicons/share2.dart';
+import 'package:koukicons/comments.dart';
+import 'package:koukicons/callback.dart';
+import 'package:koukicons/businessman.dart';
 
 class DonorList extends StatefulWidget {
   final String dis, tal, bg;
@@ -50,6 +55,7 @@ class _DonorListState extends State<DonorList> {
     return MaterialApp(
       theme: ut.maintheme(),
       home: Scaffold(
+        backgroundColor: Colors.orange[50],
         appBar: AppBar(
           title: Text('Donors List'),
           leading: IconButton(
@@ -67,191 +73,365 @@ class _DonorListState extends State<DonorList> {
                 (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
               lis = snapshot.data;
               if (!snapshot.hasData) {
-                return Center(child:SpinKitHourGlass(color:Colors.red,size:80,),);
+                return Center(
+                  child: SpinKitHourGlass(
+                    color: Colors.red,
+                    size: 80,
+                  ),
+                );
               } else {
                 return ListView.builder(
                     itemCount: lis?.length ?? 0,
                     itemBuilder: (context, index) {
-                      return Column(
-                        children: <Widget>[
-                          ExpansionTile(
-                            leading: Icon(
-                              Icons.invert_colors,
-                              color: Color(0xFFFB415B),
-                            ),
-                            title: Text(
-                              lis[index]['name'],
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            subtitle: Text(lis[index]['contacts'] + ",",
-                                style: TextStyle(fontSize: 16)),
+                      return Container(
+                        padding: EdgeInsets.all(5.0),
+                        // height: 420,
+                        width: MediaQuery.of(context).size.width,
+                        child: Card(
+                            child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
                                 children: <Widget>[
-                                  IconButton(
-                                    icon: Icon(Icons.phone),
-                                    onPressed: () {
-                                      launch("tel://" + lis[index]['contacts']);
-                                    },
-                                    color: Color(0xFFFB415B),
+                                  CircleAvatar(
+                                    child: KoukiconsBusinessman(),
+                                    radius: 30,
                                   ),
-                                  IconButton(
-                                    icon: Icon(Icons.message),
-                                    onPressed: () {
-                                      launch("sms:" + lis[index]['contacts']);
-                                    },
-                                    color: Color(0xFFFB415B),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.share),
-                                    onPressed: () {
-                                      Share.share("Name:" +
-                                          lis[index]['name'] +
-                                          "\nContacts:" +
-                                          lis[index]['contacts']);
-                                    },
-                                    color: Color(0xFFFB415B),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.report),
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                                actions: <Widget>[
-                                                  FlatButton(
-                                                      onPressed: () {
-                                                        _txt=_grp==4?un.text:_txt;print(_txt);
-                                                        launch(
-                                                          'mailto:tomercondeveloper@gmail.com?subject=' +
-                                                              _txt +
-                                                              '&body=' +
-                                                              lis[index]
-                                                                  ['name'] +
-                                                              ' is reported with the issue of ' +
-                                                              _txt);},
-                                                      child: Text('Report'))
-                                                ],
-                                                content: StatefulBuilder(
-                                                    builder:
-                                                        (BuildContext context,
-                                                            setState) {
-                                                  return Container(
-                                                    height: 500,
-                                                    width: double.maxFinite,
-                                                    child: ListView(
-                                                      children: <Widget>[
-                                                        Text(
-                                                            lis[index]['name']),
-                                                        Divider(),
-                                                        RadioListTile(
-                                                            title: Text(
-                                                                "Wrong number"),
-                                                            value: 0,
-                                                            groupValue: _grp,
-                                                            onChanged: (val) {
-                                                              setState(() {
-                                                                _txt =
-                                                                    "Wrong number";
-                                                                _grp = val;
-                                                                print(val);
-                                                              });
-                                                            }),
-                                                        Divider(),
-                                                        RadioListTile(
-                                                            title: Text(
-                                                                "Denied Request"),
-                                                            value: 1,
-                                                            groupValue: _grp,
-                                                            onChanged: (val) {
-                                                              setState(() {
-                                                                _txt =
-                                                                    "Denied Request";
-                                                                _grp = val;
-                                                                print(val);
-                                                              });
-                                                            }),
-                                                        Divider(),
-                                                        RadioListTile(
-                                                            title: Text(
-                                                                "Someone else is using"),
-                                                            value: 2,
-                                                            groupValue: _grp,
-                                                            onChanged: (val) {
-                                                              setState(() {
-                                                                _txt =
-                                                                    "Someone else is using";
-                                                                _grp = val;
-                                                                print(val);
-                                                              });
-                                                            }),
-                                                        Divider(),
-                                                        RadioListTile(
-                                                            title: Text(
-                                                                "Asked for money"),
-                                                            value: 3,
-                                                            groupValue: _grp,
-                                                            onChanged: (val) {
-                                                              setState(() {
-                                                                _txt =
-                                                                    "Asked for money";
-                                                                _grp = val;
-                                                                print(val);
-                                                              });
-                                                            }),
-                                                        Divider(),
-                                                        RadioListTile(
-                                                            title:
-                                                                Text("Others"),
-                                                            value: 4,
-                                                            groupValue: _grp,
-                                                            onChanged: (val) {
-                                                              setState(() {
-                                                               
-                                                                _grp = val;
-                                                                w = TextFormField(
-                                                                  validator:
-                                                                      (value) {
-                                                                    if (value
-                                                                        .isEmpty) {
-                                                                      return 'Field required';
-                                                                    } else {
-                                                                      return null;
-                                                                    }
-                                                                  },
-                                                                  controller:
-                                                                      un,
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          20),
-                                                                  decoration: InputDecoration(
-                                                                      
-                                                                      enabledBorder: UnderlineInputBorder(
-                                                                          borderSide: BorderSide(
-                                                                              color: Colors
-                                                                                  .black)),
-                                                                      ),
-                                                                );
-                                                                 _txt =un.text;
-                                                              });
-                                                            }),
-                                                       _grp==4? w:SizedBox(width:2)
-                                                      ],
-                                                    ),
-                                                  );
-                                                }),
-                                              ));
-                                    },
-                                    color: Color(0xFFFB415B),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                                                      child: Text(
+                                        lis[index]['name']
+                                            .toString()
+                                            .toUpperCase(),
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 25)),
                                   ),
                                 ],
+                              ),
+                              SizedBox(height: 10),
+                              Divider(),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      "Last Donated on: " +
+                                          lis[index]['last_don'],
+                                      style: TextStyle(
+                                          color: Colors.blue[900],
+                                          fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    lis[index]['status'] == 'Unavailable for'
+                                        ? Container(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 3, horizontal: 10),
+                                            margin: EdgeInsets.all(0),
+                                            decoration: ut.rounded(
+                                                Colors.red, false, 40),
+                                            child: Text(
+                                              lis[index]['status'] +
+                                                        " upto " +
+                                                        lis[index]['for_time'],
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold),
+                                            ))
+                                        : Container(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 3, horizontal: 10),
+                                            margin: EdgeInsets.all(0),
+                                            decoration: ut.rounded(
+                                                Colors.green, false, 40),
+                                            child: lis[index]['status'] ==
+                                                    'Available anytime'
+                                                ? Text(
+                                                    lis[index]['status'],
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  )
+                                                : Text(
+                                                    lis[index]['status'] +
+                                                        " upto " +
+                                                        lis[index]['for_time'],
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                          ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 3, horizontal: 10),
+                                      margin: EdgeInsets.all(0),
+                                      decoration:
+                                          ut.rounded(Colors.red, false, 40),
+                                      child: Text(
+                                        lis[index]['bloodgroup'],
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Colors.blue,
+                                    ),
+                                    Text(
+                                      lis[index]['localty'] +
+                                          "," +
+                                          lis[index]['district'],
+                                      style: TextStyle(
+                                          color: Colors.blue[900],
+                                          fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: Colors.grey[100],
+                                        child: IconButton(
+                                            icon: KoukiconsCallback(),
+                                            onPressed: () {
+                                              launch("tel://" +
+                                                  lis[index]['contacts']);
+                                            })),
+                                    CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: Colors.grey[100],
+                                        child: IconButton(
+                                            icon: KoukiconsComments(),
+                                            onPressed: () {
+                                              launch("sms:" +
+                                                  lis[index]['contacts']);
+                                            })),
+                                    CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: Colors.grey[100],
+                                        child: IconButton(
+                                            icon: KoukiconsShare2(),
+                                            onPressed: () {
+                                              Share.share("Name:" +
+                                                  lis[index]['name'] +
+                                                  "\nContacts:" +
+                                                  lis[index]['contacts'] +
+                                                  "\nLocation:" +
+                                                  lis[index]['localty'] +
+                                                  "," +
+                                                  lis[index]['district']);
+                                            })),
+                                    CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: Colors.grey[100],
+                                        child: IconButton(
+                                            icon: KoukiconsReport(),
+                                            onPressed: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (context) => AlertDialog(
+                                                            actions: <Widget>[
+                                                              FlatButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    _txt = _grp ==
+                                                                            4
+                                                                        ? un.text
+                                                                        : _txt;
+                                                                    print(_txt);
+                                                                    launch('mailto:tomercondeveloper@gmail.com?subject=' +
+                                                                        _txt +
+                                                                        '&body=' +
+                                                                        lis[index]
+                                                                            [
+                                                                            'name'] +
+                                                                        ' is reported with the issue of ' +
+                                                                        _txt);
+                                                                  },
+                                                                  child: Text(
+                                                                      'Report'))
+                                                            ],
+                                                            content: StatefulBuilder(
+                                                                builder: (BuildContext
+                                                                        context,
+                                                                    setState) {
+                                                              return Container(
+                                                                height: 500,
+                                                                width: double
+                                                                    .maxFinite,
+                                                                child: ListView(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.all(10.0),
+                                                                      child: Center(
+                                                                        child: Text(lis[
+                                                                                index]
+                                                                            [
+                                                                            'name'],style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20),),
+                                                                      ),
+                                                                    ),
+                                                                   
+                                                                    RadioListTile(
+                                                                        title: Text(
+                                                                            "Wrong number"),
+                                                                        value:
+                                                                            0,
+                                                                        groupValue:
+                                                                            _grp,
+                                                                        onChanged:
+                                                                            (val) {
+                                                                          setState(
+                                                                              () {
+                                                                            _txt =
+                                                                                "Wrong number";
+                                                                            _grp =
+                                                                                val;
+                                                                            print(val);
+                                                                          });
+                                                                        }),
+                                                                    Divider(),
+                                                                    RadioListTile(
+                                                                        title: Text(
+                                                                            "Denied Request"),
+                                                                        value:
+                                                                            1,
+                                                                        groupValue:
+                                                                            _grp,
+                                                                        onChanged:
+                                                                            (val) {
+                                                                          setState(
+                                                                              () {
+                                                                            _txt =
+                                                                                "Denied Request";
+                                                                            _grp =
+                                                                                val;
+                                                                            print(val);
+                                                                          });
+                                                                        }),
+                                                                    Divider(),
+                                                                    RadioListTile(
+                                                                        title: Text(
+                                                                            "Someone else is using"),
+                                                                        value:
+                                                                            2,
+                                                                        groupValue:
+                                                                            _grp,
+                                                                        onChanged:
+                                                                            (val) {
+                                                                          setState(
+                                                                              () {
+                                                                            _txt =
+                                                                                "Someone else is using";
+                                                                            _grp =
+                                                                                val;
+                                                                            print(val);
+                                                                          });
+                                                                        }),
+                                                                    Divider(),
+                                                                    RadioListTile(
+                                                                        title: Text(
+                                                                            "Asked for money"),
+                                                                        value:
+                                                                            3,
+                                                                        groupValue:
+                                                                            _grp,
+                                                                        onChanged:
+                                                                            (val) {
+                                                                          setState(
+                                                                              () {
+                                                                            _txt =
+                                                                                "Asked for money";
+                                                                            _grp =
+                                                                                val;
+                                                                            print(val);
+                                                                          });
+                                                                        }),
+                                                                    Divider(),
+                                                                    RadioListTile(
+                                                                        title: Text(
+                                                                            "Others"),
+                                                                        value:
+                                                                            4,
+                                                                        groupValue:
+                                                                            _grp,
+                                                                        onChanged:
+                                                                            (val) {
+                                                                          setState(
+                                                                              () {
+                                                                            _grp =
+                                                                                val;
+                                                                            w = TextFormField(
+                                                                              validator: (value) {
+                                                                                if (value.isEmpty) {
+                                                                                  return 'Field required';
+                                                                                } else {
+                                                                                  return null;
+                                                                                }
+                                                                              },
+                                                                              controller: un,
+                                                                              style: TextStyle(fontSize: 20),
+                                                                              decoration: InputDecoration(
+                                                                                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                                                                              ),
+                                                                            );
+                                                                            _txt =
+                                                                                un.text;
+                                                                          });
+                                                                        }),
+                                                                    _grp == 4
+                                                                        ? w
+                                                                        : SizedBox(
+                                                                            width:
+                                                                                2)
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            }),
+                                                          ));
+                                            })),
+                                  ],
+                                ),
                               )
                             ],
                           ),
-                          //Divider(indent: 20,endIndent: 20,),
-                        ],
+                        )),
                       );
                     });
               }
