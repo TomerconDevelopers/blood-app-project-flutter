@@ -34,6 +34,7 @@ class _RequestListState extends State<RequestList> {
         theme: ut.maintheme(),
         home: SafeArea(
           child: Scaffold(
+            backgroundColor: Colors.orange[50],
             appBar: AppBar(
               title: Text('Request List'),
               leading: IconButton(
@@ -151,7 +152,7 @@ class _RequestListState extends State<RequestList> {
                                         ),
                                         Column(
                                           children: <Widget>[
-                                            KoukiconsClocktime(),
+                                            KoukiconsClocktime(height: 43,),
                                             Text(
                                               "Time : " +
                                                   lis[index]['date']
