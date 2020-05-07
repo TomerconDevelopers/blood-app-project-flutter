@@ -60,7 +60,7 @@ File _image;
     await initmon();
 
         var initializationSettingsAndroid =
-    new AndroidInitializationSettings('@mipmap/ic_launcher');
+    new AndroidInitializationSettings('app_icon');
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
@@ -117,7 +117,7 @@ File _image;
       });
     }
     else{
-    Navigator.pop(context);
+    return false;
     }
 
     return true;
