@@ -30,7 +30,8 @@ class _TermsState extends State<Terms> {
     "Collection of personal and other information",
     "User's Consent",
     "Grievance Officer",
-    "Dispute Resolution & Jurisdiction"
+    "Dispute Resolution & Jurisdiction",
+    "About us",
       ];
       //maps titles to their respective contents
   Map<String, String> d = {
@@ -67,6 +68,7 @@ class _TermsState extends State<Terms> {
     "User's Consent":"- By using the Application and/ or by providing information to the Company through the Application, the User consents to the collection and use of the information disclosed by the User on the Application in accordance with this Policy, including but not limited to the User’s consent to the Company/Application sharing/divulging the User’s information, as per the terms contained herein.",
     "Grievance Officer":"-  In accordance with Information Technology Act, 2000 and rules made there under, the contact details of the Grievance Officer are provided below: Grievance Officer",
     "Dispute Resolution & Jurisdiction":"-  It is expressly agreed to by the Parties hereto that the formation, interpretation and performance of this Policy and any disputes arising therefrom will be resolved through a two-step Alternate Dispute Resolution (“ADR”) mechanism. It is further expressly agreed to by the Parties that the contents of this Section shall survive even after the termination or expiry of the Policy and/or Terms.\n    * Mediation: In case of any dispute between the parties, the Parties will attempt to resolve the same amicably amongst themselves, to the mutual satisfaction of both Parties. In the event that the Parties are unable to reach such an amicable solution within thirty (30) days of one Party communicating the existence of a dispute to the other Party, the dispute will be resolved by arbitration, as detailed hereinbelow.\n    *Arbitration. In the event that the Parties are unable to amicably resolve a dispute by mediation, said dispute will be referred to arbitration by a sole arbitrator to be appointed by the Company, and the award passed by such sole arbitrator will be valid and binding on both Parties.",
+    "About us":"- www.tomercon.xyz", 
   };
   int _current = 0;//to control page indicator
 
@@ -131,7 +133,7 @@ class _TermsState extends State<Terms> {
                                 children: <Widget>[
                                   //title
                                   Text(
-                                    s,
+                                    ""+s,
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,
@@ -142,7 +144,7 @@ class _TermsState extends State<Terms> {
                                   ),
                                   //content of each title
                                   Text(
-                                    d[s],
+                                    ""+d[s],
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 15,letterSpacing: 1.0,height: 1.5),
                                   )
