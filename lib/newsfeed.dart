@@ -232,7 +232,7 @@ class RequestCard extends StatelessWidget {
                 ),
                 Column(
                   children: <Widget>[
-                    KoukiconsClocktime(height:50),
+                    KoukiconsClocktime(height:45),
                     Text(
                       "Time : " + lis[i]['date'].substring(11, 16),
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -351,6 +351,7 @@ class _NewsFeedState extends State<NewsFeed> {
                 emergency == false
                     ? DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
+                          
                           isDense: true,
                           //hint: ut.roundedtext(
                           //     'Choose', Colors.white, Colors.red),
@@ -358,9 +359,12 @@ class _NewsFeedState extends State<NewsFeed> {
                           items: g.bloodgroup.map((lisVal) {
                             return DropdownMenuItem<String>(
                               value: lisVal,
-                              child: ut.roundedtext(
-                                  lisVal, Colors.white, Colors.red),
-                            );
+                              child   : Container(
+                                padding: EdgeInsets.symmetric(vertical:3,horizontal: 4),
+                                margin: EdgeInsets.all(0),
+                                decoration: ut.rounded(Colors.white,false,40),
+                                child: Text(lisVal,style: TextStyle(color: Colors.red,fontSize: 14),),
+                              ));
                           }).toList(),
                           onChanged: (String val) {
                             setState(() {
@@ -375,9 +379,7 @@ class _NewsFeedState extends State<NewsFeed> {
                 //ut.roundedtext("$group", Colors.white, Colors.red),
                 SizedBox(
                   width: 2,
-                ),
-                Center(
-                  child:DropdownButtonHideUnderline(
+                ),DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isDense: true,
                           
@@ -385,9 +387,12 @@ class _NewsFeedState extends State<NewsFeed> {
                           items: categ.map((lisVal) {
                             return DropdownMenuItem<String>(
                               value: lisVal,
-                              child: ut.roundedtext(
-                                  lisVal, Colors.white, Colors.red),
-                            );
+                              child: Container(
+                                padding: EdgeInsets.symmetric(vertical:3,horizontal: 4),
+                                margin: EdgeInsets.all(0),
+                                decoration: ut.rounded(Colors.white,false,40),
+                                child: Text(lisVal,style: TextStyle(color: Colors.red,fontSize: 14),),
+                              ));
                           }).toList(),
                           onChanged: (String val) {
                             setState(() {
@@ -398,7 +403,7 @@ class _NewsFeedState extends State<NewsFeed> {
                           value: ch,
                         ),
                       )
-                ),
+                ,
               ],
             ),
           ),

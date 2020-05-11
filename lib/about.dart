@@ -1,7 +1,15 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'utils.dart' as ut;
 
-class About extends StatelessWidget {
+import 'package:url_launcher/url_launcher.dart';
+class About extends StatefulWidget {
+  @override
+  _AboutState createState() => _AboutState();
+}
+
+class _AboutState extends State<About> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,10 +46,36 @@ class About extends StatelessWidget {
                   ),
                 ),
               ),
+              Row(
+                
+                children: <Widget>[
+                  Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(25, 4,25 , 8),
+                                        child: RaisedButton(onPressed: (){_launchURL();},
+                                        shape: RoundedRectangleBorder(
+  borderRadius: BorderRadius.circular(18.0),
+  side: BorderSide(color: Colors.red)
+),
+                                        color: Colors.red,
+                    child: Text("PRIVACY POLICY",style: TextStyle(color:Colors.white),),),
+                                      ),
+                  ),
+                ],
+              )
             ],
           ),
         ),
       ),
     );
   }
+
+  _launchURL() async {
+  const url = 'http://vps001.qubehost.com/bloodapp/privacypolicy/';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 }
