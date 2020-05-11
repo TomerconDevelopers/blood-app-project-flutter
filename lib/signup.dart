@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:revive/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -250,6 +251,8 @@ asyncFunc(BuildContext) async {
                                 validator: (value) =>
                                     value.isEmpty ? 'Field required...' : null,
                                 controller: age,
+                                                              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+
                                 keyboardType: TextInputType.number,
                                 style: TextStyle(fontSize: 20),
                                 decoration: InputDecoration(
@@ -272,6 +275,8 @@ asyncFunc(BuildContext) async {
                                 validator: (value) =>
                                     value.isEmpty ? 'Field required...' : null,
                                 controller: weight,
+                                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+
                                 keyboardType: TextInputType.number,
                                 style: TextStyle(fontSize: 20),
                                 decoration: InputDecoration(
@@ -425,6 +430,7 @@ asyncFunc(BuildContext) async {
                                   }
                                 },
                                 controller: acn,
+                                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                 keyboardType: TextInputType.phone,
                                 style: TextStyle(fontSize: 20),
                                 decoration: InputDecoration(
@@ -482,23 +488,7 @@ asyncFunc(BuildContext) async {
                                         firstDate: DateTime(2019),
                                         lastDate: DateTime(2200));
                                   }),
-                              //last donated
-                              // TextFormField(
-                              //   controller: ld,
-                              //   keyboardType: TextInputType.datetime,
-                              //   style: TextStyle(fontSize: 20),
-                              //   decoration: InputDecoration(
-                              //     prefixIcon: (Icon(Icons.calendar_today,
-                              //         color: Color(0xFFFB415B))),
-                              //     border: OutlineInputBorder(
-                              //       borderRadius: BorderRadius.circular(20.0),
-                              //     ),
-                              //     labelText: 'Last Donated on',
-                              //     labelStyle: TextStyle(
-                              //         color: Colors.black, fontSize: 20),
-                              //     hintText: 'YYYY-MM-DD',
-                              //   ),
-                              // ),
+                              
                               SizedBox(
                                 height: 20,
                               ),
