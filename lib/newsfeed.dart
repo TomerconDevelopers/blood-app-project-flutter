@@ -328,6 +328,8 @@ class _NewsFeedState extends State<NewsFeed> {
     group = b;
     sbg = group;
     if (emergency == true) sbg = null;
+    if (emergency == false) ch = categ[1];
+
   }
 
   @override
