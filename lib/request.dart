@@ -137,6 +137,8 @@ class _BloodRequestState extends State<BloodRequest> {
                               height: 20,
                             ),
                             new TextFormField(
+                                                            inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+
                               validator: (value) =>
                                   value.isEmpty ? 'Field required...' : null,
                               controller: age,
@@ -260,6 +262,7 @@ class _BloodRequestState extends State<BloodRequest> {
                               height: 20,
                             ),
                             new TextFormField(
+                              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                               validator: (value) =>
                                   value.isEmpty ? 'Field required...' : null,
                               controller: u,
@@ -287,6 +290,8 @@ class _BloodRequestState extends State<BloodRequest> {
                                       ? 'Enter a valid number'
                                       : null,
                               controller: cn,
+                                                            inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+
                               keyboardType: TextInputType.phone,
                               style: TextStyle(fontSize: 20),
                               decoration: InputDecoration(
@@ -312,6 +317,8 @@ class _BloodRequestState extends State<BloodRequest> {
                                 }
                               },
                               controller: acn,
+                                                            inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+
                               keyboardType: TextInputType.phone,
                               style: TextStyle(fontSize: 20),
                               decoration: InputDecoration(

@@ -14,7 +14,7 @@ String cu_name;
 String cu_type;
 String g_bg='', g_n='',g_l='';
 //=======================================================================
-List bloodgroup = ['A+', 'A-', 'O+', 'O-', 'B+', 'B-', 'AB+', 'AB-'];
+List bloodgroup = ['A+', 'A-', 'O+', 'O-', 'B+', 'B-', 'AB+', 'AB-','Oh','A2B'];
 Map<String, List<String>> tlk = {
     "Thiruvananthapuram": [
       'Neyyattinkara',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'signup.dart';
 import 'utils.dart' as ut;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -168,6 +169,7 @@ class MobileVerficationState extends State<MobileVerfication> {
                                 ? 'Enter a valid number'
                                 : null,
                         controller: mobilecontroller,
+                        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                         keyboardType: TextInputType.phone,
                         style: TextStyle(fontSize: 20),
                         decoration: InputDecoration(

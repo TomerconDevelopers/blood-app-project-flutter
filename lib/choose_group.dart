@@ -12,10 +12,10 @@ class ChooseGroup extends StatefulWidget {
 }
 class ChooseGroupState extends State<ChooseGroup> {
   bool emergency;
-  List groups = ["A+","A-","B+","B-","AB+","AB-","O+","O-"];
+  List groups = ["A+","A-","B+","B-","AB+","AB-","O+","O-","Oh","A2B"];
   ChooseGroupState(bool a){
     emergency = a;
-    ut.showtoast("Emergency: $a", Colors.black);
+    
   }
   asyncFunc(BuildContext) async {
 
@@ -38,6 +38,11 @@ class ChooseGroupState extends State<ChooseGroup> {
       home: Scaffold(
           appBar: AppBar(
             title: Text('Choose bloodgroup'),
+            leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
           ),
           body: Container(
             decoration: ut.bg(),
