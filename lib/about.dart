@@ -30,6 +30,7 @@ class _AboutState extends State<About> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              SizedBox(height: 20,),
               ut.logo(),
               Padding(
                 padding: EdgeInsets.all(20),
