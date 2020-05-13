@@ -33,8 +33,10 @@ class EmergencyGroupBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(0.0),
+      padding: const EdgeInsets.only(bottom:0.0),
       child: Container(
+        
+      padding: const EdgeInsets.only(bottom:145.0),
           margin: EdgeInsets.symmetric(vertical: 10.0),
           height: MediaQuery.of(context).size.height,
           child: lis.isEmpty && empty == false
@@ -102,10 +104,9 @@ class GroupBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: Container(
-          margin: EdgeInsets.symmetric(vertical: 0.0),
+    return Container(
+      padding: EdgeInsets.only(bottom:135.0),
+          margin: EdgeInsets.only(bottom:0),
           height: MediaQuery.of(context).size.height,
           child: lis.isEmpty && empty == false
               ? SpinKitHourGlass(
@@ -159,7 +160,7 @@ class GroupBox extends StatelessWidget {
                         }
 
                         return w;
-                      })),
+                      }),
     );
   }
 }

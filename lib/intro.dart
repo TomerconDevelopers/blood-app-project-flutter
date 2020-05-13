@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'home.dart';
 import 'package:intro_slider/intro_slider.dart';
@@ -21,10 +22,12 @@ class IntroState extends State<Intro> {
     
     slides.add(
       new Slide(
+        styleTitle: GoogleFonts.fugazOne(color: Colors.white,fontSize: 20),
         title: "Welcome to WK Blood Book",
+        styleDescription: GoogleFonts.fugazOne(color:Colors.white),
         description: "You are somebody's life saver",
-        //pathImage: "images/intro3.png",// To shibiliya: Place logo path here then remove below line
-        centerWidget: Icon(Icons.chat,size: 140,color: Colors.white,),
+        pathImage: "assets/images/logo.png",// To shibiliya: Place logo path here then remove below line
+        //centerWidget: Icon(Icons.chat,size: 140,color: Colors.white,),
         widthImage:imgsize,
         heightImage:imgsize,
         backgroundColor: Colors.red[400],
@@ -32,9 +35,15 @@ class IntroState extends State<Intro> {
     );
     slides.add(
       new Slide(
-        title: "Slide 2",
-        description: "Description",
-        centerWidget: Icon(Icons.trending_up,size: 140,color: Colors.white,),
+        
+        styleTitle: GoogleFonts.fugazOne(color: Colors.white,fontSize: 20),
+        title: "Instant notifications",
+        //pathImage: "images/intro3.png",
+        description: "Never miss any notification from our side",
+        styleDescription: GoogleFonts.fugazOne(color:Colors.white),
+
+        centerWidget: Icon(Icons.notifications_active,size: 140,color: Colors.white,),
+
         widthImage:imgsize,
         heightImage:imgsize,
         backgroundColor: Color(0xff29B6F6),
@@ -42,9 +51,12 @@ class IntroState extends State<Intro> {
     );
     slides.add(
       new Slide(
-        title: "Slide 3",
-        description: "Description",
-        centerWidget: Icon(Icons.notifications_active,size: 140,color: Colors.white,),
+        styleDescription: GoogleFonts.fugazOne(color:Colors.white),
+          styleTitle: GoogleFonts.fugazOne(color:Colors.white),
+         
+        title: "Verified Reqeusts",
+        description: "We provide only verified requests",
+        centerWidget: Icon(Icons.verified_user,size: 140,color: Colors.white,),
         widthImage:imgsize,
         heightImage:imgsize,
         backgroundColor: Colors.purple,
