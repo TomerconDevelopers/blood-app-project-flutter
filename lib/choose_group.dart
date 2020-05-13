@@ -12,7 +12,7 @@ class ChooseGroup extends StatefulWidget {
 }
 class ChooseGroupState extends State<ChooseGroup> {
   bool emergency;
-  List groups = ["A+","A-","B+","B-","AB+","AB-","O+","O-","Oh","A2B"];
+  List groups = ["A+","A-","B+","B-","AB+","AB-","O+","O-","Oh","A2B+","A2B-","-D-/-D-","In(a+b-)","Co(a-b-)","I-i-","Mg"];
   ChooseGroupState(bool a){
     emergency = a;
     

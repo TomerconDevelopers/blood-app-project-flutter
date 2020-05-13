@@ -236,7 +236,7 @@ class _BloodRequestState extends State<BloodRequest> {
                                   req_time = val == null ? 0 : val;
                                   //print("req:$req_time");
                                       //print(req_date.add(Duration(hours: req_time.hour,minutes: req_time.minute)));
-                                      print(req_date);
+                                      print(req_time);
                                 },
                                 decoration: InputDecoration(
                                     prefixIcon: (Icon(Icons.access_time,
@@ -579,9 +579,9 @@ class _BloodRequestState extends State<BloodRequest> {
       "id": uname,
       "patient":patient.text,
       "case":caseof.text,
-      
-      //"requested_time":DateTime.now().toString()
+      "requested_time":DateTime.now().toString()
     });
+    print(req_date);
     var res = await http.post( s+"/coordinator_request.php", body: bd);
     print(res.statusCode);
     reg = jsonDecode(res.body);
@@ -620,8 +620,9 @@ class _BloodRequestState extends State<BloodRequest> {
       "hospital": h.text,
        "patient":patient.text,
        "case":caseof.text,
-     // "requested_time":DateTime.now().toString()
+     "requested_time":DateTime.now().toString()
     });
+    print(req_date);
     http.Response res = await http.post(s+"/request.php", body: bd);
     print(res.statusCode);
     print(res.body);

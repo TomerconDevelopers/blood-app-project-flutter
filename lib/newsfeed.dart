@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -6,31 +7,25 @@ import 'package:koukicons/businessman.dart';
 import 'package:koukicons/calendar.dart';
 import 'package:koukicons/callback.dart';
 import 'package:koukicons/clocktime.dart';
-import 'package:koukicons/phone.dart';
-import 'package:koukicons/phoneDown.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:koukicons/openFolder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import './details.dart';
 import 'utils.dart' as ut;
 import 'package:http/http.dart' as http;
 import 'globals.dart' as g;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:koukicons/alarmClock.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
+Widget j;
 List lis = [];
+List lis1=[];
 List categ=['Emergency','All'];
 int index = 0;
 String sbg,ch;
 var dis, dis1, dis2;
-Future<List> getData1() async {
-  final SharedPreferences sp = await SharedPreferences.getInstance();
-  dis = g.g_bg.isNotEmpty ? sp.getString('district') : null;
-  dis1 = g.g_l.isNotEmpty ? sp.getString('district0') : null;
-  dis2 = g.g_l.isNotEmpty ? sp.getString('district1') : null;
-  final res = await http.get(g.baseUrl + "/newsfeed.php");
-  print(res.statusCode);
-  return jsonDecode(res.body);
-}
+int page=1;bool p=false;bool empty=false;bool ind=false;
+ScrollController _scroll;
+
+
 
 //Emergency newsfeed
 class EmergencyGroupBox extends StatelessWidget {
@@ -41,17 +36,19 @@ class EmergencyGroupBox extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10.0),
         height: MediaQuery.of(context).size.height,
-        child: FutureBuilder(
-            future: getData1(),
-            builder: (context, ss) {
-              lis = ss.data;
-              if (!ss.hasData) {
-                return SpinKitHourGlass(
+        child: lis.isEmpty && empty==false?SpinKitHourGlass(
                   color: Colors.red,
                   size: 80,
-                );
-              } else {
-                return ListView.builder(
+                ):lis.isEmpty && empty==true?Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      KoukiconsOpenFolder(height: 80,color: Colors.grey[300],),
+                      Text('No requests',style: TextStyle(color: Colors.grey[300],fontSize: 30),)
+                    ],
+                  ),
+                ):ListView.builder(
+                  controller: _scroll,
                     itemCount: lis?.length ?? 0,
                     itemBuilder: (context, index) {
                       Widget w = SizedBox(width: 1);
@@ -80,9 +77,8 @@ class EmergencyGroupBox extends StatelessWidget {
                       }
 
                       return w;
-                    });
-              }
-            }),
+                    })
+            
       ),
     );
   }
@@ -101,23 +97,27 @@ class GroupBox extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 0.0),
         height: MediaQuery.of(context).size.height,
-        child: FutureBuilder(
-            future: getData1(),
-            builder: (context, ss) {
-              lis = ss.data;
-              if (!ss.hasData) {
-                return SpinKitHourGlass(
+        child: lis.isEmpty && empty==false?SpinKitHourGlass(
                   color: Colors.red,
                   size: 80,
-                );
-              } else {
-                return ListView.builder(
+                ):lis.isEmpty && empty==true?Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      KoukiconsOpenFolder(height: 80,color: Colors.grey[300],),
+                      Text('No requests',style: TextStyle(color: Colors.grey[300],fontSize: 30),)
+                    ],
+                  ),
+                ):ListView.builder(
+                  controller: _scroll,
                     itemCount: lis?.length ?? 0,
                     itemBuilder: (context, index) {
                       Widget w = SizedBox(width: 1);
                       if (lis[index]['bloodgroup'] == this.group) {
                         if (g.g_bg.isNotEmpty && dis != null) {
-                          if (lis[index]['district'] == dis) {
+                           
+                          if (lis[index]['district'] == dis && empty==false) {
+                           
                             w = RequestCard(
                               i: index,
                             );
@@ -127,11 +127,15 @@ class GroupBox extends StatelessWidget {
                             dis2 != null) {
                           if (lis[index]['district'] == dis1 ||
                               lis[index]['district'] == dis2) {
-                            w = RequestCard(
+                              
+                           
+                              w = RequestCard(
                               i: index,
                             );
+                           
                           }
-                        } else {
+                        }
+                         else {
                           w = RequestCard(
                             i: index,
                           );
@@ -139,9 +143,8 @@ class GroupBox extends StatelessWidget {
                       }
 
                       return w;
-                    });
-              }
-            }),
+                    })
+             
       ),
     );
   }
@@ -301,7 +304,7 @@ class RequestCard extends StatelessWidget {
                           launch("tel://" + lis[i]['bystander_contacts']);
                         })),
               ],
-            )
+            ),
           ],
         ),
       )),
@@ -322,25 +325,57 @@ class NewsFeed extends StatefulWidget {
 class _NewsFeedState extends State<NewsFeed> {
   bool emergency; //TO FILTER EMERGENCY ONLY
   String group;
+  Timer _countdownTimer;
   // TO FILTER BLOOD GROUP
   _NewsFeedState(bool a, String b) {
+    
     emergency = a;
     group = b;
     sbg = group;
     if (emergency == true) sbg = null;
     if (emergency == false) ch = categ[1];
-
+    emergency==true? getData1():getData2();
   }
+  
+@override
+  void initState() {
+    _scroll=new ScrollController();
+   super.initState();
+    _scroll.addListener((){
+      if(_scroll.position.pixels==_scroll.position.maxScrollExtent){
+        
+          
+       setState(() {
+        if(p==false){
+        page=page+1;
+        emergency==true?getData1():getData2();
+        
+        }
+       });
+      }
+    });
+    
+    
+    
+  }
+  
+ @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  } 
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ut.maintheme(),
       home: Scaffold(
+        backgroundColor: Colors.orange[50],
           appBar: AppBar(
             leading: IconButton(
                 icon: Icon(Icons.arrow_back_ios),
                 onPressed: () {
+                  lis.clear();lis1.clear();p=false;page=1;empty=false;
                   Navigator.pop(context);
                 }),
             title: Row(
@@ -351,6 +386,7 @@ class _NewsFeedState extends State<NewsFeed> {
                 emergency == false
                     ? DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
+                          hint: Text('Choose',style: TextStyle(color: Colors.white,fontSize: 14),),
                           
                           isDense: true,
                           //hint: ut.roundedtext(
@@ -369,6 +405,8 @@ class _NewsFeedState extends State<NewsFeed> {
                           onChanged: (String val) {
                             setState(() {
                               sbg = val;
+                              lis.clear();lis1.clear();p=false;page=1;empty=false;
+                              getData2();
                             });
                           },
                           value: sbg,
@@ -398,6 +436,13 @@ class _NewsFeedState extends State<NewsFeed> {
                             setState(() {
                               ch = val;
                               emergency=ch==categ[0]?true:false;
+                              sbg=ch==categ[0]?null:sbg;
+                             if(ch==categ[0]){setState(() {
+                               lis.clear();lis1.clear();p=false;page=1;empty=false;getData1();
+                             });}
+                             if(ch==categ[1]){setState(() {
+                               lis.clear();lis1.clear();p=false;page=1;empty=false;getData2();
+                             });}
                             });
                           },
                           value: ch,
@@ -407,14 +452,76 @@ class _NewsFeedState extends State<NewsFeed> {
               ],
             ),
           ),
-          body: Container(
-            color: Colors.orange[50],
-            child: emergency == true
-                ? EmergencyGroupBox()
-                : GroupBox(
-                    group: sbg,
-                  ),
+
+          
+          
+          body: ModalProgressHUD(
+           dismissible: true,
+            inAsyncCall: ind,
+                      child: Container(
+              
+              child: emergency == true
+                  ? EmergencyGroupBox()
+                  : GroupBox(
+                      group: sbg,
+                    ),
+            ),
           )),
     );
   }
+   getData1() async {
+     print(sbg);
+     print('page is $page');
+  final SharedPreferences sp = await SharedPreferences.getInstance();
+  dis = g.g_bg.isNotEmpty ? sp.getString('district') : null;
+  dis1 = g.g_l.isNotEmpty ? sp.getString('district0') : null;
+  dis2 = g.g_l.isNotEmpty ? sp.getString('district1') : null;
+  if(lis.isNotEmpty)setState(() {
+    ind=true;
+  });
+  final res = await http.post(g.baseUrl+"/newsfeed.php",body: jsonEncode({"pageno":page,"dis":dis,"dis0":dis1,"dis1":dis2,"group":sbg}));
+  print(res.statusCode);
+ setState(() {
+   if(lis.isNotEmpty)ind=false;
+   lis1=jsonDecode(res.body);
+ print(lis1.length);
+ if(lis1.length==0 && page==1)empty=true;
+ if(lis1.length==0)p=true;
+  if(lis1.length!=0){
+    lis1.forEach((f){
+      lis.add(f);
+  });
+  }
+   print(lis);
+ });
+  
+}
+getData2() async {
+   print('page is $page');
+  print(sbg);
+  final SharedPreferences sp = await SharedPreferences.getInstance();
+  dis = g.g_bg.isNotEmpty ? sp.getString('district') : null;
+  dis1 = g.g_l.isNotEmpty ? sp.getString('district0') : null;
+  dis2 = g.g_l.isNotEmpty ? sp.getString('district1') : null;
+  if(lis.isNotEmpty)setState(() {
+    ind=true;
+  });
+  final res = await http.post(g.baseUrl+"/newsfeed.php",body: jsonEncode({"pageno":page,"group":sbg,"dis":dis,"dis0":dis1,"dis1":dis2}));
+  print(res.statusCode);
+ setState(() {
+   if(lis.isNotEmpty)ind=false;
+   lis1=jsonDecode(res.body);
+ print(lis1.length);
+ if(lis1.length==0 && page==1)empty=true;
+ print('empty is $empty');
+ if(lis1.length==0)p=true;
+if(lis1.length!=0){
+    lis1.forEach((f){
+      lis.add(f);
+  });
+   print(lis);
+}
+  
+ });
+}
 }

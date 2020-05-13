@@ -7,6 +7,7 @@ import 'globals.dart' as g;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+
 bool coord_req=false;
 class BloodRequestDetails extends StatefulWidget {
   final String name;
@@ -314,7 +315,7 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
                       decoration: InputDecoration(
                         labelStyle:
                             TextStyle(color: Colors.black, fontSize: 20),
-                        hintText: 'Enter Coordinator username',
+                        hintText: 'Enter Coordinator\'s name',
                       ),
                     ),
                   ),
@@ -383,7 +384,7 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
       "verified": ve,
       "id": id.text,
       "fcm_token":"",
-      "req_time":requested_time,
+      "requested_time":requested_time,
       "patient":pat_name,
       "case":pat_case
     });
@@ -397,6 +398,7 @@ class _BloodRequestDetailsState extends State<BloodRequestDetails> {
     });
     print(reg);
      if(reg!="Try Again"){
+       g.del=true;
        setState(() {
          Navigator.pop(context,(){
            setState(() {
