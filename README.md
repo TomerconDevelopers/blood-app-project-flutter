@@ -1,16 +1,11 @@
 # revive
 
-The repository for blood donors app for BDK Kerala project
+The repository for blood donors app developed by tomercon tutorial batch 1 students
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Backend repo: https://github.com/TomerconDevelopers/blood-app-project-backend.
+(PHP & MySQL)
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+If you found this rpoject useful, Give a star. You can report any issues we will fix it.
+Collaborators are invited.
