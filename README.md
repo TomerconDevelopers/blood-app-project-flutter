@@ -1,5 +1,5 @@
 # revive
-![alt text](https://github.com/TomerconDevelopers/blood-app-project-flutter/blob/master/image.jpg?raw=true)
+![alt text](https://github.com/TomerconDevelopers/blood-app-project-flutter/blob/app/Output%20screenshots/Newsfeed.jpg?raw=true)
 The repository for blood donors app developed by tomercon tutorial batch 1 students
 
 ## Getting Started
